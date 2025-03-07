@@ -94,28 +94,27 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
 
           // Filter by selected book if not 'All'
           if (widget.selectedBook != null && widget.selectedBook != 'All') {
-            allQuestions = allQuestions
-                .where((q) =>
-                    q['reference'].toString().startsWith(widget.selectedBook!))
-                .toList();
-          }
-
-          if (allQuestions.isEmpty) {
-            questions = [
-              {
-                "question": "No questions available for this book!",
-                "options": ["Try another book"],
-                "answer": "Try another book",
-                "reference": "N/A"
-              }
-            ];
-            return;
+            allQuestions = allQuestions.where((question) {
+              final reference = question['reference'] as String;
+              final book = reference.split(' ')[0];
+              return book == widget.selectedBook;
+            }).toList();
           }
 
           if (widget.randomizeQuestions) {
             allQuestions.shuffle(Random());
           }
           questions = allQuestions.take(widget.questionCount).toList();
+          if (questions.isEmpty) {
+            questions = [
+              {
+                "question": "No questions available for this book!",
+                "options": ["Try another book", "Okay", "Cancel", "Retry"],
+                "answer": "Try another book",
+                "reference": "N/A"
+              }
+            ];
+          }
           _animationController.forward();
         });
       }
@@ -231,7 +230,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
       setState(() {
         scrolls -= 50;
         _bonusMessage =
-            'Hint: The answer is "${questions[currentQuestionIndex]['answer']}" (Ref: ${questions[currentQuestionIndex]['reference']})';
+            'Hint: The answer is "${questions[currentQuestionIndex]['answer']}" (See ${questions[currentQuestionIndex]['reference']})';
       });
       Future.delayed(const Duration(seconds: 2), () {
         if (mounted && widget.useTime) {
@@ -335,7 +334,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-            '${widget.difficulty[0].toUpperCase()}${widget.difficulty.substring(1)} Quiz${widget.selectedBook != 'All' ? ' - ${widget.selectedBook}' : ''}'),
+            '${widget.difficulty[0].toUpperCase()}${widget.difficulty.substring(1)} Quiz${widget.selectedBook != null && widget.selectedBook != 'All' ? ' - ${widget.selectedBook}' : ''}'),
         backgroundColor: Colors.orangeAccent,
         elevation: 4,
       ),
