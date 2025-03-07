@@ -592,220 +592,233 @@ $playerName''',
             },
           ),
           PopupMenuButton<String>(
-            onSelected: (value) {
-              if (value == 'instructions') {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const InstructionsScreen()),
-                );
-              } else if (value == 'gospel') {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const GospelScreen()),
-                );
-              } else if (value == 'which_church') {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const WhichChurchScreen()),
-                );
-              }
-            },
-            itemBuilder: (context) => [
-              const PopupMenuItem(
-                  value: 'instructions', child: Text('Instructions')),
-              const PopupMenuItem(value: 'gospel', child: Text('The Gospel')),
-              const PopupMenuItem(
-                  value: 'which_church', child: Text('Which Church')),
-            ],
-            icon: const Icon(Icons.menu, color: Colors.white),
-          ),
+              onSelected: (value) {
+                if (value == 'instructions') {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const InstructionsScreen()),
+                  );
+                } else if (value == 'gospel') {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const GospelScreen()),
+                  );
+                } else if (value == 'which_church') {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const WhichChurchScreen()),
+                  );
+                }
+              },
+              itemBuilder: (context) => [
+                    const PopupMenuItem(
+                        value: 'instructions', child: Text('Instructions')),
+                    const PopupMenuItem(
+                        value: 'gospel', child: Text('The Gospel')),
+                    const PopupMenuItem(
+                        value: 'which_church', child: Text('Which Church')),
+                  ],
+              icon: const Icon(Icons.menu, color: Colors.white)),
         ],
       ),
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.black87, Colors.black54],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
-        ),
-        child: Center(
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset(
-                  'assets/images/faithful_journey_banner.jpg',
-                  width: double.infinity,
-                  height: 200,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) =>
-                      const Icon(Icons.error, size: 200, color: Colors.red),
-                ),
-                const SizedBox(height: 20),
-                FadeTransition(
-                  opacity: _fadeAnimation,
-                  child: ScaleTransition(
-                    scale: _scaleAnimation,
-                    child: Text(
-                      'Welcome, $playerTitle!',
-                      style: const TextStyle(
-                        fontSize: 32,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.orangeAccent,
-                        shadows: [
-                          Shadow(
-                              color: Colors.black54,
-                              offset: Offset(2, 2),
-                              blurRadius: 4)
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 15),
-                Text(
-                  'Level: $playerLevel',
-                  style: const TextStyle(fontSize: 24, color: Colors.white70),
-                ),
-                const SizedBox(height: 40),
-                _buildDifficultyButton('Beginner'),
-                const SizedBox(height: 20),
-                _buildDifficultyButton('Intermediate'),
-                const SizedBox(height: 20),
-                _buildDifficultyButton('Advanced'),
-                const SizedBox(height: 20),
-                FadeTransition(
-                  opacity: _fadeAnimation,
-                  child: ScaleTransition(
-                    scale: _scaleAnimation,
-                    child: SizedBox(
-                      width: 300,
-                      height: 60,
-                      child: ElevatedButton(
-                        onPressed: _inviteFriend,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              const Color.fromARGB(255, 174, 246, 162),
-                          foregroundColor: Colors.black,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16)),
-                          elevation: 8,
-                          textStyle: const TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
-                        ),
-                        child: const Text('Invite a Friend'),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                FadeTransition(
-                  opacity: _fadeAnimation,
-                  child: ScaleTransition(
-                    scale: _scaleAnimation,
-                    child: SizedBox(
-                      width: 300,
-                      height: 60,
-                      child: ElevatedButton.icon(
-                        onPressed: () {
-                          _shareContent(
-                            'Join me on Bible Quest to grow in faith!',
-                            'https://biblequestapp.com/$playerName',
-                            imagePath:
-                                'assets/images/faithful_journey_banner.jpg',
-                          );
-                        },
-                        icon: const Icon(Icons.share, color: Colors.black),
-                        label: const Text('Share My Journey'),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.amber[600],
-                          foregroundColor: Colors.black,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16)),
-                          elevation: 8,
-                          textStyle: const TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 25),
-                const Text(
-                  "'Answer questions, rise in knowledge, get to know the Word so you can hear and know Him, and rise in faith!, Jesus does really love you!!'",
-                  style: TextStyle(fontSize: 14, color: Colors.white60),
-                  textAlign: TextAlign.center,
-                  maxLines: 3,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const SizedBox(height: 10),
-                const Text(
-                  "Romans 10:17 NKJV\nSo then faith comes by hearing, and hearing by the word of God.",
-                  style: TextStyle(fontSize: 14, color: Colors.white60),
-                  textAlign: TextAlign.center,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    FadeTransition(
-                      opacity: _fadeAnimation,
-                      child: ScaleTransition(
-                        scale: _scaleAnimation,
-                        child: SizedBox(
-                          width: 300,
-                          height: 60,
-                          child: ElevatedButton(
-                            onPressed: _showSuggestionsDialog,
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.orange,
-                              foregroundColor: Colors.black,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(16)),
-                              elevation: 8,
-                              textStyle: const TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.bold),
-                            ),
-                            child: const Text('Suggestions'),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 20),
-                    FadeTransition(
-                      opacity: _fadeAnimation,
-                      child: ScaleTransition(
-                        scale: _scaleAnimation,
-                        child: SizedBox(
-                          width: 300,
-                          height: 60,
-                          child: ElevatedButton(
-                            onPressed: _showFeedbackDialog,
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.orange,
-                              foregroundColor: Colors.black,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(16)),
-                              elevation: 8,
-                              textStyle: const TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.bold),
-                            ),
-                            child: const Text('Feedback'),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+      body: Stack(
+        children: [
+          // Background Image
+          Container(
+            width: double.infinity,
+            height: double.infinity,
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/images/faithful_journey_banner.jpg'),
+                fit: BoxFit.cover, // Covers the screen, may crop edges
+              ),
             ),
           ),
-        ),
+          // Overlay Content with Gradient
+          Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Colors.black87, Colors.black54],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+              ),
+            ),
+            child: Center(
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const SizedBox(height: 20),
+                    FadeTransition(
+                      opacity: _fadeAnimation,
+                      child: ScaleTransition(
+                        scale: _scaleAnimation,
+                        child: Text(
+                          'Welcome, $playerTitle!',
+                          style: const TextStyle(
+                            fontSize: 32,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.orangeAccent,
+                            shadows: [
+                              Shadow(
+                                  color: Colors.black54,
+                                  offset: Offset(2, 2),
+                                  blurRadius: 4)
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 15),
+                    Text(
+                      'Level: $playerLevel',
+                      style:
+                          const TextStyle(fontSize: 24, color: Colors.white70),
+                    ),
+                    const SizedBox(height: 40),
+                    _buildDifficultyButton('Beginner'),
+                    const SizedBox(height: 20),
+                    _buildDifficultyButton('Intermediate'),
+                    const SizedBox(height: 20),
+                    _buildDifficultyButton('Advanced'),
+                    const SizedBox(height: 20),
+                    FadeTransition(
+                      opacity: _fadeAnimation,
+                      child: ScaleTransition(
+                        scale: _scaleAnimation,
+                        child: SizedBox(
+                          width: 300,
+                          height: 60,
+                          child: ElevatedButton(
+                            onPressed: _inviteFriend,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor:
+                                  const Color.fromARGB(255, 174, 246, 162),
+                              foregroundColor: Colors.black,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16)),
+                              elevation: 8,
+                              textStyle: const TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold),
+                            ),
+                            child: const Text('Invite a Friend'),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    FadeTransition(
+                      opacity: _fadeAnimation,
+                      child: ScaleTransition(
+                        scale: _scaleAnimation,
+                        child: SizedBox(
+                          width: 300,
+                          height: 60,
+                          child: ElevatedButton.icon(
+                            onPressed: () {
+                              _shareContent(
+                                'Join me on Bible Quest to grow in faith!',
+                                'https://biblequestapp.com/$playerName',
+                                imagePath:
+                                    'assets/images/faithful_journey_banner.jpg',
+                              );
+                            },
+                            icon: const Icon(Icons.share, color: Colors.black),
+                            label: const Text('Share My Journey'),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.amber[600],
+                              foregroundColor: Colors.black,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16)),
+                              elevation: 8,
+                              textStyle: const TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 25),
+                    const Text(
+                      "'Answer questions, rise in knowledge, get to know the Word so you can hear and know Him, and rise in faith!, Jesus does really love you!!'",
+                      style: TextStyle(fontSize: 14, color: Colors.white60),
+                      textAlign: TextAlign.center,
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 10),
+                    const Text(
+                      "Romans 10:17 NKJV\nSo then faith comes by hearing, and hearing by the word of God.",
+                      style: TextStyle(fontSize: 14, color: Colors.white60),
+                      textAlign: TextAlign.center,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        FadeTransition(
+                          opacity: _fadeAnimation,
+                          child: ScaleTransition(
+                            scale: _scaleAnimation,
+                            child: SizedBox(
+                              width: 300,
+                              height: 60,
+                              child: ElevatedButton(
+                                onPressed: _showSuggestionsDialog,
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.orange,
+                                  foregroundColor: Colors.black,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(16)),
+                                  elevation: 8,
+                                  textStyle: const TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                child: const Text('Suggestions'),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 20),
+                        FadeTransition(
+                          opacity: _fadeAnimation,
+                          child: ScaleTransition(
+                            scale: _scaleAnimation,
+                            child: SizedBox(
+                              width: 300,
+                              height: 60,
+                              child: ElevatedButton(
+                                onPressed: _showFeedbackDialog,
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.orange,
+                                  foregroundColor: Colors.black,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(16)),
+                                  elevation: 8,
+                                  textStyle: const TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                child: const Text('Feedback'),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20), // Extra padding at bottom
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
