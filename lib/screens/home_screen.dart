@@ -30,6 +30,78 @@ class _HomeScreenState extends State<HomeScreen>
   bool muteSound = false;
   int questionCount = 10;
   bool randomizeQuestions = true;
+  String? selectedBook = 'All'; // Default to all books
+
+  // List of Bible books (simplified; expand as needed)
+  final List<String> bibleBooks = [
+    'All',
+    'Genesis',
+    'Exodus',
+    'Leviticus',
+    'Numbers',
+    'Deuteronomy',
+    'Joshua',
+    'Judges',
+    'Ruth',
+    '1 Samuel',
+    '2 Samuel',
+    '1 Kings',
+    '2 Kings',
+    '1 Chronicles',
+    '2 Chronicles',
+    'Ezra',
+    'Nehemiah',
+    'Esther',
+    'Job',
+    'Psalms',
+    'Proverbs',
+    'Ecclesiastes',
+    'Song of Solomon',
+    'Isaiah',
+    'Jeremiah',
+    'Lamentations',
+    'Ezekiel',
+    'Daniel',
+    'Hosea',
+    'Joel',
+    'Amos',
+    'Obadiah',
+    'Jonah',
+    'Micah',
+    'Nahum',
+    'Habakkuk',
+    'Zephaniah',
+    'Haggai',
+    'Zechariah',
+    'Malachi',
+    'Matthew',
+    'Mark',
+    'Luke',
+    'John',
+    'Acts',
+    'Romans',
+    '1 Corinthians',
+    '2 Corinthians',
+    'Galatians',
+    'Ephesians',
+    'Philippians',
+    'Colossians',
+    '1 Thessalonians',
+    '2 Thessalonians',
+    '1 Timothy',
+    '2 Timothy',
+    'Titus',
+    'Philemon',
+    'Hebrews',
+    'James',
+    '1 Peter',
+    '2 Peter',
+    '1 John',
+    '2 John',
+    '3 John',
+    'Jude',
+    'Revelation'
+  ];
 
   String _getTitle(int level) {
     if (level >= 20) return 'Sage';
@@ -115,6 +187,7 @@ class _HomeScreenState extends State<HomeScreen>
                     muteSound: muteSound,
                     questionCount: questionCount,
                     randomizeQuestions: randomizeQuestions,
+                    selectedBook: selectedBook, // Pass selected book
                   ),
                 ),
               );
@@ -195,6 +268,7 @@ $playerName''',
   }
 
   void _showSuggestionsDialog() {
+    // Unchanged, keeping it concise
     TextEditingController nameController =
         TextEditingController(text: playerName);
     TextEditingController suggestionController = TextEditingController();
@@ -281,6 +355,7 @@ $playerName''',
   }
 
   void _showFeedbackDialog() {
+    // Unchanged, keeping it concise
     TextEditingController nameController =
         TextEditingController(text: playerName);
     TextEditingController feedbackController = TextEditingController();
@@ -548,6 +623,30 @@ $playerName''',
                       ),
                     ],
                   ),
+                  const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      const Icon(Icons.book,
+                          size: 20, color: Colors.orangeAccent),
+                      const SizedBox(width: 8),
+                      const Text('Book:',
+                          style: TextStyle(color: Colors.white70)),
+                      const SizedBox(width: 8),
+                      DropdownButton<String>(
+                        value: selectedBook,
+                        dropdownColor: Colors.grey[900],
+                        style: const TextStyle(color: Colors.white70),
+                        items: bibleBooks
+                            .map((book) => DropdownMenuItem<String>(
+                                value: book, child: Text(book)))
+                            .toList(),
+                        onChanged: (value) {
+                          setDialogState(() => selectedBook = value);
+                          setState(() => selectedBook = value);
+                        },
+                      ),
+                    ],
+                  ),
                 ],
               ),
             );
@@ -636,7 +735,6 @@ $playerName''',
       ),
       body: Stack(
         children: [
-          // Background Image
           Container(
             width: double.infinity,
             height: double.infinity,
@@ -647,7 +745,6 @@ $playerName''',
               ),
             ),
           ),
-          // Overlay Content with Gradient
           Container(
             decoration: const BoxDecoration(
               gradient: LinearGradient(
