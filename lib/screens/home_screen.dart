@@ -590,38 +590,48 @@ $playerName''',
                 ),
               );
             },
+            tooltip: 'Leaderboard',
+          ),
+          IconButton(
+            icon: const Icon(Icons.lightbulb_outline, color: Colors.white),
+            onPressed: _showSuggestionsDialog,
+            tooltip: 'Suggestions',
+          ),
+          IconButton(
+            icon: const Icon(Icons.feedback, color: Colors.white),
+            onPressed: _showFeedbackDialog,
+            tooltip: 'Feedback',
           ),
           PopupMenuButton<String>(
-              onSelected: (value) {
-                if (value == 'instructions') {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const InstructionsScreen()),
-                  );
-                } else if (value == 'gospel') {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const GospelScreen()),
-                  );
-                } else if (value == 'which_church') {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const WhichChurchScreen()),
-                  );
-                }
-              },
-              itemBuilder: (context) => [
-                    const PopupMenuItem(
-                        value: 'instructions', child: Text('Instructions')),
-                    const PopupMenuItem(
-                        value: 'gospel', child: Text('The Gospel')),
-                    const PopupMenuItem(
-                        value: 'which_church', child: Text('Which Church')),
-                  ],
-              icon: const Icon(Icons.menu, color: Colors.white)),
+            onSelected: (value) {
+              if (value == 'instructions') {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const InstructionsScreen()),
+                );
+              } else if (value == 'gospel') {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const GospelScreen()),
+                );
+              } else if (value == 'which_church') {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const WhichChurchScreen()),
+                );
+              }
+            },
+            itemBuilder: (context) => [
+              const PopupMenuItem(
+                  value: 'instructions', child: Text('Instructions')),
+              const PopupMenuItem(value: 'gospel', child: Text('The Gospel')),
+              const PopupMenuItem(
+                  value: 'which_church', child: Text('Which Church')),
+            ],
+            icon: const Icon(Icons.menu, color: Colors.white),
+          ),
         ],
       ),
       body: Stack(
@@ -633,7 +643,7 @@ $playerName''',
             decoration: const BoxDecoration(
               image: DecorationImage(
                 image: AssetImage('assets/images/faithful_journey_banner.jpg'),
-                fit: BoxFit.cover, // Covers the screen, may crop edges
+                fit: BoxFit.cover,
               ),
             ),
           ),
@@ -758,61 +768,6 @@ $playerName''',
                       overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        FadeTransition(
-                          opacity: _fadeAnimation,
-                          child: ScaleTransition(
-                            scale: _scaleAnimation,
-                            child: SizedBox(
-                              width: 300,
-                              height: 60,
-                              child: ElevatedButton(
-                                onPressed: _showSuggestionsDialog,
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.orange,
-                                  foregroundColor: Colors.black,
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(16)),
-                                  elevation: 8,
-                                  textStyle: const TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                child: const Text('Suggestions'),
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 20),
-                        FadeTransition(
-                          opacity: _fadeAnimation,
-                          child: ScaleTransition(
-                            scale: _scaleAnimation,
-                            child: SizedBox(
-                              width: 300,
-                              height: 60,
-                              child: ElevatedButton(
-                                onPressed: _showFeedbackDialog,
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.orange,
-                                  foregroundColor: Colors.black,
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(16)),
-                                  elevation: 8,
-                                  textStyle: const TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                child: const Text('Feedback'),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 20), // Extra padding at bottom
                   ],
                 ),
               ),
