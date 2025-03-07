@@ -1,2 +1,2 @@
-# bible_quiz
+# Bible Quest
 a Bible quiz App
