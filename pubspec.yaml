@@ -1,0 +1,29 @@
+name: bible_quest
+description: A Bible trivia game to grow in faith and knowledge.
+version: 1.0.0+1
+license: Proprietary
+publish_to: 'none'
+
+environment:
+  sdk: '>=2.18.0 <3.0.0' # Compatible Flutter SDK range
+
+dependencies:
+  flutter:
+    sdk: flutter
+  google_fonts: ^6.1.0 # Add this
+  shared_preferences: ^2.2.2
+  audioplayers: ^5.2.0 # For quiz_screen.dart
+  url_launcher: ^6.2.0 # For home_screen.dart
+  share_plus: ^7.2.0 # For home_screen.dart
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0 # For code linting (optional)
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/
+    - assets/sounds/
+    - assets/questions.json
