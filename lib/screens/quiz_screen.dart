@@ -17,6 +17,7 @@ class QuizScreen extends StatefulWidget {
   final bool muteSound;
   final int questionCount;
   final bool randomizeQuestions;
+  final String? selectedBook; // New parameter
 
   const QuizScreen({
     super.key,
@@ -29,6 +30,7 @@ class QuizScreen extends StatefulWidget {
     required this.muteSound,
     required this.questionCount,
     required this.randomizeQuestions,
+    this.selectedBook,
   });
 
   @override
@@ -39,7 +41,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
   int currentQuestionIndex = 0;
   int score = 0;
   late int lives;
-  int scrolls = 0; // Local copy, synced with globals.scrolls
+  int scrolls = 0;
   List<Map<String, dynamic>> questions = [];
   late AnimationController _animationController;
   late Animation<Offset> _slideAnimation;
@@ -49,7 +51,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
   int _correctAnswers = 0;
   String _bonusMessage = '';
   late AudioPlayer _audioPlayer;
-  int xp = 0; // Local XP tracker
+  int xp = 0;
 
   @override
   void initState() {
@@ -66,7 +68,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
         CurvedAnimation(parent: _animationController, curve: Curves.easeOut));
     lives = widget.useLives ? widget.livesCount : -1;
     _secondsRemaining = widget.useTime ? widget.timeLimit : -1;
-    scrolls = globals.Globals.scrolls; // Sync with global state
+    scrolls = globals.Globals.scrolls;
     _loadQuestions();
     if (widget.useTime) _startTimer();
   }
@@ -89,12 +91,31 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
           List<Map<String, dynamic>> allQuestions =
               List<Map<String, dynamic>>.from(
                   data[widget.difficulty.toLowerCase()]);
-          if (widget.randomizeQuestions) {
-            allQuestions.shuffle(Random()); // Shuffle questions if enabled
+
+          // Filter by selected book if not 'All'
+          if (widget.selectedBook != null && widget.selectedBook != 'All') {
+            allQuestions = allQuestions
+                .where((q) =>
+                    q['reference'].toString().startsWith(widget.selectedBook!))
+                .toList();
           }
-          questions = allQuestions
-              .take(widget.questionCount)
-              .toList(); // Take specified number
+
+          if (allQuestions.isEmpty) {
+            questions = [
+              {
+                "question": "No questions available for this book!",
+                "options": ["Try another book"],
+                "answer": "Try another book",
+                "reference": "N/A"
+              }
+            ];
+            return;
+          }
+
+          if (widget.randomizeQuestions) {
+            allQuestions.shuffle(Random());
+          }
+          questions = allQuestions.take(widget.questionCount).toList();
           _animationController.forward();
         });
       }
@@ -210,7 +231,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
       setState(() {
         scrolls -= 50;
         _bonusMessage =
-            'Hint: The answer is "${questions[currentQuestionIndex]['answer']}"';
+            'Hint: The answer is "${questions[currentQuestionIndex]['answer']}" (Ref: ${questions[currentQuestionIndex]['reference']})';
       });
       Future.delayed(const Duration(seconds: 2), () {
         if (mounted && widget.useTime) {
@@ -225,13 +246,13 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
 
   void _nextQuestion() {
     setState(() {
-      if (currentQuestionIndex < widget.questionCount - 1) {
+      if (currentQuestionIndex < questions.length - 1) {
         currentQuestionIndex++;
         _animationController.reset();
         _animationController.forward();
         if (widget.useTime) _startTimer();
       } else {
-        double passThreshold = widget.questionCount * 0.7; // 70% pass threshold
+        double passThreshold = questions.length * 0.7;
         _endQuiz(_correctAnswers >= passThreshold
             ? 'Level Complete!'
             : 'Quiz Ended!');
@@ -241,21 +262,19 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
 
   Future<void> _endQuiz(String message) async {
     _timer?.cancel();
-    globals.Globals.scrolls = scrolls; // Sync local scrolls to global
-    xp = score; // Assign score to XP
-    globals.Globals.playerXP += xp; // Update global XP
+    globals.Globals.scrolls = scrolls;
+    xp = score;
+    globals.Globals.playerXP += xp;
     int xpPerLevel = widget.difficulty.toLowerCase() == 'beginner'
         ? 100
         : widget.difficulty.toLowerCase() == 'intermediate'
             ? 250
             : 500;
     globals.Globals.playerLevel =
-        (globals.Globals.playerXP / xpPerLevel).floor() +
-            1; // Update global level
-    await globals.Globals.savePlayerData(); // Save player data
-    globals.Globals.updateLeaderboard(
-        widget.playerName, score); // Update leaderboard
-    await globals.Globals.saveLeaderboard(); // Save leaderboard
+        (globals.Globals.playerXP / xpPerLevel).floor() + 1;
+    await globals.Globals.savePlayerData();
+    globals.Globals.updateLeaderboard(widget.playerName, score);
+    await globals.Globals.saveLeaderboard();
     if (mounted) {
       Navigator.pushReplacement(
         context,
@@ -284,7 +303,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
         _playSound('sounds/correct.mp3');
         _correctStreak++;
         _correctAnswers++;
-        scrolls += 10; // Update local scrolls
+        scrolls += 10;
         int points = basePoints;
         String bonusText = '';
 
@@ -297,7 +316,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
           bonusText += 'Streak Bonus! ';
         }
         score += points;
-        if (_correctAnswers == widget.questionCount) {
+        if (_correctAnswers == questions.length) {
           score += 100;
           bonusText += 'Perfect Level! ';
           _correctStreak = 0;
@@ -316,7 +335,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-            '${widget.difficulty[0].toUpperCase()}${widget.difficulty.substring(1)} Quiz'),
+            '${widget.difficulty[0].toUpperCase()}${widget.difficulty.substring(1)} Quiz${widget.selectedBook != 'All' ? ' - ${widget.selectedBook}' : ''}'),
         backgroundColor: Colors.orangeAccent,
         elevation: 4,
       ),
@@ -341,7 +360,7 @@ class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Question ${currentQuestionIndex + 1}/${widget.questionCount}',
+                          'Question ${currentQuestionIndex + 1}/${questions.length}',
                           style: const TextStyle(
                               fontSize: 22, color: Colors.orangeAccent),
                         ),
