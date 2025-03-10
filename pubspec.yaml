@@ -11,10 +11,14 @@ dependencies:
   flutter:
     sdk: flutter
   google_fonts: ^6.1.0 # Add this
-  shared_preferences: ^2.2.2
   audioplayers: ^5.2.0 # For quiz_screen.dart
   url_launcher: ^6.2.0 # For home_screen.dart
   share_plus: ^7.2.0 # For home_screen.dart
+  http_client: ^1.5.3
+  http: ^1.2.1
+  crypto: ^3.0.5
+  uuid: ^4.4.2
+  shared_preferences: ^2.2.3
 
 dev_dependencies:
   flutter_test:
@@ -27,3 +31,6 @@ flutter:
     - assets/images/
     - assets/sounds/
     - assets/questions.json
+
+
+    

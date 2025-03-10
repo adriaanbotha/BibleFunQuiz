@@ -1,3 +1,4 @@
+import 'package:bible_quest/screens/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:share_plus/share_plus.dart';
@@ -700,6 +701,17 @@ $playerName''',
             icon: const Icon(Icons.feedback, color: Colors.white),
             onPressed: _showFeedbackDialog,
             tooltip: 'Feedback',
+          ),
+          // In HomeScreen's AppBar actions, add:
+          IconButton(
+            icon: const Icon(Icons.person, color: Colors.white),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const ProfileScreen()),
+              );
+            },
+            tooltip: 'Profile',
           ),
           PopupMenuButton<String>(
             onSelected: (value) {

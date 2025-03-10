@@ -1,19 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart'; // Add this import
+import 'package:shared_preferences/shared_preferences.dart';
+import 'screens/login_screen.dart';
 import 'screens/home_screen.dart';
+import 'services/upstash_service.dart';
 import 'globals.dart' as globals;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final prefs = await SharedPreferences.getInstance();
-  await prefs.clear(); // Clear all stored data
+  // await prefs.clear(); // Comment out for production
   await globals.Globals.loadLeaderboard();
   await globals.Globals.loadPlayerData();
-  runApp(const BibleQuestApp());
+  final upstashService = UpstashService();
+  final token = prefs.getString('authToken');
+  final isLoggedIn =
+      token != null && await upstashService.validateToken(token) != null;
+  runApp(BibleQuestApp(
+      initialRoute: isLoggedIn ? const HomeScreen() : const LoginScreen()));
 }
 
 class BibleQuestApp extends StatelessWidget {
-  const BibleQuestApp({super.key});
+  final Widget initialRoute;
+
+  const BibleQuestApp({super.key, required this.initialRoute});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +33,7 @@ class BibleQuestApp extends StatelessWidget {
         primarySwatch: Colors.orange,
         useMaterial3: true,
       ),
-      home: const HomeScreen(),
+      home: initialRoute,
     );
   }
 }
