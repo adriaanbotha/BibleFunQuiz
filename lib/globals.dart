@@ -1,18 +1,24 @@
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:crypto/crypto.dart';
+import 'dart:convert';
 
 class Globals {
   static int playerLevel = 1;
   static int playerXP = 0;
   static int scrolls = 0;
   static List<Map<String, dynamic>> leaderboard = [];
+  static String? currentUsername;
+  static String? currentEmail;
+  static String? authToken;
 
   static Future<void> loadPlayerData() async {
     final prefs = await SharedPreferences.getInstance();
     playerLevel = prefs.getInt('playerLevel') ?? 1;
     playerXP = prefs.getInt('playerXP') ?? 0;
     scrolls = prefs.getInt('scrolls') ?? 0;
-    print(
-        'Loaded player data: level=$playerLevel, XP=$playerXP, scrolls=$scrolls');
+    currentUsername = prefs.getString('username');
+    currentEmail = prefs.getString('email');
+    authToken = prefs.getString('authToken');
   }
 
   static Future<void> savePlayerData() async {
@@ -20,15 +26,20 @@ class Globals {
     await prefs.setInt('playerLevel', playerLevel);
     await prefs.setInt('playerXP', playerXP);
     await prefs.setInt('scrolls', scrolls);
+    if (currentUsername != null)
+      await prefs.setString('username', currentUsername!);
+    if (currentEmail != null) await prefs.setString('email', currentEmail!);
+    if (authToken != null) await prefs.setString('authToken', authToken!);
+  }
+
+  static String hashPassword(String password) {
+    return sha256.convert(utf8.encode(password)).toString();
   }
 
   static Future<void> loadLeaderboard() async {
     try {
       final prefs = await SharedPreferences.getInstance();
       final leaderboardData = prefs.get('leaderboard');
-      print(
-          'Raw leaderboard data: $leaderboardData, Type: ${leaderboardData.runtimeType}');
-
       if (leaderboardData is List<dynamic>) {
         final leaderboardString = leaderboardData.cast<String>();
         leaderboard = leaderboardString.map((e) {
@@ -46,11 +57,10 @@ class Globals {
             'score': int.tryParse(parts.length > 1 ? parts[1] : '0') ?? 0,
           }
         ];
-        await saveLeaderboard(); // Fix the stored format
+        await saveLeaderboard();
       } else {
         leaderboard = [];
       }
-      print('Parsed leaderboard: $leaderboard');
     } catch (e, stackTrace) {
       print('Error loading leaderboard: $e');
       print('Stack trace: $stackTrace');
