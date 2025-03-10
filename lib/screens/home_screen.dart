@@ -269,7 +269,6 @@ $playerName''',
   }
 
   void _showSuggestionsDialog() {
-    // Unchanged, keeping it concise
     TextEditingController nameController =
         TextEditingController(text: playerName);
     TextEditingController suggestionController = TextEditingController();
@@ -356,7 +355,6 @@ $playerName''',
   }
 
   void _showFeedbackDialog() {
-    // Unchanged, keeping it concise
     TextEditingController nameController =
         TextEditingController(text: playerName);
     TextEditingController feedbackController = TextEditingController();
@@ -668,9 +666,9 @@ $playerName''',
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Bible Quest'),
+        title: const Text('Bible Quest', style: TextStyle(color: Colors.white)),
         centerTitle: true,
-        backgroundColor: Colors.orangeAccent,
+        backgroundColor: Colors.orange[700],
         elevation: 4,
         leading: IconButton(
           icon: const Icon(Icons.settings, color: Colors.white),
@@ -702,7 +700,6 @@ $playerName''',
             onPressed: _showFeedbackDialog,
             tooltip: 'Feedback',
           ),
-          // In HomeScreen's AppBar actions, add:
           IconButton(
             icon: const Icon(Icons.person, color: Colors.white),
             onPressed: () {
@@ -776,16 +773,17 @@ $playerName''',
                       child: ScaleTransition(
                         scale: _scaleAnimation,
                         child: Text(
-                          'Welcome, $playerTitle!',
+                          'Welcome, ${globals.Globals.currentUsername ?? 'Guest'}!',
                           style: const TextStyle(
                             fontSize: 32,
                             fontWeight: FontWeight.bold,
-                            color: Colors.orangeAccent,
+                            color: Colors.orange,
                             shadows: [
                               Shadow(
-                                  color: Colors.black54,
-                                  offset: Offset(2, 2),
-                                  blurRadius: 4)
+                                color: Colors.black54,
+                                offset: Offset(2, 2),
+                                blurRadius: 4,
+                              ),
                             ],
                           ),
                         ),
