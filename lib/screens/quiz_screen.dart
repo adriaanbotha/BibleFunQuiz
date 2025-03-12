@@ -2,91 +2,100 @@ import 'package:flutter/material.dart';
 import '../globals.dart' as globals;
 
 class QuizScreen extends StatefulWidget {
-  final String? difficulty; // Added difficulty parameter
-  const QuizScreen({super.key, this.difficulty});
+  const QuizScreen({super.key});
 
   @override
-  _QuizScreenState createState() => _QuizScreenState();
+  State<QuizScreen> createState() => _QuizScreenState();
 }
 
 class _QuizScreenState extends State<QuizScreen> {
   int currentQuestionIndex = 0;
   int score = 0;
-  final List<Map<String, dynamic>> questions = [
+  List<Map<String, dynamic>> questions = [
     {
-      'question': 'What is the first book of the Bible?',
-      'options': ['Exodus', 'Genesis', 'Leviticus'],
-      'answer': 'Genesis',
+      'question': 'Who is the Word according to John 1:1?',
+      'options': ['Jesus', 'Moses', 'David', 'Paul'],
+      'answer': 'Jesus',
     },
-    {
-      'question': 'Who built the ark?',
-      'options': ['Moses', 'Noah', 'Abraham'],
-      'answer': 'Noah',
-    },
+    // Add more questions as needed
   ];
 
-  void _submitAnswer(String selectedOption) {
-    if (selectedOption == questions[currentQuestionIndex]['answer']) {
-      score++;
+  void checkAnswer(String selectedAnswer) {
+    if (selectedAnswer == questions[currentQuestionIndex]['answer']) {
+      setState(() {
+        score++;
+      });
     }
     if (currentQuestionIndex < questions.length - 1) {
       setState(() {
         currentQuestionIndex++;
       });
     } else {
-      _endQuiz();
+      globals.updateHighScore(score);
+      globals.currentScore = score;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Quiz completed! Score: $score'),
+          backgroundColor: Colors.orange[700],
+        ),
+      );
+      globals.navigatorKey.currentState?.pop();
     }
-  }
-
-  void _endQuiz() {
-    globals.currentScore = score; // Updated to use variable
-    globals.updateHighScore(score); // Updated to use defined method
-
-    // Show polite completion message
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text(
-            'Well done! You’ve completed the quiz. See how you rank on the leaderboard!'),
-        backgroundColor: globals.primaryColor, // Fixed reference
-        duration: const Duration(seconds: 2),
-      ),
-    );
-
-    // Navigate to leaderboard after a short delay
-    Future.delayed(const Duration(seconds: 2), () {
-      globals.navigatorKey.currentState
-          ?.pushReplacementNamed('/leaderboard'); // Fixed reference
-    });
   }
 
   @override
   Widget build(BuildContext context) {
-    if (currentQuestionIndex >= questions.length) {
-      return const Center(child: CircularProgressIndicator());
-    }
-
-    final currentQuestion = questions[currentQuestionIndex];
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Bible Quiz'),
-        backgroundColor: globals.primaryColor, // Fixed reference
+        title: const Text('Bible Quiz', style: TextStyle(color: Colors.white)),
+        backgroundColor: Colors.orange[700],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            Text(
-              currentQuestion['question'],
-              style: const TextStyle(fontSize: 20),
-            ),
-            const SizedBox(height: 20),
-            ...currentQuestion['options'].map<Widget>((option) {
-              return ListTile(
-                title: Text(option),
-                onTap: () => _submitAnswer(option),
-              );
-            }).toList(),
-          ],
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Color(0xFF1A1A1A), Color(0xFF2D2D2D)],
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Question ${currentQuestionIndex + 1}/${questions.length}',
+                style: const TextStyle(color: Colors.white, fontSize: 18),
+              ),
+              const SizedBox(height: 20),
+              Text(
+                questions[currentQuestionIndex]['question'],
+                style: const TextStyle(color: Colors.white, fontSize: 20),
+              ),
+              const SizedBox(height: 20),
+              ...questions[currentQuestionIndex]['options']
+                  .map<Widget>((option) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: ElevatedButton(
+                    onPressed: () => checkAnswer(option),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.orange[700],
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 10,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    child: Text(option),
+                  ),
+                );
+              }).toList(),
+            ],
+          ),
         ),
       ),
     );

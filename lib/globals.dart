@@ -48,7 +48,6 @@ Future<void> loadPlayerData() async {
 
 Future<void> savePlayerData() async {
   if (currentUsername != null && currentEmail != null && authToken != null) {
-    // Fetch existing data to preserve the password
     final existingData =
         await upstash.UpstashService.loadPlayerData(currentEmail!);
     String? existingPassword = existingData?['password'];
@@ -58,7 +57,7 @@ Future<void> savePlayerData() async {
       email: currentEmail!,
       authToken: authToken!,
       nickname: currentNickname,
-      password: existingPassword, // Preserve the existing password
+      password: existingPassword,
     );
   } else {
     print('Error: Missing player data to save');

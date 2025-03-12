@@ -4,8 +4,7 @@ import '../globals.dart' as globals;
 
 class UpstashService {
   static const String upstashRedisUrl = globals.upstashRedisUrl;
-  static const String upstashRedisToken =
-      'AevSAAIjcDFkNzY3YjFiZTZhNWI0ZjlhODlkOGE3NTgyOTY3MWQyOHAxMA';
+  static const String upstashRedisToken = 'your-upstash-token';
 
   static Future<bool> registerUser({
     required String email,
@@ -16,9 +15,7 @@ class UpstashService {
       print('Checking if user exists: $email');
       final checkResponse = await http.get(
         Uri.parse('$upstashRedisUrl/get/user:$email'),
-        headers: {
-          'Authorization': 'Bearer $upstashRedisToken',
-        },
+        headers: {'Authorization': 'Bearer $upstashRedisToken'},
       );
 
       print('Check user response status: ${checkResponse.statusCode}');
@@ -33,20 +30,16 @@ class UpstashService {
       }
 
       print('Saving new user: $email');
+      final userData = jsonEncode({
+        'username': username,
+        'email': email,
+        'password': password,
+        'nickname': username,
+      });
+
       final saveResponse = await http.post(
-        Uri.parse('$upstashRedisUrl/set'),
-        headers: {
-          'Authorization': 'Bearer $upstashRedisToken',
-          'Content-Type': 'application/json',
-        },
-        body: jsonEncode({
-          'key': 'user:$email',
-          'value': jsonEncode({
-            'username': username,
-            'email': email,
-            'password': password,
-          }),
-        }),
+        Uri.parse('$upstashRedisUrl/set/user:$email/$userData'),
+        headers: {'Authorization': 'Bearer $upstashRedisToken'},
       );
 
       print('Save user response status: ${saveResponse.statusCode}');
@@ -73,22 +66,21 @@ class UpstashService {
     required String username,
     required String email,
     required String authToken,
+    String? nickname,
+    String? password,
   }) async {
     try {
+      final userData = jsonEncode({
+        'username': username,
+        'email': email,
+        'authToken': authToken,
+        'nickname': nickname ?? '',
+        'password': password,
+      });
+
       final response = await http.post(
-        Uri.parse('$upstashRedisUrl/set'),
-        headers: {
-          'Authorization': 'Bearer $upstashRedisToken',
-          'Content-Type': 'application/json',
-        },
-        body: jsonEncode({
-          'key': 'user:$email',
-          'value': jsonEncode({
-            'username': username,
-            'email': email,
-            'authToken': authToken,
-          }),
-        }),
+        Uri.parse('$upstashRedisUrl/set/user:$email/$userData'),
+        headers: {'Authorization': 'Bearer $upstashRedisToken'},
       );
 
       print('Save player data response status: ${response.statusCode}');
@@ -115,9 +107,7 @@ class UpstashService {
     try {
       final response = await http.get(
         Uri.parse('$upstashRedisUrl/get/user:$email'),
-        headers: {
-          'Authorization': 'Bearer $upstashRedisToken',
-        },
+        headers: {'Authorization': 'Bearer $upstashRedisToken'},
       );
 
       print('Load player data response status: ${response.statusCode}');

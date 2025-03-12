@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../globals.dart' as globals;
-import '../services/upstash_service.dart' as upstash;
+import '../services/upstash_service.dart' as upstash; // Added import
 
 class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({super.key});
@@ -17,10 +17,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   Future<void> _register() async {
     if (_passwordController.text != _confirmPasswordController.text) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Passwords do not match. Please try again.'),
+        SnackBar(
+          // Removed const
+          content: const Text('Passwords do not match. Please try again.'),
           backgroundColor: Colors.red,
-          duration: Duration(seconds: 3),
         ),
       );
       return;
@@ -42,21 +42,20 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       globals.authToken = token;
       globals.isLoggedIn = true;
 
-      // Pass the password to savePlayerData to preserve it
       await upstash.UpstashService.savePlayerData(
         username: username,
         email: email,
         authToken: token,
-        nickname: username, // Initialize nickname
-        password: _passwordController.text, // Preserve password
+        nickname: username,
+        password: _passwordController.text,
       );
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
+        SnackBar(
+          // Removed const
+          content: const Text(
               'Thank you! Your account has been created. Please log in to proceed.'),
-          backgroundColor: globals.primaryColor,
-          duration: Duration(seconds: 2),
+          backgroundColor: Colors.orange[700],
         ),
       );
 
@@ -64,11 +63,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       globals.navigatorKey.currentState?.pushReplacementNamed('/login');
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
+        SnackBar(
+          // Removed const
+          content: const Text(
               'We apologize, registration failed. This email may already be in use.'),
           backgroundColor: Colors.red,
-          duration: Duration(seconds: 3),
         ),
       );
     }
@@ -78,39 +77,79 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Register'),
-        backgroundColor: globals.primaryColor,
+        title: const Text('Register', style: TextStyle(color: Colors.white)),
+        backgroundColor: Colors.orange[700],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: _emailController,
-              decoration: const InputDecoration(labelText: 'Email'),
-            ),
-            TextField(
-              controller: _passwordController,
-              decoration: const InputDecoration(labelText: 'Password'),
-              obscureText: true,
-            ),
-            TextField(
-              controller: _confirmPasswordController,
-              decoration: const InputDecoration(labelText: 'Confirm Password'),
-              obscureText: true,
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _register,
-              child: const Text('Register'),
-            ),
-            TextButton(
-              onPressed: () {
-                globals.navigatorKey.currentState?.pushNamed('/login');
-              },
-              child: const Text('Already have an account? Login here'),
-            ),
-          ],
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Color(0xFF1A1A1A), Color(0xFF2D2D2D)],
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              TextField(
+                controller: _emailController,
+                decoration: const InputDecoration(
+                  labelText: 'Email',
+                  labelStyle: TextStyle(color: Colors.white),
+                ),
+                style: const TextStyle(color: Colors.white),
+              ),
+              const SizedBox(height: 20),
+              TextField(
+                controller: _passwordController,
+                decoration: const InputDecoration(
+                  labelText: 'Password',
+                  labelStyle: TextStyle(color: Colors.white),
+                ),
+                obscureText: true,
+                style: const TextStyle(color: Colors.white),
+              ),
+              const SizedBox(height: 20),
+              TextField(
+                controller: _confirmPasswordController,
+                decoration: const InputDecoration(
+                  labelText: 'Confirm Password',
+                  labelStyle: TextStyle(color: Colors.white),
+                ),
+                obscureText: true,
+                style: const TextStyle(color: Colors.white),
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: _register,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.orange[700],
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 40,
+                    vertical: 15,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                child: const Text('Register'),
+              ),
+              const SizedBox(height: 20),
+              TextButton(
+                onPressed: () {
+                  globals.navigatorKey.currentState?.pushNamed('/login');
+                },
+                child: Text(
+                  // Removed const
+                  'Already have an account? Login here',
+                  style: TextStyle(color: Colors.orange[200]),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -16,9 +16,7 @@ class UpstashService {
       print('Checking if user exists: $email');
       final checkResponse = await http.get(
         Uri.parse('$upstashRedisUrl/get/user:$email'),
-        headers: {
-          'Authorization': 'Bearer $upstashRedisToken',
-        },
+        headers: {'Authorization': 'Bearer $upstashRedisToken'},
       );
 
       print('Check user response status: ${checkResponse.statusCode}');
@@ -36,15 +34,13 @@ class UpstashService {
       final userData = jsonEncode({
         'username': username,
         'email': email,
-        'password': password, // Ensure password is saved
+        'password': password,
         'nickname': username,
       });
 
       final saveResponse = await http.post(
         Uri.parse('$upstashRedisUrl/set/user:$email/$userData'),
-        headers: {
-          'Authorization': 'Bearer $upstashRedisToken',
-        },
+        headers: {'Authorization': 'Bearer $upstashRedisToken'},
       );
 
       print('Save user response status: ${saveResponse.statusCode}');
@@ -72,7 +68,7 @@ class UpstashService {
     required String email,
     required String authToken,
     String? nickname,
-    String? password, // Added to preserve password
+    String? password,
   }) async {
     try {
       final userData = jsonEncode({
@@ -80,14 +76,12 @@ class UpstashService {
         'email': email,
         'authToken': authToken,
         'nickname': nickname ?? '',
-        'password': password, // Include password (may be null if not provided)
+        'password': password,
       });
 
       final response = await http.post(
         Uri.parse('$upstashRedisUrl/set/user:$email/$userData'),
-        headers: {
-          'Authorization': 'Bearer $upstashRedisToken',
-        },
+        headers: {'Authorization': 'Bearer $upstashRedisToken'},
       );
 
       print('Save player data response status: ${response.statusCode}');
@@ -114,9 +108,7 @@ class UpstashService {
     try {
       final response = await http.get(
         Uri.parse('$upstashRedisUrl/get/user:$email'),
-        headers: {
-          'Authorization': 'Bearer $upstashRedisToken',
-        },
+        headers: {'Authorization': 'Bearer $upstashRedisToken'},
       );
 
       print('Load player data response status: ${response.statusCode}');
