@@ -1,83 +1,70 @@
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:crypto/crypto.dart';
-import 'dart:convert';
+import 'package:flutter/material.dart';
+import '../services/upstash_service.dart' as upstash;
 
-class Globals {
-  static int playerLevel = 1;
-  static int playerXP = 0;
-  static int scrolls = 0;
-  static List<Map<String, dynamic>> leaderboard = [];
-  static String? currentUsername;
-  static String? currentEmail;
-  static String? authToken;
+const Color primaryColor = Color(0xFF2E7D32);
+const Color accentColor = Color(0xFFFFC107);
+const String appName = 'Bible Quest';
 
-  static Future<void> loadPlayerData() async {
-    final prefs = await SharedPreferences.getInstance();
-    playerLevel = prefs.getInt('playerLevel') ?? 1;
-    playerXP = prefs.getInt('playerXP') ?? 0;
-    scrolls = prefs.getInt('scrolls') ?? 0;
-    currentUsername = prefs.getString('username');
-    currentEmail = prefs.getString('email');
-    authToken = prefs.getString('authToken');
+String? currentUserId;
+String? currentUsername;
+String? currentEmail;
+String? currentNickname;
+String? authToken;
+bool isLoggedIn = false;
+
+int currentScore = 0;
+int highScore = 0;
+List<String> completedQuizzes = [];
+const int maxQuizQuestions = 10;
+
+const String baseApiUrl = 'https://relative-bison-60370.upstash.io';
+const String upstashRedisUrl = 'https://relative-bison-60370.upstash.io';
+
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
+void resetGameState() {
+  currentScore = 0;
+  completedQuizzes.clear();
+}
+
+void updateHighScore(int score) {
+  if (score > highScore) {
+    highScore = score;
   }
+}
 
-  static Future<void> savePlayerData() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setInt('playerLevel', playerLevel);
-    await prefs.setInt('playerXP', playerXP);
-    await prefs.setInt('scrolls', scrolls);
-    if (currentUsername != null)
-      await prefs.setString('username', currentUsername!);
-    if (currentEmail != null) await prefs.setString('email', currentEmail!);
-    if (authToken != null) await prefs.setString('authToken', authToken!);
-  }
-
-  static String hashPassword(String password) {
-    return sha256.convert(utf8.encode(password)).toString();
-  }
-
-  static Future<void> loadLeaderboard() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final leaderboardData = prefs.get('leaderboard');
-      if (leaderboardData is List<dynamic>) {
-        final leaderboardString = leaderboardData.cast<String>();
-        leaderboard = leaderboardString.map((e) {
-          final parts = e.split(':');
-          return {
-            'name': parts[0],
-            'score': int.tryParse(parts.length > 1 ? parts[1] : '0') ?? 0,
-          };
-        }).toList();
-      } else if (leaderboardData is String) {
-        final parts = leaderboardData.split(':');
-        leaderboard = [
-          {
-            'name': parts[0],
-            'score': int.tryParse(parts.length > 1 ? parts[1] : '0') ?? 0,
-          }
-        ];
-        await saveLeaderboard();
-      } else {
-        leaderboard = [];
-      }
-    } catch (e, stackTrace) {
-      print('Error loading leaderboard: $e');
-      print('Stack trace: $stackTrace');
-      leaderboard = [];
+Future<void> loadPlayerData() async {
+  if (currentEmail != null) {
+    final data = await upstash.UpstashService.loadPlayerData(currentEmail!);
+    if (data != null) {
+      currentUsername = data['username'];
+      currentEmail = data['email'];
+      currentNickname = data['nickname'];
+      authToken = data['authToken'];
+      isLoggedIn = true;
     }
   }
+}
 
-  static Future<void> saveLeaderboard() async {
-    final prefs = await SharedPreferences.getInstance();
-    final leaderboardString =
-        leaderboard.map((e) => '${e['name']}:${e['score']}').toList();
-    await prefs.setStringList('leaderboard', leaderboardString);
-  }
+Future<void> savePlayerData() async {
+  if (currentUsername != null && currentEmail != null && authToken != null) {
+    // Fetch existing data to preserve the password
+    final existingData =
+        await upstash.UpstashService.loadPlayerData(currentEmail!);
+    String? existingPassword = existingData?['password'];
 
-  static void updateLeaderboard(String name, int score) {
-    leaderboard.add({'name': name, 'score': score});
-    leaderboard.sort((a, b) => b['score'].compareTo(a['score']));
-    if (leaderboard.length > 10) leaderboard = leaderboard.sublist(0, 10);
+    await upstash.UpstashService.savePlayerData(
+      username: currentUsername!,
+      email: currentEmail!,
+      authToken: authToken!,
+      nickname: currentNickname,
+      password: existingPassword, // Preserve the existing password
+    );
+  } else {
+    print('Error: Missing player data to save');
   }
+}
+
+Future<void> loadLeaderboard() async {
+  await upstash.UpstashService.loadLeaderboard();
 }
