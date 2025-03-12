@@ -33,18 +33,20 @@ class UpstashService {
       }
 
       print('Saving new user: $email');
-      final userData = jsonEncode({
-        'username': username,
-        'email': email,
-        'password': password, // Ensure password is saved
-        'nickname': username,
-      });
-
       final saveResponse = await http.post(
-        Uri.parse('$upstashRedisUrl/set/user:$email/$userData'),
+        Uri.parse('$upstashRedisUrl/set'),
         headers: {
           'Authorization': 'Bearer $upstashRedisToken',
+          'Content-Type': 'application/json',
         },
+        body: jsonEncode({
+          'key': 'user:$email',
+          'value': jsonEncode({
+            'username': username,
+            'email': email,
+            'password': password,
+          }),
+        }),
       );
 
       print('Save user response status: ${saveResponse.statusCode}');
@@ -71,23 +73,22 @@ class UpstashService {
     required String username,
     required String email,
     required String authToken,
-    String? nickname,
-    String? password, // Added to preserve password
   }) async {
     try {
-      final userData = jsonEncode({
-        'username': username,
-        'email': email,
-        'authToken': authToken,
-        'nickname': nickname ?? '',
-        'password': password, // Include password (may be null if not provided)
-      });
-
       final response = await http.post(
-        Uri.parse('$upstashRedisUrl/set/user:$email/$userData'),
+        Uri.parse('$upstashRedisUrl/set'),
         headers: {
           'Authorization': 'Bearer $upstashRedisToken',
+          'Content-Type': 'application/json',
         },
+        body: jsonEncode({
+          'key': 'user:$email',
+          'value': jsonEncode({
+            'username': username,
+            'email': email,
+            'authToken': authToken,
+          }),
+        }),
       );
 
       print('Save player data response status: ${response.statusCode}');

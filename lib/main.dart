@@ -1,39 +1,71 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'screens/login_screen.dart';
 import 'screens/home_screen.dart';
-import 'services/upstash_service.dart';
+import 'screens/login_screen.dart';
+import 'screens/leaderboard_screen.dart';
+import 'screens/registration_screen.dart'; // Added import for RegistrationScreen
 import 'globals.dart' as globals;
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  final prefs = await SharedPreferences.getInstance();
-  // await prefs.clear(); // Comment out for production
-  await globals.Globals.loadLeaderboard();
-  await globals.Globals.loadPlayerData();
-  final upstashService = UpstashService();
-  final token = prefs.getString('authToken');
-  final isLoggedIn =
-      token != null && await upstashService.validateToken(token) != null;
-  runApp(BibleQuestApp(
-      initialRoute: isLoggedIn ? const HomeScreen() : const LoginScreen()));
+void main() {
+  runApp(const MyApp());
 }
 
-class BibleQuestApp extends StatelessWidget {
-  final Widget initialRoute;
-
-  const BibleQuestApp({super.key, required this.initialRoute});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Bible Quest',
+      navigatorKey: globals.navigatorKey, // Set global navigator key
+      title: globals.appName,
       theme: ThemeData(
-        brightness: Brightness.dark,
-        primarySwatch: Colors.orange,
-        useMaterial3: true,
+        primarySwatch: Colors.green,
+        primaryColor: globals.primaryColor,
+        colorScheme: ColorScheme.fromSwatch(
+          primarySwatch: Colors.green,
+          accentColor: globals.accentColor, // Moved to colorScheme
+        ),
       ),
-      home: initialRoute,
+      initialRoute: '/login',
+      routes: {
+        '/login': (context) => const LoginScreen(),
+        '/home': (context) => const HomeScreen(),
+        '/leaderboard': (context) => const LeaderboardScreen(),
+        '/registration': (context) =>
+            const RegistrationScreen(), // Added registration route
+        // Add other routes as needed
+      },
+    );
+  }
+}
+
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key});
+
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  @override
+  void initState() {
+    super.initState();
+    _loadInitialData();
+  }
+
+  Future<void> _loadInitialData() async {
+    await globals.loadLeaderboard();
+    await globals.loadPlayerData();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text(globals.appName),
+      ),
+      body: const Center(
+        child: Text('Welcome to Bible Quest!'),
+      ),
     );
   }
 }
