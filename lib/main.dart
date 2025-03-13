@@ -1,21 +1,29 @@
 import 'package:flutter/material.dart';
 import 'screens/home_screen.dart';
-import 'screens/login_screen.dart';
-import 'screens/registration_screen.dart';
-import 'screens/profile_screen.dart';
-import 'screens/gospel_screen.dart';
-import 'screens/quiz_screen.dart';
-import 'screens/instructions_screen.dart';
+import 'screens/settings_screen.dart';
 import 'screens/leaderboard_screen.dart';
-import 'screens/which_screen_church.dart';
+import 'screens/instructions_screen.dart';
+import 'screens/which_church_screen.dart';
+import 'screens/gospel_screen.dart';
+import 'screens/donate_screen.dart';
+import 'screens/login_screen.dart';
 import 'globals.dart' as globals;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'services/auth_service.dart';
+import 'services/settings_service.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final prefs = await SharedPreferences.getInstance();
+  final settingsService = SettingsService(prefs);
+
+  runApp(MyApp(settingsService: settingsService));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final SettingsService settingsService;
+
+  const MyApp({Key? key, required this.settingsService}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,20 +31,19 @@ class MyApp extends StatelessWidget {
       navigatorKey: globals.navigatorKey,
       title: globals.appName,
       theme: ThemeData(
-        primarySwatch: Colors.orange,
-        scaffoldBackgroundColor: Colors.grey[900],
+        primaryColor: const Color(0xFFFF9800),
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFFFF9800)),
       ),
-      initialRoute: '/login',
+      initialRoute: '/',
       routes: {
-        '/login': (context) => const LoginScreen(),
-        '/home': (context) => const HomeScreen(),
-        '/registration': (context) => const RegistrationScreen(),
-        '/profile': (context) => const ProfileScreen(),
-        '/gospel': (context) => const GospelScreen(),
-        '/quiz': (context) => const QuizScreen(),
-        '/instructions': (context) => const InstructionsScreen(),
+        '/': (context) => const HomeScreen(),
+        '/settings': (context) => SettingsScreen(settingsService: settingsService),
         '/leaderboard': (context) => const LeaderboardScreen(),
-        '/whichchurch': (context) => const WhichScreenChurch(),
+        '/instructions': (context) => const InstructionsScreen(),
+        '/which-church': (context) => const WhichChurchScreen(),
+        '/gospel': (context) => const GospelScreen(),
+        '/donate': (context) => const DonateScreen(),
+        '/login': (context) => const LoginScreen(),
       },
     );
   }

@@ -1,54 +1,104 @@
 import 'package:flutter/material.dart';
-import '../globals.dart' as globals;
+import '../widgets/custom_app_bar.dart';
 
 class GospelScreen extends StatelessWidget {
-  const GospelScreen({super.key});
+  const GospelScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title:
-            const Text('Gospel Journey', style: TextStyle(color: Colors.white)),
-        backgroundColor: Colors.orange[700],
+      appBar: const CustomAppBar(title: 'The Gospel'),
+      body: ListView(
+        padding: const EdgeInsets.all(16.0),
+        children: [
+          _buildSection(
+            'God\'s Love',
+            'For God so loved the world that He gave His only begotten Son, that whoever believes in Him should not perish but have everlasting life.',
+            'John 3:16',
+          ),
+          _buildSection(
+            'Our Need',
+            'For all have sinned and fall short of the glory of God.',
+            'Romans 3:23',
+          ),
+          _buildSection(
+            'God\'s Gift',
+            'For the wages of sin is death, but the gift of God is eternal life in Christ Jesus our Lord.',
+            'Romans 6:23',
+          ),
+          _buildSection(
+            'Our Response',
+            'If you confess with your mouth the Lord Jesus and believe in your heart that God has raised Him from the dead, you will be saved.',
+            'Romans 10:9',
+          ),
+          const SizedBox(height: 16),
+          _buildPrayerCard(),
+        ],
       ),
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xFF1A1A1A), Color(0xFF2D2D2D)],
-          ),
+    );
+  }
+
+  Widget _buildSection(String title, String verse, String reference) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: 16.0),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              title,
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFFFF9800),
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              verse,
+              style: const TextStyle(fontSize: 16),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              reference,
+              style: const TextStyle(
+                fontSize: 14,
+                fontStyle: FontStyle.italic,
+                color: Colors.grey,
+              ),
+            ),
+          ],
         ),
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Removed const
-              const Text(
-                'Gospel of John Chapter 1 (NIV)',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold),
+      ),
+    );
+  }
+
+  Widget _buildPrayerCard() {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: const [
+            Text(
+              'Prayer of Salvation',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFFFF9800),
               ),
-              const SizedBox(height: 10),
-              const Text(
-                '1 In the beginning was the Word, and the Word was with God, and the Word was God. 2 He was with God in the beginning. 3 Through him all things were made; without him nothing was made that has been made...',
-                style: TextStyle(color: Colors.white, fontSize: 16),
-              ),
-              const SizedBox(height: 20),
-              Text(
-                'Continue reading the Gospel to deepen your understanding of Jesus\' life and teachings!',
-                style: TextStyle(
-                  color: Colors.orange[200],
-                  fontSize: 16,
-                  fontStyle: FontStyle.italic,
-                ),
-              ),
-            ],
-          ),
+            ),
+            SizedBox(height: 16),
+            Text(
+              'Dear God,\n\n'
+              'I believe that Jesus died for my sins and rose from the dead. '
+              'I ask for Your forgiveness and invite Jesus to be my Lord and Savior. '
+              'Thank You for saving me and making me Your child.\n\n'
+              'In Jesus\' name,\nAmen',
+              style: TextStyle(fontSize: 16),
+            ),
+          ],
         ),
       ),
     );
