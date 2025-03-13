@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import '../globals.dart' as globals;
+import '../widgets/custom_app_bar.dart';
+import '../widgets/app_drawer.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  final String? nickname;
+
+  const HomeScreen({Key? key, this.nickname}) : super(key: key);
 
   Future<void> _logout(BuildContext context) async {
     globals.currentUserId = null;
@@ -25,10 +29,11 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Bible Quest', style: TextStyle(color: Colors.white)),
-        backgroundColor: Colors.orange[700],
+      appBar: const CustomAppBar(
+        title: 'Bible Quiz',
+        showLeading: true,
       ),
+      drawer: AppDrawer(nickname: nickname),
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
@@ -37,106 +42,25 @@ class HomeScreen extends StatelessWidget {
             colors: [Color(0xFF1A1A1A), Color(0xFF2D2D2D)],
           ),
         ),
-        child: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text(
-                'Welcome, ${globals.currentUsername ?? 'Guest'}!',
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 40),
-              ElevatedButton(
-                onPressed: () {
-                  if (globals.isLoggedIn) {
-                    globals.navigatorKey.currentState?.pushNamed('/gospel');
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Please log in to continue.'),
-                        backgroundColor: Colors.red,
-                      ),
-                    );
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.orange[700],
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 40,
-                    vertical: 15,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                child: const Text('Start Gospel Journey'),
-              ),
+              _buildDifficultyButton('Beginner', Colors.green),
+              const SizedBox(height: 16),
+              _buildDifficultyButton('Intermediate', Colors.orange),
+              const SizedBox(height: 16),
+              _buildDifficultyButton('Advanced', Colors.red),
+              const SizedBox(height: 32),
+              _buildKidsModeButton(),
+              const Spacer(),
+              _buildScriptureOfTheDay(),
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
                   if (globals.isLoggedIn) {
-                    globals.navigatorKey.currentState?.pushNamed('/quiz');
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Please log in to continue.'),
-                        backgroundColor: Colors.red,
-                      ),
-                    );
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.orange[700],
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 40,
-                    vertical: 15,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                child: const Text('Take a Quiz'),
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  if (globals.isLoggedIn) {
-                    globals.navigatorKey.currentState
-                        ?.pushNamed('/instructions');
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Please log in to continue.'),
-                        backgroundColor: Colors.red,
-                      ),
-                    );
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.orange[700],
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 40,
-                    vertical: 15,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                child: const Text('Instructions'),
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  if (globals.isLoggedIn) {
-                    globals.navigatorKey.currentState
-                        ?.pushNamed('/leaderboard');
+                    globals.navigatorKey.currentState?.pushNamed('/leaderboard');
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
@@ -231,6 +155,54 @@ class HomeScreen extends StatelessWidget {
                 child: const Text('Logout'),
               ),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDifficultyButton(String difficulty, Color color) {
+    return ElevatedButton(
+      onPressed: () {
+        // Handle difficulty selection
+      },
+      style: ElevatedButton.styleFrom(
+        backgroundColor: color,
+        padding: const EdgeInsets.symmetric(vertical: 20),
+      ),
+      child: Text(
+        difficulty,
+        style: const TextStyle(fontSize: 18),
+      ),
+    );
+  }
+
+  Widget _buildKidsModeButton() {
+    return ElevatedButton(
+      onPressed: () {
+        // Handle kids mode selection
+      },
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.purple,
+        padding: const EdgeInsets.symmetric(vertical: 20),
+      ),
+      child: const Text(
+        'Kids Mode',
+        style: TextStyle(fontSize: 18),
+      ),
+    );
+  }
+
+  Widget _buildScriptureOfTheDay() {
+    return const Card(
+      child: Padding(
+        padding: EdgeInsets.all(16.0),
+        child: Text(
+          'Romans 10:17 NKJV\n"So then faith comes by hearing, and hearing by the word of God."',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 16,
+            fontStyle: FontStyle.italic,
           ),
         ),
       ),

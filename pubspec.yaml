@@ -12,7 +12,7 @@ dependencies:
     sdk: flutter
   google_fonts: ^6.1.0 # Add this
   audioplayers: ^5.2.0 # For quiz_screen.dart
-  url_launcher: ^6.2.0 # For home_screen.dart
+  url_launcher: ^6.1.10 # For home_screen.dart
   share_plus: ^7.2.0 # For home_screen.dart
   http_client: ^1.5.3
   http: ^1.2.1
@@ -31,6 +31,7 @@ flutter:
     - assets/images/
     - assets/sounds/
     - assets/questions.json
+    - assets/fallback_questions.json
 
 
     

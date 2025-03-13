@@ -1,44 +1,85 @@
 import 'package:flutter/material.dart';
-import '../globals.dart' as globals;
+import '../widgets/custom_app_bar.dart';
 
 class InstructionsScreen extends StatelessWidget {
-  const InstructionsScreen({super.key});
+  const InstructionsScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title:
-            const Text('Instructions', style: TextStyle(color: Colors.white)),
-        backgroundColor: Colors.orange[700],
-      ),
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xFF1A1A1A), Color(0xFF2D2D2D)],
-          ),
-        ),
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
-              Text(
-                'How to Play Bible Quest',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 10),
-              Text(
-                '1. Log in or register to start your journey.\n2. Explore the Gospel to learn more about the Bible.\n3. Take quizzes to test your knowledge.\n4. Check the leaderboard to see your ranking.\n5. Update your profile and nickname.',
-                style: TextStyle(color: Colors.white, fontSize: 16),
-              ),
+      appBar: const CustomAppBar(title: 'Instructions'),
+      body: ListView(
+        padding: const EdgeInsets.all(16.0),
+        children: [
+          _buildInstructionCard(
+            'Getting Started',
+            'Welcome to Bible Quiz! Here\'s how to play:',
+            [
+              'Choose your difficulty level',
+              'Select your preferred age group',
+              'Answer questions within the time limit',
+              'Earn points for correct answers',
+              'Complete daily challenges for bonus points',
             ],
           ),
+          _buildInstructionCard(
+            'Game Modes',
+            'Different ways to play:',
+            [
+              'Regular Quiz - Test your knowledge',
+              'Daily Challenge - 5 special questions',
+              'Kids Mode - Age-appropriate questions',
+              'Multiplayer - Play with friends',
+            ],
+          ),
+          _buildInstructionCard(
+            'Scoring',
+            'How points are calculated:',
+            [
+              'Correct Answer: +100 points',
+              'Speed Bonus: Up to +50 points',
+              'Daily Streak: +10 points per day',
+              'Perfect Round: +200 bonus points',
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildInstructionCard(String title, String subtitle, List<String> points) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: 16.0),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              title,
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFFFF9800),
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              subtitle,
+              style: const TextStyle(fontSize: 16),
+            ),
+            const SizedBox(height: 16),
+            ...points.map((point) => Padding(
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: Row(
+                children: [
+                  const Icon(Icons.check_circle, color: Color(0xFFFF9800), size: 20),
+                  const SizedBox(width: 8),
+                  Expanded(child: Text(point)),
+                ],
+              ),
+            )),
+          ],
         ),
       ),
     );
