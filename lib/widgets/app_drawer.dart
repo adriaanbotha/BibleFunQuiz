@@ -129,7 +129,7 @@ class AppDrawer extends StatelessWidget {
           ),
           const SizedBox(height: 10),
           Text(
-            'Welcome${nickname != null ? ", $nickname" : ""}!',
+            nickname != null ? 'Welcome, $nickname!' : 'Welcome!',
             style: const TextStyle(
               color: Colors.white,
               fontSize: 20,

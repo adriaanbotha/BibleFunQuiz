@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import '../globals.dart' as globals;
-import '../utils/profanity_filter.dart';
+import '../services/profanity_filter.dart';
 import 'login_screen.dart';
 import '../services/auth_service.dart';
 import '../widgets/custom_app_bar.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   final AuthService authService;
 
   const ProfileScreen({
@@ -14,9 +14,73 @@ class ProfileScreen extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  _ProfileScreenState createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  final _nicknameController = TextEditingController();
+  bool _isEditing = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _nicknameController.text = widget.authService.getNickname() ?? '';
+  }
+
+  @override
+  void dispose() {
+    _nicknameController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _updateNickname() async {
+    final newNickname = _nicknameController.text.trim();
+    if (newNickname.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Nickname cannot be empty'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    if (ProfanityFilter.containsProfanity(newNickname)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please choose an appropriate nickname'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    final email = widget.authService.getCurrentEmail();
+    if (email != null) {
+      final success = await widget.authService.updateNickname(email, newNickname);
+      if (mounted) {
+        if (success) {
+          setState(() => _isEditing = false);
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Nickname updated successfully'),
+              backgroundColor: Colors.green,
+            ),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Failed to update nickname'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      }
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final nickname = authService.getNickname();
-    
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -43,13 +107,7 @@ class ProfileScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 20),
-              Text(
-                nickname ?? 'User',
-                style: const TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+              _buildNicknameSection(),
               const SizedBox(height: 30),
               _buildProfileCard(
                 title: 'Statistics',
@@ -70,6 +128,57 @@ class ProfileScreen extends StatelessWidget {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNicknameSection() {
+    return Card(
+      elevation: 4,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'Nickname',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                IconButton(
+                  icon: Icon(_isEditing ? Icons.save : Icons.edit),
+                  onPressed: () {
+                    if (_isEditing) {
+                      _updateNickname();
+                    } else {
+                      setState(() => _isEditing = true);
+                    }
+                  },
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            if (_isEditing)
+              TextField(
+                controller: _nicknameController,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  hintText: 'Enter new nickname',
+                ),
+                maxLength: 20,
+              )
+            else
+              Text(
+                _nicknameController.text,
+                style: const TextStyle(fontSize: 16),
+              ),
+          ],
         ),
       ),
     );
