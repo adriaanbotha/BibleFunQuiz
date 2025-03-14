@@ -2,47 +2,32 @@ import 'package:flutter/material.dart';
 import '../globals.dart' as globals;
 import '../widgets/custom_app_bar.dart';
 import '../widgets/app_drawer.dart';
+import '../services/auth_service.dart';
 
 class HomeScreen extends StatelessWidget {
-  final String? nickname;
+  final AuthService authService;
 
-  const HomeScreen({Key? key, this.nickname}) : super(key: key);
-
-  Future<void> _logout(BuildContext context) async {
-    globals.currentUserId = null;
-    globals.currentUsername = null;
-    globals.currentEmail = null;
-    globals.currentNickname = null;
-    globals.authToken = null;
-    globals.isLoggedIn = false;
-    globals.currentScore = 0;
-    globals.highScore = 0;
-    globals.completedQuizzes.clear();
-
-    if (globals.navigatorKey.currentState != null) {
-      globals.navigatorKey.currentState!.pushReplacementNamed('/login');
-    } else {
-      Navigator.of(context).pushReplacementNamed('/login');
-    }
-  }
+  const HomeScreen({
+    Key? key,
+    required this.authService,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const CustomAppBar(
-        title: 'Bible Quiz',
-        showLeading: true,
-      ),
-      drawer: AppDrawer(nickname: nickname),
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xFF1A1A1A), Color(0xFF2D2D2D)],
-          ),
-        ),
-        child: Padding(
+    return WillPopScope(
+      onWillPop: () async {
+        final ScaffoldState? scaffold = Scaffold.maybeOf(context);
+        if (scaffold?.isDrawerOpen ?? false) {
+          Navigator.of(context).pop();
+          return false;
+        }
+        return true;
+      },
+      child: Scaffold(
+        key: GlobalKey<ScaffoldState>(),
+        appBar: const CustomAppBar(),
+        drawer: AppDrawer(authService: authService),
+        body: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -56,104 +41,6 @@ class HomeScreen extends StatelessWidget {
               _buildKidsModeButton(),
               const Spacer(),
               _buildScriptureOfTheDay(),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  if (globals.isLoggedIn) {
-                    globals.navigatorKey.currentState?.pushNamed('/leaderboard');
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Please log in to continue.'),
-                        backgroundColor: Colors.red,
-                      ),
-                    );
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.orange[700],
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 40,
-                    vertical: 15,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                child: const Text('Leaderboard'),
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  if (globals.isLoggedIn) {
-                    globals.navigatorKey.currentState
-                        ?.pushNamed('/whichchurch');
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Please log in to continue.'),
-                        backgroundColor: Colors.red,
-                      ),
-                    );
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.orange[700],
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 40,
-                    vertical: 15,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                child: const Text('Which Church?'),
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  if (globals.isLoggedIn) {
-                    globals.navigatorKey.currentState?.pushNamed('/profile');
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Please log in to continue.'),
-                        backgroundColor: Colors.red,
-                      ),
-                    );
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.orange[700],
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 40,
-                    vertical: 15,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                child: const Text('Profile'),
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () => _logout(context),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red,
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 40,
-                    vertical: 15,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                child: const Text('Logout'),
-              ),
             ],
           ),
         ),

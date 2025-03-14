@@ -1,13 +1,25 @@
 import 'package:flutter/material.dart';
-import '../widgets/custom_app_bar.dart';
+import '../services/auth_service.dart';
 
 class LeaderboardScreen extends StatelessWidget {
-  const LeaderboardScreen({Key? key}) : super(key: key);
+  final AuthService authService;
+
+  const LeaderboardScreen({
+    Key? key,
+    required this.authService,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const CustomAppBar(title: 'Leaderboard'),
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        title: const Text('Leaderboard'),
+        backgroundColor: const Color(0xFFFF9800),
+      ),
       body: Column(
         children: [
           _buildLeaderboardHeader(),
@@ -25,9 +37,36 @@ class LeaderboardScreen extends StatelessWidget {
       color: const Color(0xFFFF9800),
       child: const Row(
         children: [
-          Expanded(flex: 1, child: Text('Rank', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold))),
-          Expanded(flex: 2, child: Text('Player', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold))),
-          Expanded(flex: 1, child: Text('Score', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold))),
+          Expanded(
+            flex: 1,
+            child: Text(
+              'Rank',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Text(
+              'Player',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: Text(
+              'Score',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold
+              ),
+            ),
+          ),
         ],
       ),
     );

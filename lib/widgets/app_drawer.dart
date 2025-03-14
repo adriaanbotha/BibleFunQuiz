@@ -1,16 +1,23 @@
 import 'package:flutter/material.dart';
+import '../services/auth_service.dart';
 
 class AppDrawer extends StatelessWidget {
-  final String? nickname;
+  final AuthService authService;
 
-  const AppDrawer({Key? key, this.nickname}) : super(key: key);
+  const AppDrawer({
+    Key? key,
+    required this.authService,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final isLoggedIn = authService.isLoggedIn();
+    final nickname = authService.getNickname();
+
     return Drawer(
       child: Column(
         children: [
-          _buildDrawerHeader(context),
+          _buildDrawerHeader(nickname),
           Expanded(
             child: ListView(
               padding: EdgeInsets.zero,
@@ -20,50 +27,81 @@ class AppDrawer extends StatelessWidget {
                   title: 'Home',
                   onTap: () => Navigator.pushReplacementNamed(context, '/'),
                 ),
-                _buildMenuItem(
-                  icon: Icons.settings,
-                  title: 'Settings',
-                  onTap: () => Navigator.pushNamed(context, '/settings'),
-                ),
-                _buildMenuItem(
-                  icon: Icons.leaderboard,
-                  title: 'Leaderboard',
-                  onTap: () => Navigator.pushNamed(context, '/leaderboard'),
-                ),
+                if (isLoggedIn) ...[
+                  _buildMenuItem(
+                    icon: Icons.person,
+                    title: 'Profile',
+                    onTap: () {
+                      Navigator.pop(context); // Close drawer first
+                      Navigator.pushNamed(context, '/profile');
+                    },
+                  ),
+                  _buildMenuItem(
+                    icon: Icons.settings,
+                    title: 'Settings',
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.pushNamed(context, '/settings');
+                    },
+                  ),
+                  _buildMenuItem(
+                    icon: Icons.leaderboard,
+                    title: 'Leaderboard',
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.pushNamed(context, '/leaderboard');
+                    },
+                  ),
+                ],
                 _buildMenuItem(
                   icon: Icons.help,
                   title: 'Instructions',
-                  onTap: () => Navigator.pushNamed(context, '/instructions'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.pushNamed(context, '/instructions');
+                  },
                 ),
                 _buildMenuItem(
                   icon: Icons.church,
                   title: 'Which Church',
-                  onTap: () => Navigator.pushNamed(context, '/which-church'),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.pushNamed(context, '/which-church');
+                  },
                 ),
                 _buildMenuItem(
                   icon: Icons.book,
                   title: 'Gospel',
-                  onTap: () => Navigator.pushNamed(context, '/gospel'),
-                ),
-                _buildMenuItem(
-                  icon: Icons.favorite,
-                  title: 'Donate',
-                  onTap: () => Navigator.pushNamed(context, '/donate'),
-                ),
-                const Divider(),
-                _buildMenuItem(
-                  icon: Icons.offline_bolt,
-                  title: 'Offline Mode',
-                  onTap: () => _toggleOfflineMode(context),
-                ),
-                _buildMenuItem(
-                  icon: Icons.logout,
-                  title: 'Logout',
                   onTap: () {
-                    // Add logout logic here
-                    Navigator.pushReplacementNamed(context, '/login');
+                    Navigator.pop(context);
+                    Navigator.pushNamed(context, '/gospel');
                   },
                 ),
+                const Divider(),
+                if (isLoggedIn)
+                  _buildMenuItem(
+                    icon: Icons.logout,
+                    title: 'Logout',
+                    onTap: () async {
+                      await authService.logout();
+                      if (context.mounted) {
+                        Navigator.pushNamedAndRemoveUntil(
+                          context,
+                          '/login',
+                          (route) => false,
+                        );
+                      }
+                    },
+                  )
+                else
+                  _buildMenuItem(
+                    icon: Icons.login,
+                    title: 'Login',
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.pushNamed(context, '/login');
+                    },
+                  ),
               ],
             ),
           ),
@@ -72,7 +110,7 @@ class AppDrawer extends StatelessWidget {
     );
   }
 
-  Widget _buildDrawerHeader(BuildContext context) {
+  Widget _buildDrawerHeader(String? nickname) {
     return DrawerHeader(
       decoration: const BoxDecoration(
         color: Color(0xFFFF9800),

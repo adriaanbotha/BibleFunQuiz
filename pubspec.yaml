@@ -19,6 +19,8 @@ dependencies:
   crypto: ^3.0.5
   uuid: ^4.4.2
   shared_preferences: ^2.2.3
+  connectivity_plus: ^5.0.2
+  provider: ^6.1.1
 
 dev_dependencies:
   flutter_test:
