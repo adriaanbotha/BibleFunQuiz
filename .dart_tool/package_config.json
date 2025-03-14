@@ -2,6 +2,12 @@
   "configVersion": 2,
   "packages": [
     {
+      "name": "args",
+      "rootUri": "file:///Users/adriaan/.pub-cache/hosted/pub.dev/args-2.7.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.3"
+    },
+    {
       "name": "async",
       "rootUri": "file:///Users/adriaan/.pub-cache/hosted/pub.dev/async-2.12.0",
       "packageUri": "lib/",
@@ -80,6 +86,18 @@
       "languageVersion": "3.4"
     },
     {
+      "name": "connectivity_plus",
+      "rootUri": "file:///Users/adriaan/.pub-cache/hosted/pub.dev/connectivity_plus-5.0.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
+      "name": "connectivity_plus_platform_interface",
+      "rootUri": "file:///Users/adriaan/.pub-cache/hosted/pub.dev/connectivity_plus_platform_interface-1.2.4",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "cross_file",
       "rootUri": "file:///Users/adriaan/.pub-cache/hosted/pub.dev/cross_file-0.3.4+2",
       "packageUri": "lib/",
@@ -90,6 +108,12 @@
       "rootUri": "file:///Users/adriaan/.pub-cache/hosted/pub.dev/crypto-3.0.6",
       "packageUri": "lib/",
       "languageVersion": "3.4"
+    },
+    {
+      "name": "dbus",
+      "rootUri": "file:///Users/adriaan/.pub-cache/hosted/pub.dev/dbus-0.7.11",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
     },
     {
       "name": "executor",
@@ -224,6 +248,18 @@
       "languageVersion": "3.2"
     },
     {
+      "name": "nested",
+      "rootUri": "file:///Users/adriaan/.pub-cache/hosted/pub.dev/nested-1.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "nm",
+      "rootUri": "file:///Users/adriaan/.pub-cache/hosted/pub.dev/nm-0.5.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "path",
       "rootUri": "file:///Users/adriaan/.pub-cache/hosted/pub.dev/path-1.9.1",
       "packageUri": "lib/",
@@ -266,6 +302,12 @@
       "languageVersion": "3.2"
     },
     {
+      "name": "petitparser",
+      "rootUri": "file:///Users/adriaan/.pub-cache/hosted/pub.dev/petitparser-6.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.5"
+    },
+    {
       "name": "platform",
       "rootUri": "file:///Users/adriaan/.pub-cache/hosted/pub.dev/platform-3.1.6",
       "packageUri": "lib/",
@@ -276,6 +318,12 @@
       "rootUri": "file:///Users/adriaan/.pub-cache/hosted/pub.dev/plugin_platform_interface-2.1.8",
       "packageUri": "lib/",
       "languageVersion": "3.0"
+    },
+    {
+      "name": "provider",
+      "rootUri": "file:///Users/adriaan/.pub-cache/hosted/pub.dev/provider-6.1.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
     },
     {
       "name": "share_plus",
@@ -476,13 +524,19 @@
       "languageVersion": "3.3"
     },
     {
+      "name": "xml",
+      "rootUri": "file:///Users/adriaan/.pub-cache/hosted/pub.dev/xml-6.5.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.2"
+    },
+    {
       "name": "bible_quest",
       "rootUri": "../",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     }
   ],
-  "generated": "2025-03-13T12:50:51.827129Z",
+  "generated": "2025-03-14T02:26:52.468096Z",
   "generator": "pub",
   "generatorVersion": "3.7.0",
   "flutterRoot": "file:///Users/adriaan/development/flutter",

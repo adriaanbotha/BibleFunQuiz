@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../services/connectivity_service.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -19,19 +21,27 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppBar(
-      backgroundColor: const Color(0xFFFF9800),
-      elevation: 4,
-      leading: showLeading ? _buildLeadingButton(context) : null,
-      title: Text(
-        title,
-        style: const TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-          color: Colors.white,
+    return Builder(
+      builder: (BuildContext context) => AppBar(
+        backgroundColor: const Color(0xFFFF9800),
+        elevation: 4,
+        leading: showLeading ? _buildLeadingButton(context) : null,
+        title: Row(
+          children: [
+            Text(
+              title,
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+            const SizedBox(width: 8),
+            _buildConnectivityIndicator(),
+          ],
         ),
+        actions: showActions ? _buildActions(context) : null,
       ),
-      actions: showActions ? _buildActions(context) : null,
     );
   }
 
@@ -39,94 +49,91 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     return IconButton(
       icon: const Icon(Icons.menu),
       onPressed: () {
-        Scaffold.of(context).openDrawer();
+        final ScaffoldState? scaffold = Scaffold.maybeOf(context);
+        if (scaffold != null) {
+          scaffold.openDrawer();
+        }
       },
       tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
     );
   }
 
+  Widget _buildConnectivityIndicator() {
+    return Consumer<ConnectivityService>(
+      builder: (context, connectivity, child) {
+        return Tooltip(
+          message: connectivity.isOnline ? 'Online' : 'Offline',
+          child: Container(
+            padding: const EdgeInsets.all(4),
+            decoration: BoxDecoration(
+              color: connectivity.isOnline ? Colors.green : Colors.grey,
+              borderRadius: BorderRadius.circular(4),
+            ),
+            child: Icon(
+              connectivity.isOnline ? Icons.wifi : Icons.wifi_off,
+              size: 16,
+              color: Colors.white,
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   List<Widget> _buildActions(BuildContext context) {
     return [
-      // Leaderboard Button
-      IconButton(
-        icon: const Icon(Icons.leaderboard),
-        tooltip: 'Leaderboard',
-        onPressed: () => Navigator.pushNamed(context, '/leaderboard'),
-      ),
-      
       // Share Button
-      IconButton(
-        icon: const Icon(Icons.share),
-        tooltip: 'Share App',
-        onPressed: () {
-          _showShareDialog(context);
-        },
+      Builder(
+        builder: (context) => IconButton(
+          icon: const Icon(Icons.share),
+          tooltip: 'Share App',
+          onPressed: () {
+            _showShareDialog(context);
+          },
+        ),
       ),
 
       // Invite Button
-      IconButton(
-        icon: const Icon(Icons.person_add),
-        tooltip: 'Invite Friends',
-        onPressed: () {
-          _showInviteDialog(context);
-        },
-      ),
-
-      // Donate Button
-      IconButton(
-        icon: const Icon(Icons.favorite),
-        tooltip: 'Donate',
-        onPressed: () => Navigator.pushNamed(context, '/donate'),
+      Builder(
+        builder: (context) => IconButton(
+          icon: const Icon(Icons.person_add),
+          tooltip: 'Invite Friends',
+          onPressed: () {
+            _showInviteDialog(context);
+          },
+        ),
       ),
 
       // Optional additional actions
       if (additionalActions != null) ...additionalActions!,
 
       // Overflow Menu
-      PopupMenuButton<String>(
-        onSelected: (value) => _handleMenuSelection(context, value),
-        itemBuilder: (BuildContext context) => [
-          const PopupMenuItem<String>(
-            value: 'settings',
-            child: ListTile(
-              leading: Icon(Icons.settings),
-              title: Text('Settings'),
+      Builder(
+        builder: (context) => PopupMenuButton<String>(
+          onSelected: (value) => _handleMenuSelection(context, value),
+          itemBuilder: (BuildContext context) => [
+            const PopupMenuItem<String>(
+              value: 'offline_mode',
+              child: ListTile(
+                leading: Icon(Icons.offline_bolt),
+                title: Text('Offline Mode'),
+              ),
             ),
-          ),
-          const PopupMenuItem<String>(
-            value: 'instructions',
-            child: ListTile(
-              leading: Icon(Icons.help),
-              title: Text('Instructions'),
+            const PopupMenuItem<String>(
+              value: 'about',
+              child: ListTile(
+                leading: Icon(Icons.info),
+                title: Text('About'),
+              ),
             ),
-          ),
-          const PopupMenuItem<String>(
-            value: 'offline_mode',
-            child: ListTile(
-              leading: Icon(Icons.offline_bolt),
-              title: Text('Offline Mode'),
-            ),
-          ),
-          const PopupMenuItem<String>(
-            value: 'about',
-            child: ListTile(
-              leading: Icon(Icons.info),
-              title: Text('About'),
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     ];
   }
 
   void _handleMenuSelection(BuildContext context, String value) {
     switch (value) {
-      case 'settings':
-        Navigator.pushNamed(context, '/settings');
-        break;
-      case 'instructions':
-        Navigator.pushNamed(context, '/instructions');
-        break;
       case 'offline_mode':
         _toggleOfflineMode(context);
         break;
