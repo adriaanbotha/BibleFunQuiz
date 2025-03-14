@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'profanity_filter.dart';
 
 class AuthService {
   final SharedPreferences _prefs;
@@ -14,11 +15,11 @@ class AuthService {
   AuthService(this._prefs);
 
   // Online Registration
-  Future<bool> register(String email, String password) async {
-    debugPrint('Attempting online registration with email: $email');
+  Future<bool> register(String email, String password, String nickname) async {
+    debugPrint('Attempting registration with email: $email and nickname: $nickname');
     
     try {
-      // First, check if user exists
+      // Check if user exists
       final checkUserResponse = await http.post(
         Uri.parse('$baseUrl/get/user:$email'),
         headers: {
@@ -26,48 +27,41 @@ class AuthService {
         },
       );
 
-      debugPrint('Check user response: ${checkUserResponse.body}');
-      final checkUserData = json.decode(checkUserResponse.body);
+      if (checkUserResponse.statusCode == 200) {
+        final userData = json.decode(checkUserResponse.body);
+        if (userData['result'] != null) {
+          debugPrint('User already exists');
+          return false;
+        }
+
+        // Create new user data
+        final user = {
+          'email': email,
+          'password': password,
+          'nickname': nickname,
+          'createdAt': DateTime.now().toIso8601String(),
+        };
+
+        // Store user data
+        final registerResponse = await http.post(
+          Uri.parse('$baseUrl/set/user:$email/${Uri.encodeComponent(json.encode(user))}'),
+          headers: {
+            'Authorization': 'Bearer $apiKey',
+          },
+        );
+
+        if (registerResponse.statusCode == 200) {
+          debugPrint('User registered successfully');
+          await _saveUserData(email, nickname);
+          return true;
+        }
+      }
       
-      // If user exists (not null), return false
-      if (checkUserData['result'] != null) {
-        debugPrint('User already exists in Upstash');
-        return false;
-      }
-
-      // Create user data
-      final userData = {
-        'email': email,
-        'password': password,
-        'nickname': email.split('@')[0],
-        'createdAt': DateTime.now().toIso8601String(),
-      };
-
-      // Store user data using SET
-      final setUserResponse = await http.post(
-        Uri.parse('$baseUrl/set/user:$email/${json.encode(userData)}'),
-        headers: {
-          'Authorization': 'Bearer $apiKey',
-        },
-      );
-
-      debugPrint('Set user response: ${setUserResponse.body}');
-      final setUserData = json.decode(setUserResponse.body);
-
-      if (setUserResponse.statusCode == 200 && setUserData['result'] == 'OK') {
-        debugPrint('User registered successfully in Upstash');
-        await _saveLocalUser(userData);
-        await listAllUsers(); // Verify storage
-        return true;
-      }
-
-      debugPrint('Upstash registration failed, status: ${setUserResponse.statusCode}');
+      debugPrint('Registration failed');
       return false;
-
     } catch (e) {
-      debugPrint('Error during online registration: $e');
-      debugPrint('Falling back to local registration...');
-      return _registerLocally(email, password);
+      debugPrint('Error during registration: $e');
+      return false;
     }
   }
 
@@ -302,5 +296,51 @@ class AuthService {
     } catch (e) {
       debugPrint('Error clearing users: $e');
     }
+  }
+
+  Future<bool> updateNickname(String email, String newNickname) async {
+    try {
+      // Check for profanity
+      if (ProfanityFilter.containsProfanity(newNickname)) {
+        debugPrint('Nickname contains inappropriate content');
+        return false;
+      }
+
+      final response = await http.post(
+        Uri.parse('$baseUrl/get/user:$email'),
+        headers: {
+          'Authorization': 'Bearer $apiKey',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final userData = json.decode(response.body);
+        if (userData['result'] != null) {
+          final user = json.decode(userData['result']);
+          user['nickname'] = newNickname;
+
+          // Update user data in Upstash
+          final updateResponse = await http.post(
+            Uri.parse('$baseUrl/set/user:$email/${json.encode(user)}'),
+            headers: {
+              'Authorization': 'Bearer $apiKey',
+            },
+          );
+
+          if (updateResponse.statusCode == 200) {
+            await _saveUserData(email, newNickname);
+            return true;
+          }
+        }
+      }
+      return false;
+    } catch (e) {
+      debugPrint('Error updating nickname: $e');
+      return false;
+    }
+  }
+
+  String? getCurrentEmail() {
+    return _prefs.getString('current_user_email');
   }
 } 

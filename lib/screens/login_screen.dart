@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import '../services/auth_service.dart';
+import '../services/profanity_filter.dart';
 
 class LoginScreen extends StatefulWidget {
   final AuthService authService;
@@ -14,105 +15,18 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _nicknameController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
   bool _isRegistering = false;
+  bool _obscurePassword = true;
 
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
+    _nicknameController.dispose();
     super.dispose();
-  }
-
-  Future<void> _handleSubmit() async {
-    if (_formKey.currentState?.validate() ?? false) {
-      setState(() => _isLoading = true);
-      
-      debugPrint('Form submitted:');
-      debugPrint('Email: ${_emailController.text}');
-      debugPrint('Password: ${_passwordController.text}');
-      debugPrint('Mode: ${_isRegistering ? 'Registration' : 'Login'}');
-      
-      try {
-        bool success;
-        if (_isRegistering) {
-          debugPrint('Attempting registration...');
-          success = await widget.authService.register(
-            _emailController.text,
-            _passwordController.text,
-          );
-          
-          // Print debug info
-          await widget.authService.printUserStatus(_emailController.text);
-          
-          if (success && mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Registration successful! Please log in.'),
-                backgroundColor: Colors.green,
-              ),
-            );
-            setState(() {
-              _isRegistering = false;
-              _passwordController.clear();
-            });
-          } else if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text(
-                  'Registration failed. Email might be already registered or network issues.',
-                ),
-                backgroundColor: Colors.orange,
-              ),
-            );
-          }
-        } else {
-          debugPrint('Attempting login...');
-          success = await widget.authService.login(
-            _emailController.text,
-            _passwordController.text,
-          );
-          
-          // Print debug info
-          await widget.authService.printUserStatus(_emailController.text);
-          
-          if (success && mounted) {
-            debugPrint('Login successful, navigating to home screen');
-            Navigator.pushNamedAndRemoveUntil(
-              context,
-              '/',
-              (route) => false,
-            );
-          } else if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text(
-                  'Login failed. Please check your credentials or network connection.',
-                ),
-                backgroundColor: Colors.red,
-              ),
-            );
-          }
-        }
-      } catch (e) {
-        debugPrint('Error during ${_isRegistering ? 'registration' : 'login'}: $e');
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('An error occurred. Please try again.'),
-              backgroundColor: Colors.red,
-            ),
-          );
-        }
-      } finally {
-        if (mounted) {
-          setState(() => _isLoading = false);
-        }
-      }
-    } else {
-      debugPrint('Form validation failed');
-    }
   }
 
   @override
@@ -132,16 +46,16 @@ class _LoginScreenState extends State<LoginScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 const SizedBox(height: 40),
-                // App Logo or Icon
                 const Icon(
                   Icons.quiz,
                   size: 100,
                   color: Color(0xFFFF9800),
                 ),
                 const SizedBox(height: 40),
-                // Title
                 Text(
-                  _isRegistering ? 'Create Account' : 'Welcome Back!',
+                  _isRegistering 
+                    ? 'Create Your Account'
+                    : 'Welcome Back!',
                   style: const TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
@@ -149,11 +63,11 @@ class _LoginScreenState extends State<LoginScreen> {
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 20),
-                // Email Field
                 TextFormField(
                   controller: _emailController,
                   decoration: const InputDecoration(
                     labelText: 'Email',
+                    hintText: 'Enter your email',
                     border: OutlineInputBorder(),
                     prefixIcon: Icon(Icons.email),
                   ),
@@ -162,22 +76,68 @@ class _LoginScreenState extends State<LoginScreen> {
                     if (value?.isEmpty ?? true) {
                       return 'Please enter your email';
                     }
-                    if (!value!.contains('@')) {
-                      return 'Please enter a valid email';
+                    if (!value!.contains('@') || !value.contains('.')) {
+                      return 'Please enter a valid email address';
                     }
                     return null;
                   },
+                  textInputAction: TextInputAction.next,
+                  onFieldSubmitted: (_) => FocusScope.of(context).nextFocus(),
                 ),
                 const SizedBox(height: 16),
-                // Password Field
+                if (_isRegistering) ...[
+                  TextFormField(
+                    controller: _nicknameController,
+                    decoration: const InputDecoration(
+                      labelText: 'Nickname',
+                      hintText: 'Choose a friendly name',
+                      border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.person),
+                      helperText: 'This name will be displayed throughout the app',
+                      helperMaxLines: 2,
+                    ),
+                    validator: (value) {
+                      if (!_isRegistering) return null;
+                      if (value == null || value.isEmpty) {
+                        return 'Please choose a nickname';
+                      }
+                      if (value.length < 3) {
+                        return 'Nickname must be at least 3 characters';
+                      }
+                      if (value.length > 20) {
+                        return 'Nickname must be less than 20 characters';
+                      }
+                      if (ProfanityFilter.containsProfanity(value)) {
+                        return 'Please choose an appropriate nickname';
+                      }
+                      return null;
+                    },
+                    textInputAction: TextInputAction.next,
+                    onFieldSubmitted: (_) => FocusScope.of(context).nextFocus(),
+                  ),
+                  const SizedBox(height: 16),
+                ],
                 TextFormField(
                   controller: _passwordController,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: 'Password',
-                    border: OutlineInputBorder(),
-                    prefixIcon: Icon(Icons.lock),
+                    hintText: _isRegistering 
+                      ? 'Choose a secure password'
+                      : 'Enter your password',
+                    border: const OutlineInputBorder(),
+                    prefixIcon: const Icon(Icons.lock),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _obscurePassword ? Icons.visibility : Icons.visibility_off,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _obscurePassword = !_obscurePassword;
+                        });
+                      },
+                    ),
                   ),
-                  obscureText: true,
+                  obscureText: _obscurePassword,
                   validator: (value) {
                     if (value?.isEmpty ?? true) {
                       return 'Please enter your password';
@@ -187,9 +147,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     }
                     return null;
                   },
+                  textInputAction: TextInputAction.done,
+                  onFieldSubmitted: (_) => _handleSubmit(),
                 ),
                 const SizedBox(height: 24),
-                // Submit Button
                 ElevatedButton(
                   onPressed: _isLoading ? null : _handleSubmit,
                   style: ElevatedButton.styleFrom(
@@ -198,23 +159,34 @@ class _LoginScreenState extends State<LoginScreen> {
                     padding: const EdgeInsets.symmetric(vertical: 16),
                   ),
                   child: _isLoading
-                      ? const CircularProgressIndicator(color: Colors.white)
-                      : Text(_isRegistering ? 'Register' : 'Login'),
+                    ? const SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: Colors.white,
+                        ),
+                      )
+                    : Text(_isRegistering ? 'Register' : 'Login'),
                 ),
                 const SizedBox(height: 16),
-                // Toggle Button
                 TextButton(
                   onPressed: _isLoading
-                      ? null
-                      : () {
-                          setState(() {
-                            _isRegistering = !_isRegistering;
-                          });
-                        },
+                    ? null
+                    : () {
+                        setState(() {
+                          _isRegistering = !_isRegistering;
+                          _formKey.currentState?.reset();
+                          // Clear fields when switching modes
+                          if (!_isRegistering) {
+                            _nicknameController.clear();
+                          }
+                        });
+                      },
                   child: Text(
                     _isRegistering
-                        ? 'Already have an account? Login'
-                        : 'Don\'t have an account? Register',
+                      ? 'Already have an account? Login'
+                      : 'Don\'t have an account? Register',
                   ),
                 ),
                 // Debug Buttons (only in debug mode)
@@ -255,5 +227,75 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> _handleSubmit() async {
+    if (_formKey.currentState?.validate() ?? false) {
+      setState(() => _isLoading = true);
+      
+      try {
+        bool success;
+        if (_isRegistering) {
+          success = await widget.authService.register(
+            _emailController.text,
+            _passwordController.text,
+            _nicknameController.text,
+          );
+          
+          if (success && mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Registration successful! Please log in.'),
+                backgroundColor: Colors.green,
+              ),
+            );
+            setState(() {
+              _isRegistering = false;
+              _passwordController.clear();
+              _nicknameController.clear();
+            });
+          }
+        } else {
+          success = await widget.authService.login(
+            _emailController.text,
+            _passwordController.text,
+          );
+          
+          if (success && mounted) {
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              '/',
+              (route) => false,
+            );
+          }
+        }
+
+        if (!success && mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                _isRegistering
+                  ? 'Registration failed. Email might already be registered.'
+                  : 'Invalid email or password.',
+              ),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      } catch (e) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('An error occurred. Please try again.'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      } finally {
+        if (mounted) {
+          setState(() => _isLoading = false);
+        }
+      }
+    }
   }
 }
