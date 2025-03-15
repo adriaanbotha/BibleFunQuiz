@@ -28,14 +28,21 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       builder: (context) => AppBar(
         title: Text(title),
         backgroundColor: const Color(0xFFFF9800),
-        leading: title != 'Login' && title != 'Register'
+        leading: title == 'Home'
             ? IconButton(
                 icon: const Icon(Icons.menu),
                 onPressed: () {
                   Scaffold.of(context).openDrawer();
                 },
               )
-            : null,
+            : title != 'Login' && title != 'Register'
+                ? IconButton(
+                    icon: const Icon(Icons.arrow_back),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  )
+                : null,
         actions: [
           // Only show connectivity status and menu on screens that need it
           if (title != 'Login' && title != 'Register') ...[

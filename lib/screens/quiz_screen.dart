@@ -473,17 +473,16 @@ class _QuizScreenState extends State<QuizScreen> {
                               // Answer Options
                               ..._questions[_currentQuestionIndex]['options']
                                   .map<Widget>((option) => Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: ElevatedButton(
+                                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                                        child: ElevatedButton(
                                           onPressed: () => _handleAnswer(option),
-                    style: ElevatedButton.styleFrom(
+                                          style: ElevatedButton.styleFrom(
                                             backgroundColor: const Color(0xFFFF9800),
+                                            foregroundColor: Colors.white,
                                             padding: const EdgeInsets.all(16),
+                                            textStyle: const TextStyle(fontSize: 16),
                                           ),
-                                          child: Text(
-                                            option,
-                                            style: const TextStyle(fontSize: 16),
-                                          ),
+                                          child: Text(option),
                                         ),
                                       ))
                                   .toList(),

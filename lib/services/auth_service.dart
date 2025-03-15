@@ -183,8 +183,17 @@ class AuthService {
     await _prefs.remove('current_user_nickname');
   }
 
-  bool isLoggedIn() {
-    return _prefs.containsKey('current_user_email');
+  Future<bool> isLoggedIn() async {
+    // Check if user is logged in (e.g., by checking for a stored token or user data)
+    // Return true if logged in, false otherwise
+    final email = await getCurrentUserEmail();
+    return email != null && email.isNotEmpty;
+  }
+
+  Future<String?> getCurrentUserEmail() async {
+    // Return the email of the currently logged in user, or null if not logged in
+    // This will depend on how you're storing the user's login state
+    return _prefs.getString('current_user_email');
   }
 
   String? getNickname() {

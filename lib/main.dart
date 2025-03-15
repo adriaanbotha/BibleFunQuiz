@@ -21,10 +21,14 @@ import 'utils/route_guard.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
+  // Initialize services
   final prefs = await SharedPreferences.getInstance();
-  final settingsService = SettingsService(prefs);
+  final settingsService = SettingsService();
+  await settingsService.init();
+  
   final authService = AuthService(prefs);
-
+  
   runApp(MyApp(
     authService: authService,
     settingsService: settingsService,
@@ -48,87 +52,36 @@ class MyApp extends StatelessWidget {
       title: globals.appName,
       theme: ThemeData(
         primaryColor: const Color(0xFFFF9800),
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFFFF9800)),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFFFF9800),
+          primary: const Color(0xFFFF9800),
+          secondary: const Color(0xFFFFB300),
+        ),
+        useMaterial3: true,
       ),
-      initialRoute: authService.isLoggedIn() ? '/' : '/login',
-      onGenerateRoute: (settings) {
-        // List of routes that require authentication
-        const authRoutes = [
-          '/profile',
-          '/settings',
-          '/leaderboard',
-          '/quiz',
-        ];
-
-        if (authRoutes.contains(settings.name)) {
-          return MaterialPageRoute(
-            builder: (context) => FutureBuilder<bool>(
-              future: RouteGuard.checkAuth(context, authService),
-              builder: (context, snapshot) {
-                if (snapshot.hasData && snapshot.data == true) {
-                  switch (settings.name) {
-                    case '/profile':
-                      return ProfileScreen(
-                        authService: authService,
-                        settingsService: settingsService,
-                      );
-                    case '/settings':
-                      return SettingsScreen(settingsService: settingsService);
-                    case '/leaderboard':
-                      return LeaderboardScreen(authService: authService);
-                    case '/quiz':
-                      return QuizScreen(
-                        authService: authService,
-                        settingsService: settingsService,
-                        difficulty: 'beginner',
-                      );
-                    default:
-                      return HomeScreen(
-                        authService: authService,
-                        settingsService: settingsService,
-                      );
-                  }
-                }
-                return const LoadingScreen();
-              },
-            ),
-          );
-        }
-
-        // Public routes
-        switch (settings.name) {
-          case '/':
-            return MaterialPageRoute(
-              builder: (context) => HomeScreen(
-                authService: authService,
-                settingsService: settingsService,
-              ),
+      home: FutureBuilder<bool>(
+        future: authService.isLoggedIn(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Scaffold(
+              body: Center(child: CircularProgressIndicator()),
             );
-          case '/login':
-            return MaterialPageRoute(
-              builder: (context) => LoginScreen(authService: authService),
+          }
+          
+          final isLoggedIn = snapshot.data ?? false;
+          
+          if (isLoggedIn) {
+            return HomeScreen(
+              authService: authService,
+              settingsService: settingsService,
             );
-          case '/instructions':
-            return MaterialPageRoute(
-              builder: (context) => const InstructionsScreen(),
+          } else {
+            return LoginScreen(
+              authService: authService,
+              settingsService: settingsService,
             );
-          case '/which-church':
-            return MaterialPageRoute(
-              builder: (context) => const WhichChurchScreen(),
-            );
-          case '/gospel':
-            return MaterialPageRoute(
-              builder: (context) => const GospelScreen(),
-            );
-          default:
-            return MaterialPageRoute(
-              builder: (context) => const NotFoundScreen(),
-            );
-        }
-      },
-      home: HomeScreen(
-        authService: authService,
-        settingsService: settingsService,
+          }
+        },
       ),
     );
   }

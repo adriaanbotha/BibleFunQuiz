@@ -127,6 +127,7 @@ class AppDrawer extends StatelessWidget {
                   MaterialPageRoute(
                     builder: (context) => LoginScreen(
                       authService: authService,
+                      settingsService: settingsService,
                     ),
                   ),
                 );

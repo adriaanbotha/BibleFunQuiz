@@ -3,7 +3,7 @@ import '../services/auth_service.dart';
 
 class RouteGuard {
   static Future<bool> checkAuth(BuildContext context, AuthService authService) async {
-    if (!authService.isLoggedIn()) {
+    if (!await authService.isLoggedIn()) {
       // Show a message and redirect to login
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(

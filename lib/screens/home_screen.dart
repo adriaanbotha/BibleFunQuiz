@@ -101,45 +101,42 @@ class _HomeScreenState extends State<HomeScreen> {
                 onPressed: _startBeginnerQuiz,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFFFF9800),
+                  foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(
                     horizontal: 32,
                     vertical: 16,
                   ),
+                  textStyle: const TextStyle(fontSize: 18),
                 ),
-                child: const Text(
-                  'Beginner Quiz',
-                  style: TextStyle(fontSize: 18),
-                ),
+                child: const Text('Beginner Quiz'),
               ),
               const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: _startIntermediateQuiz,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFFFF9800),
+                  foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(
                     horizontal: 32,
                     vertical: 16,
                   ),
+                  textStyle: const TextStyle(fontSize: 18),
                 ),
-                child: const Text(
-                  'Intermediate Quiz',
-                  style: TextStyle(fontSize: 18),
-                ),
+                child: const Text('Intermediate Quiz'),
               ),
               const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: _startAdvancedQuiz,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFFFF9800),
+                  foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(
                     horizontal: 32,
                     vertical: 16,
                   ),
+                  textStyle: const TextStyle(fontSize: 18),
                 ),
-                child: const Text(
-                  'Advanced Quiz',
-                  style: TextStyle(fontSize: 18),
-                ),
+                child: const Text('Advanced Quiz'),
               ),
             ],
           ),

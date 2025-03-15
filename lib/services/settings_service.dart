@@ -1,95 +1,154 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsService {
-  final SharedPreferences _prefs;
+  late SharedPreferences _prefs;
+  bool _initialized = false;
 
-  SettingsService(this._prefs);
+  // Default settings
+  static const bool DEFAULT_SOUND_ENABLED = true;
+  static const bool DEFAULT_LIVES_ENABLED = true;
+  static const int DEFAULT_NUMBER_OF_LIVES = 3;
+  static const bool DEFAULT_TIMER_ENABLED = true;
+  static const int DEFAULT_TIME_PER_QUESTION = 30;
+  static const bool DEFAULT_SHOW_REFERENCES = true;
+  static const bool DEFAULT_RANDOMIZE_QUESTIONS = true;
+  static const int DEFAULT_QUESTION_COUNT = 25;
+  static const String DEFAULT_DIFFICULTY = 'beginner';
 
-  // Game Settings
-  bool get showLives => _prefs.getBool('show_lives') ?? true;
-  bool get showTimer => _prefs.getBool('show_timer') ?? true;
-  bool get soundEnabled => _prefs.getBool('sound_enabled') ?? true;
-  bool get darkTheme => _prefs.getBool('dark_theme') ?? false;
-  bool get randomizeQuestions => _prefs.getBool('randomize') ?? true;
-  int get questionQuantity => _prefs.getInt('question_quantity') ?? 10;
-  bool get offlineMode => _prefs.getBool('offline_mode') ?? false;
-  
-  // Kids Mode Settings
-  String get kidsAgeGroup => _prefs.getString('kids_age_group') ?? '8-11';
-  bool get kidsMode => _prefs.getBool('kids_mode') ?? false;
+  // Keys for SharedPreferences
+  static const String KEY_SOUND_ENABLED = 'sound_enabled';
+  static const String KEY_LIVES_ENABLED = 'lives_enabled';
+  static const String KEY_NUMBER_OF_LIVES = 'number_of_lives';
+  static const String KEY_TIMER_ENABLED = 'timer_enabled';
+  static const String KEY_TIME_PER_QUESTION = 'time_per_question';
+  static const String KEY_SHOW_REFERENCES = 'show_references';
+  static const String KEY_RANDOMIZE_QUESTIONS = 'randomize_questions';
+  static const String KEY_QUESTION_COUNT = 'question_count';
+  static const String KEY_DIFFICULTY = 'difficulty';
 
-  // Quiz Categories
-  List<String> get selectedCategories {
-    return _prefs.getStringList('selected_categories') ?? 
-        ['Old Testament', 'New Testament'];
-  }
-
-  // Add this method to safely get settings
-  dynamic getSetting(String key) {
-    return _prefs.get(key);
-  }
-
-  // Setters
-  Future<void> updateSetting(String key, dynamic value) async {
-    if (value is bool) {
-      await _prefs.setBool(key, value);
-    } else if (value is int) {
-      await _prefs.setInt(key, value);
-    } else if (value is String) {
-      await _prefs.setString(key, value);
-    } else if (value is List<String>) {
-      await _prefs.setStringList(key, value);
+  // Initialize SharedPreferences
+  Future<void> init() async {
+    if (!_initialized) {
+      _prefs = await SharedPreferences.getInstance();
+      _initialized = true;
     }
   }
 
-  // Add these new methods
-  Future<int> getQuestionsPerQuiz() async {
-    return _prefs.getInt('questions_per_quiz') ?? 10; // Default to 10 questions
-  }
-
-  Future<bool> getShowReferences() async {
-    return _prefs.getBool('show_references') ?? true; // Default to showing references
-  }
-
-  Future<void> setQuestionsPerQuiz(int value) async {
-    await _prefs.setInt('questions_per_quiz', value);
-  }
-
-  Future<void> setShowReferences(bool value) async {
-    await _prefs.setBool('show_references', value);
-  }
-
+  // Sound settings
   Future<bool> getSoundEnabled() async {
-    return _prefs.getBool('sound_enabled') ?? true;
+    await init();
+    return _prefs.getBool(KEY_SOUND_ENABLED) ?? DEFAULT_SOUND_ENABLED;
   }
 
   Future<void> setSoundEnabled(bool value) async {
-    await _prefs.setBool('sound_enabled', value);
+    await init();
+    await _prefs.setBool(KEY_SOUND_ENABLED, value);
   }
 
-  // Add these methods for lives settings
+  // Lives settings
   Future<bool> getLivesEnabled() async {
-    return _prefs.getBool('lives_enabled') ?? true;
+    await init();
+    return _prefs.getBool(KEY_LIVES_ENABLED) ?? DEFAULT_LIVES_ENABLED;
   }
 
   Future<void> setLivesEnabled(bool value) async {
-    await _prefs.setBool('lives_enabled', value);
+    await init();
+    await _prefs.setBool(KEY_LIVES_ENABLED, value);
   }
 
   Future<int> getNumberOfLives() async {
-    return _prefs.getInt('number_of_lives') ?? 3;
+    await init();
+    return _prefs.getInt(KEY_NUMBER_OF_LIVES) ?? DEFAULT_NUMBER_OF_LIVES;
   }
 
   Future<void> setNumberOfLives(int value) async {
-    await _prefs.setInt('number_of_lives', value);
+    await init();
+    await _prefs.setInt(KEY_NUMBER_OF_LIVES, value);
   }
 
-  // Add timer settings
+  // Timer settings
+  Future<bool> getTimerEnabled() async {
+    await init();
+    return _prefs.getBool(KEY_TIMER_ENABLED) ?? DEFAULT_TIMER_ENABLED;
+  }
+
+  Future<void> setTimerEnabled(bool value) async {
+    await init();
+    await _prefs.setBool(KEY_TIMER_ENABLED, value);
+  }
+
   Future<int> getTimePerQuestion() async {
-    return _prefs.getInt('time_per_question') ?? 30; // Default 30 seconds
+    await init();
+    return _prefs.getInt(KEY_TIME_PER_QUESTION) ?? DEFAULT_TIME_PER_QUESTION;
   }
 
   Future<void> setTimePerQuestion(int value) async {
-    await _prefs.setInt('time_per_question', value);
+    await init();
+    await _prefs.setInt(KEY_TIME_PER_QUESTION, value);
+  }
+
+  // Reference settings
+  Future<bool> getShowReferences() async {
+    await init();
+    return _prefs.getBool(KEY_SHOW_REFERENCES) ?? DEFAULT_SHOW_REFERENCES;
+  }
+
+  Future<void> setShowReferences(bool value) async {
+    await init();
+    await _prefs.setBool(KEY_SHOW_REFERENCES, value);
+  }
+
+  // Question settings
+  Future<bool> getRandomizeQuestions() async {
+    await init();
+    return _prefs.getBool(KEY_RANDOMIZE_QUESTIONS) ?? DEFAULT_RANDOMIZE_QUESTIONS;
+  }
+
+  Future<void> setRandomizeQuestions(bool value) async {
+    await init();
+    await _prefs.setBool(KEY_RANDOMIZE_QUESTIONS, value);
+  }
+
+  Future<int> getQuestionCount() async {
+    await init();
+    return _prefs.getInt(KEY_QUESTION_COUNT) ?? DEFAULT_QUESTION_COUNT;
+  }
+
+  Future<void> setQuestionCount(int value) async {
+    await init();
+    await _prefs.setInt(KEY_QUESTION_COUNT, value);
+  }
+
+  // Difficulty settings
+  Future<String> getDifficulty() async {
+    await init();
+    return _prefs.getString(KEY_DIFFICULTY) ?? DEFAULT_DIFFICULTY;
+  }
+
+  Future<void> setDifficulty(String value) async {
+    await init();
+    await _prefs.setString(KEY_DIFFICULTY, value);
+  }
+
+  // Reset all settings to defaults
+  Future<void> resetToDefaults() async {
+    await init();
+    await setSoundEnabled(DEFAULT_SOUND_ENABLED);
+    await setLivesEnabled(DEFAULT_LIVES_ENABLED);
+    await setNumberOfLives(DEFAULT_NUMBER_OF_LIVES);
+    await setTimerEnabled(DEFAULT_TIMER_ENABLED);
+    await setTimePerQuestion(DEFAULT_TIME_PER_QUESTION);
+    await setShowReferences(DEFAULT_SHOW_REFERENCES);
+    await setRandomizeQuestions(DEFAULT_RANDOMIZE_QUESTIONS);
+    await setQuestionCount(DEFAULT_QUESTION_COUNT);
+    await setDifficulty(DEFAULT_DIFFICULTY);
+  }
+
+  Future<int> getQuestionsPerQuiz() async {
+    return getQuestionCount();
+  }
+
+  Future<void> setQuestionsPerQuiz(int value) async {
+    await setQuestionCount(value);
   }
 } 

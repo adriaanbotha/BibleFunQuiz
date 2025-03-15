@@ -2,14 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import '../services/auth_service.dart';
 import '../services/profanity_filter.dart';
+import '../services/settings_service.dart';
+import '../screens/home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   final AuthService authService;
+  final SettingsService settingsService;
 
-  const LoginScreen({Key? key, required this.authService}) : super(key: key);
+  const LoginScreen({
+    Key? key, 
+    required this.authService,
+    required this.settingsService,
+  }) : super(key: key);
 
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
@@ -20,6 +27,7 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _isLoading = false;
   bool _isRegistering = false;
   bool _obscurePassword = true;
+  String? _errorMessage;
 
   @override
   void dispose() {
@@ -354,18 +362,7 @@ class _LoginScreenState extends State<LoginScreen> {
             });
           }
         } else {
-          success = await widget.authService.login(
-            _emailController.text,
-            _passwordController.text,
-          );
-          
-          if (success && mounted) {
-            Navigator.pushNamedAndRemoveUntil(
-              context,
-              '/',
-              (route) => false,
-            );
-          }
+          success = await _login();
         }
 
         if (!success && mounted) {
@@ -394,6 +391,55 @@ class _LoginScreenState extends State<LoginScreen> {
           setState(() => _isLoading = false);
         }
       }
+    }
+  }
+
+  Future<bool> _login() async {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
+    try {
+      final email = _emailController.text.trim();
+      final password = _passwordController.text;
+
+      if (email.isEmpty || password.isEmpty) {
+        setState(() {
+          _errorMessage = 'Please enter both email and password';
+          _isLoading = false;
+        });
+        return false;
+      }
+
+      final success = await widget.authService.login(email, password);
+
+      if (success) {
+        // Successfully logged in, navigate to home screen
+        if (mounted) {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => HomeScreen(
+                authService: widget.authService,
+                settingsService: widget.settingsService,
+              ),
+            ),
+          );
+        }
+        return true;
+      } else {
+        setState(() {
+          _errorMessage = 'Invalid email or password';
+          _isLoading = false;
+        });
+        return false;
+      }
+    } catch (e) {
+      setState(() {
+        _errorMessage = 'An error occurred: ${e.toString()}';
+        _isLoading = false;
+      });
+      return false;
     }
   }
 
