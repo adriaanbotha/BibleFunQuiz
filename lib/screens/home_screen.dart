@@ -4,6 +4,7 @@ import '../services/settings_service.dart';
 import '../screens/quiz_screen.dart';
 import '../widgets/custom_app_bar.dart';
 import '../widgets/app_drawer.dart';
+import 'dart:io' show Platform;
 
 class HomeScreen extends StatefulWidget {
   final AuthService authService;
@@ -67,6 +68,130 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  Widget _buildQuizButtons() {
+    if (Platform.isMacOS) {
+      // Desktop layout with buttons in a row
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Expanded(
+            child: Container(
+              constraints: const BoxConstraints(maxWidth: 800),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: SizedBox(
+                        height: 48,
+                        child: ElevatedButton(
+                          onPressed: _startBeginnerQuiz,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFFFF9800),
+                            foregroundColor: Colors.white,
+                            textStyle: const TextStyle(fontSize: 16),
+                          ),
+                          child: const Text('Beginner Quiz'),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: SizedBox(
+                        height: 48,
+                        child: ElevatedButton(
+                          onPressed: _startIntermediateQuiz,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFFFF9800),
+                            foregroundColor: Colors.white,
+                            textStyle: const TextStyle(fontSize: 16),
+                          ),
+                          child: const Text('Intermediate Quiz'),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: SizedBox(
+                        height: 48,
+                        child: ElevatedButton(
+                          onPressed: _startAdvancedQuiz,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFFFF9800),
+                            foregroundColor: Colors.white,
+                            textStyle: const TextStyle(fontSize: 16),
+                          ),
+                          child: const Text('Advanced Quiz'),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      );
+    } else {
+      // Mobile layout with full-width stacked buttons
+      return SizedBox(
+        width: double.infinity,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 280),
+          child: Column(
+            children: [
+              SizedBox(
+                width: double.infinity,
+                height: 48,
+                child: ElevatedButton(
+                  onPressed: _startBeginnerQuiz,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFFFF9800),
+                    foregroundColor: Colors.white,
+                    textStyle: const TextStyle(fontSize: 16),
+                  ),
+                  child: const Text('Beginner Quiz'),
+                ),
+              ),
+              const SizedBox(height: 12),
+              SizedBox(
+                width: double.infinity,
+                height: 48,
+                child: ElevatedButton(
+                  onPressed: _startIntermediateQuiz,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFFFF9800),
+                    foregroundColor: Colors.white,
+                    textStyle: const TextStyle(fontSize: 16),
+                  ),
+                  child: const Text('Intermediate Quiz'),
+                ),
+              ),
+              const SizedBox(height: 12),
+              SizedBox(
+                width: double.infinity,
+                height: 48,
+                child: ElevatedButton(
+                  onPressed: _startAdvancedQuiz,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFFFF9800),
+                    foregroundColor: Colors.white,
+                    textStyle: const TextStyle(fontSize: 16),
+                  ),
+                  child: const Text('Advanced Quiz'),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -83,19 +208,19 @@ class _HomeScreenState extends State<HomeScreen> {
           title: 'Home',
           authService: widget.authService,
           settingsService: widget.settingsService,
+          scaffoldKey: _scaffoldKey,
         ),
         drawer: AppDrawer(
           authService: widget.authService,
           settingsService: widget.settingsService,
           onClose: () async {
             _closeDrawer();
-            // Wait for the drawer to close before proceeding
             await Future.delayed(const Duration(milliseconds: 300));
           },
         ),
         body: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(24.0),
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(20.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -109,17 +234,17 @@ class _HomeScreenState extends State<HomeScreen> {
                         Text(
                           'Welcome, $nickname! 🌟',
                           style: const TextStyle(
-                            fontSize: 24,
+                            fontSize: 22,
                             fontWeight: FontWeight.bold,
                             color: Color(0xFFFF9800),
                           ),
                           textAlign: TextAlign.center,
                         ),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: 12),
                         const Text(
-                          'Ready to explore the Word? Choose your level and let\'s grow in faith together!',
+                          'Ready to explore the Word? Choose your level!',
                           style: TextStyle(
-                            fontSize: 16,
+                            fontSize: 14,
                             color: Colors.black87,
                           ),
                           textAlign: TextAlign.center,
@@ -128,81 +253,41 @@ class _HomeScreenState extends State<HomeScreen> {
                     );
                   },
                 ),
-                const SizedBox(height: 40),
+                const SizedBox(height: 30),
                 // Quiz level description
                 const Text(
                   'Select Your Journey:',
                   style: TextStyle(
-                    fontSize: 18,
+                    fontSize: 16,
                     fontWeight: FontWeight.bold,
                     color: Colors.black87,
                   ),
                 ),
+                const SizedBox(height: 20),
+                // Quiz buttons with platform-specific layout
+                _buildQuizButtons(),
                 const SizedBox(height: 24),
-                // Quiz buttons
-                ElevatedButton(
-                  onPressed: _startBeginnerQuiz,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFFF9800),
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 32,
-                      vertical: 16,
-                    ),
-                    textStyle: const TextStyle(fontSize: 18),
-                  ),
-                  child: const Text('Beginner Quiz'),
-                ),
-                const SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: _startIntermediateQuiz,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFFF9800),
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 32,
-                      vertical: 16,
-                    ),
-                    textStyle: const TextStyle(fontSize: 18),
-                  ),
-                  child: const Text('Intermediate Quiz'),
-                ),
-                const SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: _startAdvancedQuiz,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFFF9800),
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 32,
-                      vertical: 16,
-                    ),
-                    textStyle: const TextStyle(fontSize: 18),
-                  ),
-                  child: const Text('Advanced Quiz'),
-                ),
-                const SizedBox(height: 40),
-                // Encouraging message
+                // Encouraging message with smaller text
                 const Text(
-                  'Answer questions, rise in knowledge, get to know the Word so you can hear and know Him, and rise in faith!\nJesus does really love you! ❤️',
+                  'Answer questions, rise in knowledge, get to know the Word so you can hear and know Him!',
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: 14,
                     color: Colors.black87,
                   ),
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 24),
-                // Romans 10:17 message
+                const SizedBox(height: 16),
+                // Romans 10:17 message in a more compact container
                 Container(
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
                     color: Colors.grey[100],
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(8),
                   ),
                   child: const Text(
-                    '"So then faith comes by hearing, and hearing by the word of God."\n- Romans 10:17 (NKJV)',
+                    '"So then faith comes by hearing, and hearing by the word of God."\n- Romans 10:17',
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: 14,
                       fontStyle: FontStyle.italic,
                       color: Colors.black87,
                     ),

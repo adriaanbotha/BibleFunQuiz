@@ -12,12 +12,14 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final AuthService? authService;
   final SettingsService? settingsService;
+  final GlobalKey<ScaffoldState>? scaffoldKey;
 
   const CustomAppBar({
     Key? key,
     required this.title,
     this.authService,
     this.settingsService,
+    this.scaffoldKey,
   }) : super(key: key);
 
   @override
@@ -113,7 +115,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             ? IconButton(
                 icon: const Icon(Icons.menu),
                 onPressed: () {
-                  Scaffold.of(context).openDrawer();
+                  if (scaffoldKey?.currentState?.isDrawerOpen ?? false) {
+                    Navigator.of(context).pop();
+                  } else {
+                    scaffoldKey?.currentState?.openDrawer();
+                  }
                 },
               )
             : title != 'Login' && title != 'Register'
