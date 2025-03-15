@@ -78,13 +78,22 @@ class WhichChurchScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'We dream of a church full of love—here\'s what that looks like from Acts!',
+              'We dream of a church full of love—here\'s what that looks like from the Book of Acts!',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
             ),
             const SizedBox(height: 24),
+            _buildMinistrySection(
+              'Nancy Coen',
+              'A global heart!',
+              {
+                'Website': 'https://www.globalascensionnetwork.net',
+                'Facebook': 'https://www.facebook.com/nancy.coen.9',
+                'YouTube': 'https://www.youtube.com/@NancyCoenGlobal',
+              },
+            ),
             _buildMinistrySection(
               'Justin Paul Abraham',
               'So inspiring!',
@@ -93,15 +102,6 @@ class WhichChurchScreen extends StatelessWidget {
                 'Facebook': 'https://www.facebook.com/justinabrahamCOBH',
                 'Instagram': 'https://www.instagram.com/justinpaulabraham',
                 'YouTube': 'https://www.youtube.com/@CompanyofBurningHearts',
-              },
-            ),
-            _buildMinistrySection(
-              'Nancy Coen',
-              'A global heart!',
-              {
-                'Website': 'https://www.globalascensionnetwork.net',
-                'Facebook': 'https://www.facebook.com/nancy.coen.9',
-                'YouTube': 'https://www.youtube.com/@NancyCoenGlobal',
               },
             ),
             _buildMinistrySection(
@@ -131,14 +131,6 @@ class WhichChurchScreen extends StatelessWidget {
                 'Facebook': 'https://www.facebook.com/FreedomApostolicResources',
                 'YouTube': 'https://www.youtube.com/@FreedomARC',
               },
-            ),
-            Card(
-              child: ListTile(
-                title: const Text('IMC Members'),
-                subtitle: const Text('A special place for your faith!'),
-                trailing: const Icon(Icons.arrow_forward, color: Color(0xFFFF9800)),
-                onTap: () => _launchURL('https://imcmembers.com'),
-              ),
             ),
           ],
         ),

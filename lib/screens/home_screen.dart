@@ -94,51 +94,123 @@ class _HomeScreenState extends State<HomeScreen> {
           },
         ),
         body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ElevatedButton(
-                onPressed: _startBeginnerQuiz,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFFF9800),
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 32,
-                    vertical: 16,
-                  ),
-                  textStyle: const TextStyle(fontSize: 18),
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // Welcome message with nickname
+                FutureBuilder<String?>(
+                  future: Future.value(widget.authService.getNickname()),
+                  builder: (context, snapshot) {
+                    final nickname = snapshot.data ?? 'Friend';
+                    return Column(
+                      children: [
+                        Text(
+                          'Welcome, $nickname! 🌟',
+                          style: const TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFFFF9800),
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 16),
+                        const Text(
+                          'Ready to explore the Word? Choose your level and let\'s grow in faith together!',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.black87,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    );
+                  },
                 ),
-                child: const Text('Beginner Quiz'),
-              ),
-              const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: _startIntermediateQuiz,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFFF9800),
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 32,
-                    vertical: 16,
+                const SizedBox(height: 40),
+                // Quiz level description
+                const Text(
+                  'Select Your Journey:',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
                   ),
-                  textStyle: const TextStyle(fontSize: 18),
                 ),
-                child: const Text('Intermediate Quiz'),
-              ),
-              const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: _startAdvancedQuiz,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFFF9800),
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 32,
-                    vertical: 16,
+                const SizedBox(height: 24),
+                // Quiz buttons
+                ElevatedButton(
+                  onPressed: _startBeginnerQuiz,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFFFF9800),
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 32,
+                      vertical: 16,
+                    ),
+                    textStyle: const TextStyle(fontSize: 18),
                   ),
-                  textStyle: const TextStyle(fontSize: 18),
+                  child: const Text('Beginner Quiz'),
                 ),
-                child: const Text('Advanced Quiz'),
-              ),
-            ],
+                const SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: _startIntermediateQuiz,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFFFF9800),
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 32,
+                      vertical: 16,
+                    ),
+                    textStyle: const TextStyle(fontSize: 18),
+                  ),
+                  child: const Text('Intermediate Quiz'),
+                ),
+                const SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: _startAdvancedQuiz,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFFFF9800),
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 32,
+                      vertical: 16,
+                    ),
+                    textStyle: const TextStyle(fontSize: 18),
+                  ),
+                  child: const Text('Advanced Quiz'),
+                ),
+                const SizedBox(height: 40),
+                // Encouraging message
+                const Text(
+                  'Answer questions, rise in knowledge, get to know the Word so you can hear and know Him, and rise in faith!\nJesus does really love you! ❤️',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.black87,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 24),
+                // Romans 10:17 message
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[100],
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: const Text(
+                    '"So then faith comes by hearing, and hearing by the word of God."\n- Romans 10:17 (NKJV)',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontStyle: FontStyle.italic,
+                      color: Colors.black87,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

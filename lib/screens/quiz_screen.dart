@@ -217,6 +217,17 @@ class _QuizScreenState extends State<QuizScreen> {
 
   void _showGameOver() {
     final totalScore = _calculateFinalScore();
+    
+    // Update user stats and leaderboard
+    final email = widget.authService.getCurrentEmail();
+    if (email != null) {
+      widget.authService.updateUserStats(
+        email,
+        totalScore,
+        widget.difficulty,
+      );
+    }
+
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -263,8 +274,15 @@ class _QuizScreenState extends State<QuizScreen> {
   void _showFinalScore() {
     final int finalScore = _calculateFinalScore();
     
-    // Simply navigate to the leaderboard after showing the score
-    // We'll skip updating statistics for now to avoid errors
+    // Update user stats and leaderboard
+    final email = widget.authService.getCurrentEmail();
+    if (email != null) {
+      widget.authService.updateUserStats(
+        email,
+        finalScore,
+        widget.difficulty,
+      );
+    }
 
     showDialog(
       context: context,
@@ -323,11 +341,98 @@ class _QuizScreenState extends State<QuizScreen> {
       appBar: AppBar(
         title: Text('${widget.difficulty[0].toUpperCase()}${widget.difficulty.substring(1)} Quiz'),
         backgroundColor: const Color(0xFFFF9800),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            onPressed: _isLoading 
+              ? null 
+              : () async {
+                  setState(() => _isLoading = true);
+                  await widget.authService.clearQuestionCache();
+                  await _loadQuestions();
+                },
+          ),
+        ],
       ),
       body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? FutureBuilder<bool>(
+              future: widget.authService.hasQuestionsInCache(widget.difficulty),
+              builder: (context, snapshot) {
+                final bool isFirstLoad = !snapshot.hasData || !snapshot.data!;
+                
+                return Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(32.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFFF9800)),
+                        ),
+                        const SizedBox(height: 24),
+                        if (isFirstLoad) ...[
+                          const Text(
+                            '📚 Preparing Your Bible Quest',
+                            style: TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFFFF9800),
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 16),
+                          const Text(
+                            'We\'re downloading questions for the first time to ensure smooth gameplay, even without internet. This may take a moment, but it\'s a one-time process.',
+                            style: TextStyle(fontSize: 16),
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 24),
+                          const Text(
+                            'Get ready for an amazing journey through Scripture! 🙏',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontStyle: FontStyle.italic,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ] else
+                          const Text(
+                            'Loading questions...',
+                            style: TextStyle(fontSize: 16),
+                            textAlign: TextAlign.center,
+                          ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            )
           : _questions.isEmpty
-              ? const Center(child: Text('No questions available'))
+              ? Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text('No questions available'),
+                      const SizedBox(height: 16),
+                      ElevatedButton(
+                        onPressed: () async {
+                          setState(() => _isLoading = true);
+                          await widget.authService.clearQuestionCache();
+                          await _loadQuestions();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFFFF9800),
+                          foregroundColor: Colors.white,
+                        ),
+                        child: const Text('Retry'),
+                      ),
+                    ],
+                  ),
+                )
               : Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Column(

@@ -9,6 +9,10 @@ class AuthService {
   final SharedPreferences _prefs;
   static const String _usersKey = 'registered_users';
   
+  // Add cache keys for questions
+  static const String _cachedQuestionsKey = 'cached_questions';
+  static const String _questionsLastUpdatedKey = 'questions_last_updated';
+  
   // Upstash Configuration
   static const String baseUrl = 'https://relative-bison-60370.upstash.io';
   static const String apiKey = 'AevSAAIjcDFkNzY3YjFiZTZhNWI0ZjlhODlkOGE3NTgyOTY3MWQyOHAxMA';
@@ -622,6 +626,60 @@ class AuthService {
 
   Future<List<Map<String, dynamic>>> getQuestionsByDifficulty(String difficulty) async {
     try {
+      // First try to get questions from cache
+      final cachedQuestions = await _getCachedQuestions(difficulty);
+      if (cachedQuestions.isNotEmpty) {
+        return cachedQuestions;
+      }
+
+      // If cache is empty or expired, fetch from server
+      final questions = await _fetchQuestionsFromServer(difficulty);
+      if (questions.isNotEmpty) {
+        // Cache the questions
+        await _cacheQuestions(difficulty, questions);
+      }
+      return questions;
+    } catch (e) {
+      debugPrint('Error getting questions: $e');
+      // Try to get from cache as fallback
+      return await _getCachedQuestions(difficulty);
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> _getCachedQuestions(String difficulty) async {
+    try {
+      final cachedData = _prefs.getString('${_cachedQuestionsKey}_$difficulty');
+      if (cachedData != null) {
+        final lastUpdated = _prefs.getInt('${_questionsLastUpdatedKey}_$difficulty') ?? 0;
+        final now = DateTime.now().millisecondsSinceEpoch;
+        
+        // Check if cache is less than 24 hours old
+        if (now - lastUpdated < 24 * 60 * 60 * 1000) {
+          final List<dynamic> questions = json.decode(cachedData);
+          return questions.map((q) => Map<String, dynamic>.from(q)).toList();
+        }
+      }
+      return [];
+    } catch (e) {
+      debugPrint('Error reading cached questions: $e');
+      return [];
+    }
+  }
+
+  Future<void> _cacheQuestions(String difficulty, List<Map<String, dynamic>> questions) async {
+    try {
+      await _prefs.setString('${_cachedQuestionsKey}_$difficulty', json.encode(questions));
+      await _prefs.setInt(
+        '${_questionsLastUpdatedKey}_$difficulty',
+        DateTime.now().millisecondsSinceEpoch
+      );
+    } catch (e) {
+      debugPrint('Error caching questions: $e');
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> _fetchQuestionsFromServer(String difficulty) async {
+    try {
       // Get count for this difficulty
       final countResponse = await http.post(
         Uri.parse('$baseUrl/get/questions:$difficulty:count'),
@@ -656,8 +714,34 @@ class AuthService {
 
       return questions;
     } catch (e) {
-      debugPrint('Error getting questions: $e');
+      debugPrint('Error fetching questions from server: $e');
       return [];
+    }
+  }
+
+  // Add method to force refresh cache
+  Future<bool> refreshQuestionCache() async {
+    try {
+      final difficulties = ['beginner', 'intermediate', 'advanced'];
+      for (final difficulty in difficulties) {
+        final questions = await _fetchQuestionsFromServer(difficulty);
+        if (questions.isNotEmpty) {
+          await _cacheQuestions(difficulty, questions);
+        }
+      }
+      return true;
+    } catch (e) {
+      debugPrint('Error refreshing question cache: $e');
+      return false;
+    }
+  }
+
+  // Add method to clear cache
+  Future<void> clearQuestionCache() async {
+    final difficulties = ['beginner', 'intermediate', 'advanced'];
+    for (final difficulty in difficulties) {
+      await _prefs.remove('${_cachedQuestionsKey}_$difficulty');
+      await _prefs.remove('${_questionsLastUpdatedKey}_$difficulty');
     }
   }
 
@@ -911,5 +995,74 @@ class AuthService {
   // Add this method if it doesn't exist
   Map<String, dynamic>? getCurrentUser() {
     return null;
+  }
+
+  // Add public method to check if questions are cached
+  Future<bool> hasQuestionsInCache(String difficulty) async {
+    try {
+      final cachedData = _prefs.getString('${_cachedQuestionsKey}_$difficulty');
+      if (cachedData != null) {
+        final lastUpdated = _prefs.getInt('${_questionsLastUpdatedKey}_$difficulty') ?? 0;
+        final now = DateTime.now().millisecondsSinceEpoch;
+        
+        // Check if cache is less than 24 hours old
+        if (now - lastUpdated < 24 * 60 * 60 * 1000) {
+          return true;
+        }
+      }
+      return false;
+    } catch (e) {
+      debugPrint('Error checking cached questions: $e');
+      return false;
+    }
+  }
+
+  // Add feedback to the database
+  Future<bool> submitFeedback(String feedback, {String? email}) async {
+    try {
+      final feedbackData = {
+        'feedback': feedback,
+        'email': email ?? getCurrentEmail() ?? 'anonymous',
+        'timestamp': DateTime.now().toIso8601String(),
+        'nickname': getNickname() ?? 'Anonymous User',
+      };
+
+      final response = await http.post(
+        Uri.parse('$baseUrl/lpush/feedback/${Uri.encodeComponent(json.encode(feedbackData))}'),
+        headers: {
+          'Authorization': 'Bearer $apiKey',
+        },
+      );
+
+      return response.statusCode == 200;
+    } catch (e) {
+      debugPrint('Error submitting feedback: $e');
+      return false;
+    }
+  }
+
+  // Get all feedback (admin only)
+  Future<List<Map<String, dynamic>>> getAllFeedback() async {
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/lrange/feedback/0/-1'),
+        headers: {
+          'Authorization': 'Bearer $apiKey',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final result = json.decode(response.body);
+        if (result['result'] != null) {
+          return (result['result'] as List)
+              .map((item) => json.decode(item) as Map<String, dynamic>)
+              .toList();
+        }
+      }
+      return [];
+    } catch (e) {
+      debugPrint('Error getting feedback: $e');
+      return [];
+    }
   }
 } 
