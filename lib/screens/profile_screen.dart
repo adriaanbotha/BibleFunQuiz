@@ -3,28 +3,34 @@ import '../globals.dart' as globals;
 import '../services/profanity_filter.dart';
 import 'login_screen.dart';
 import '../services/auth_service.dart';
+import '../services/settings_service.dart';
 import '../widgets/custom_app_bar.dart';
 
 class ProfileScreen extends StatefulWidget {
   final AuthService authService;
+  final SettingsService settingsService;
 
   const ProfileScreen({
     Key? key,
     required this.authService,
+    required this.settingsService,
   }) : super(key: key);
 
   @override
-  _ProfileScreenState createState() => _ProfileScreenState();
+  State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
   final _nicknameController = TextEditingController();
   bool _isEditing = false;
+  Map<String, dynamic> _statistics = {};
+  bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
     _nicknameController.text = widget.authService.getNickname() ?? '';
+    _loadStats();
   }
 
   @override
@@ -79,56 +85,112 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
+  Future<void> _loadStats() async {
+    setState(() => _isLoading = true);
+    final email = widget.authService.getCurrentEmail();
+    if (email != null) {
+      final stats = await widget.authService.getUserStats(email);
+      setState(() {
+        _statistics = stats;
+        _isLoading = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        title: const Text('Profile'),
-        backgroundColor: const Color(0xFFFF9800),
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SizedBox(height: 20),
-              const CircleAvatar(
-                radius: 60,
-                backgroundColor: Color(0xFFFF9800),
-                child: Icon(
-                  Icons.person,
-                  size: 60,
-                  color: Colors.white,
-                ),
-              ),
-              const SizedBox(height: 20),
-              _buildNicknameSection(),
-              const SizedBox(height: 30),
-              _buildProfileCard(
-                title: 'Statistics',
-                children: [
-                  _buildStatItem('Total Quizzes', '0'),
-                  _buildStatItem('Correct Answers', '0'),
-                  _buildStatItem('High Score', '0'),
-                ],
-              ),
-              const SizedBox(height: 20),
-              _buildProfileCard(
-                title: 'Achievements',
-                children: [
-                  _buildAchievement('First Quiz', 'Complete your first quiz'),
-                  _buildAchievement('Perfect Score', 'Get all answers correct'),
-                  _buildAchievement('Quiz Master', 'Complete 10 quizzes'),
-                ],
-              ),
-            ],
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.of(context).pop();
+        return false;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Profile'),
+          backgroundColor: const Color(0xFFFF9800),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
           ),
         ),
+        body: _isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : SingleChildScrollView(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 20),
+                    const CircleAvatar(
+                      radius: 60,
+                      backgroundColor: Color(0xFFFF9800),
+                      child: Icon(
+                        Icons.person,
+                        size: 60,
+                        color: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    _buildNicknameSection(),
+                    const SizedBox(height: 30),
+                    _buildProfileCard(
+                      title: 'Statistics',
+                      children: [
+                        _buildStatItem('Total Quizzes', '${_statistics['totalQuizzes'] ?? 0}'),
+                        _buildStatItem('Total Score', '${_statistics['totalScore'] ?? 0}'),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    _buildProfileCard(
+                      title: 'Achievements',
+                      children: [
+                        _buildAchievement('First Quiz', 'Complete your first quiz'),
+                        _buildAchievement('Perfect Score', 'Get all answers correct'),
+                        _buildAchievement('Quiz Master', 'Complete 10 quizzes'),
+                      ],
+                    ),
+                    const SizedBox(height: 24),
+                    Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Statistics',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            Text('Total Quizzes: ${_statistics['totalQuizzes'] ?? 0}'),
+                            Text('Total Score: ${_statistics['totalScore'] ?? 0}'),
+                            const SizedBox(height: 16),
+                            const Text(
+                              'Quizzes by Difficulty:',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            Text('Beginner: ${_statistics['quizzesByDifficulty']?['beginner'] ?? 0}'),
+                            Text('Intermediate: ${_statistics['quizzesByDifficulty']?['intermediate'] ?? 0}'),
+                            Text('Advanced: ${_statistics['quizzesByDifficulty']?['advanced'] ?? 0}'),
+                            const SizedBox(height: 16),
+                            const Text(
+                              'Scores by Difficulty:',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            Text('Beginner: ${_statistics['scoresByDifficulty']?['beginner'] ?? 0}'),
+                            Text('Intermediate: ${_statistics['scoresByDifficulty']?['intermediate'] ?? 0}'),
+                            Text('Advanced: ${_statistics['scoresByDifficulty']?['advanced'] ?? 0}'),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
       ),
     );
   }

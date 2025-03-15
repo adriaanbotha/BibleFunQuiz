@@ -189,37 +189,135 @@ class _LoginScreenState extends State<LoginScreen> {
                       : 'Don\'t have an account? Register',
                   ),
                 ),
-                // Debug Buttons (only in debug mode)
                 if (kDebugMode) ...[
-                  const SizedBox(height: 24),
-                  const Divider(),
+                  const Divider(height: 40),
                   const Text(
-                    'Debug Options',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    'Debug Options', 
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
                     textAlign: TextAlign.center,
                   ),
+                  const SizedBox(height: 20),
+                  
+                  // User Management Section
+                  const Text('User Management:', 
+                    style: TextStyle(fontWeight: FontWeight.bold)),
                   const SizedBox(height: 8),
-                  ElevatedButton(
-                    onPressed: () async {
-                      await widget.authService.listAllUsers();
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.grey[700],
-                      foregroundColor: Colors.white,
-                    ),
-                    child: const Text('Debug: List Users'),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () => _debugListUsers(),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blue,
+                          foregroundColor: Colors.white,
+                        ),
+                        child: const Text('List Users'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () => _debugClearUsers(),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red,
+                          foregroundColor: Colors.white,
+                        ),
+                        child: const Text('Clear Users'),
+                      ),
+                    ],
                   ),
+                  const SizedBox(height: 20),
+
+                  // Questions Management Section
+                  const Text('Questions Management:', 
+                    style: TextStyle(fontWeight: FontWeight.bold)),
                   const SizedBox(height: 8),
-                  ElevatedButton(
-                    onPressed: () async {
-                      await widget.authService.clearAllUsers();
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red,
-                      foregroundColor: Colors.white,
-                    ),
-                    child: const Text('Debug: Clear Users'),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () => _loadQuestionsToUpstash(),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blue,
+                          foregroundColor: Colors.white,
+                        ),
+                        child: const Text('Load Questions'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () => _listQuestions(),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green,
+                          foregroundColor: Colors.white,
+                        ),
+                        child: const Text('List Questions'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () => _clearQuestions(),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red,
+                          foregroundColor: Colors.white,
+                        ),
+                        child: const Text('Clear Questions'),
+                      ),
+                    ],
                   ),
+                  const SizedBox(height: 20),
+
+                  // Quick Login Section
+                  const Text('Quick Login:', 
+                    style: TextStyle(fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 8),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          _emailController.text = 'test@test.com';
+                          _passwordController.text = 'password123';
+                          if (_isRegistering) {
+                            _nicknameController.text = 'TestUser';
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.purple,
+                          foregroundColor: Colors.white,
+                        ),
+                        child: const Text('Fill Test User'),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 40),
+
+                  // Leaderboards Section
+                  const Text('Leaderboards:', 
+                    style: TextStyle(fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 8),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () async {
+                          final success = await widget.authService.clearLeaderboards();
+                          if (mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  success ? 'Leaderboards cleared' : 'Failed to clear leaderboards'
+                                ),
+                                backgroundColor: success ? Colors.green : Colors.red,
+                              ),
+                            );
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red,
+                          foregroundColor: Colors.white,
+                        ),
+                        child: const Text('Clear Leaderboards'),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 40),
                 ],
               ],
             ),
@@ -295,6 +393,111 @@ class _LoginScreenState extends State<LoginScreen> {
         if (mounted) {
           setState(() => _isLoading = false);
         }
+      }
+    }
+  }
+
+  Future<void> _debugListUsers() async {
+    try {
+      await widget.authService.listUsers();
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
+  Future<void> _debugClearUsers() async {
+    try {
+      final success = await widget.authService.clearUsers();
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(success 
+              ? 'Users cleared successfully' 
+              : 'Failed to clear users'),
+            backgroundColor: success ? Colors.green : Colors.red,
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
+  Future<void> _loadQuestionsToUpstash() async {
+    try {
+      final success = await widget.authService.loadQuestionsToUpstash();
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(success 
+              ? 'Questions loaded successfully' 
+              : 'Failed to load questions'),
+            backgroundColor: success ? Colors.green : Colors.red,
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
+  Future<void> _listQuestions() async {
+    try {
+      await widget.authService.listQuestions();
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
+  Future<void> _clearQuestions() async {
+    try {
+      final success = await widget.authService.clearQuestions();
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(success 
+              ? 'Questions cleared successfully' 
+              : 'Failed to clear questions'),
+            backgroundColor: success ? Colors.green : Colors.red,
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
       }
     }
   }

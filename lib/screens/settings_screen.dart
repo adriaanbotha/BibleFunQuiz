@@ -12,6 +12,33 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
+  bool _showReferences = true;
+  int _questionsPerQuiz = 10;
+  bool _soundEnabled = true;
+  bool _livesEnabled = true;
+  int _numberOfLives = 3;
+  int _timePerQuestion = 30;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSettings();
+  }
+
+  Future<void> _loadSettings() async {
+    final soundEnabled = await widget.settingsService.getSoundEnabled();
+    final livesEnabled = await widget.settingsService.getLivesEnabled();
+    final numberOfLives = await widget.settingsService.getNumberOfLives();
+    final timePerQuestion = await widget.settingsService.getTimePerQuestion();
+    
+    setState(() {
+      _soundEnabled = soundEnabled;
+      _livesEnabled = livesEnabled;
+      _numberOfLives = numberOfLives;
+      _timePerQuestion = timePerQuestion;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,9 +55,161 @@ class _SettingsScreenState extends State<SettingsScreen> {
             _buildSwitch('Dark Theme', 'dark_theme'),
             _buildSwitch('Randomize Questions', 'randomize'),
             _buildSwitch('Offline Mode', 'offline_mode'),
+            Switch(
+              value: _showReferences,
+              onChanged: (value) async {
+                await widget.settingsService.setShowReferences(value);
+                setState(() => _showReferences = value);
+              },
+            ),
+            DropdownButton<int>(
+              value: _questionsPerQuiz,
+              items: [5, 10, 15, 20].map((int value) {
+                return DropdownMenuItem<int>(
+                  value: value,
+                  child: Text('$value questions'),
+                );
+              }).toList(),
+              onChanged: (int? newValue) async {
+                if (newValue != null) {
+                  await widget.settingsService.setQuestionsPerQuiz(newValue);
+                  setState(() => _questionsPerQuiz = newValue);
+                }
+              },
+            ),
           ]),
           _buildKidsModeSection(),
           _buildCategoriesSection(),
+          SwitchListTile(
+            title: const Text('Sound Effects'),
+            subtitle: const Text('Play sounds for correct/incorrect answers'),
+            value: _soundEnabled,
+            onChanged: (bool value) async {
+              await widget.settingsService.setSoundEnabled(value);
+              setState(() {
+                _soundEnabled = value;
+              });
+            },
+          ),
+          SwitchListTile(
+            title: const Text('Lives System'),
+            subtitle: const Text('Enable lives system in quiz'),
+            value: _livesEnabled,
+            onChanged: (bool value) async {
+              await widget.settingsService.setLivesEnabled(value);
+              setState(() {
+                _livesEnabled = value;
+              });
+            },
+          ),
+          if (_livesEnabled) ...[
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Number of Lives',
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 14,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    child: DropdownButton<int>(
+                      value: _numberOfLives,
+                      isExpanded: true,
+                      underline: Container(),
+                      items: [1, 2, 3, 4, 5].map((int value) {
+                        return DropdownMenuItem<int>(
+                          value: value,
+                          child: Text(
+                            value == 1 ? '$value Life' : '$value Lives',
+                            style: const TextStyle(fontSize: 16),
+                          ),
+                        );
+                      }).toList(),
+                      onChanged: (int? newValue) async {
+                        if (newValue != null) {
+                          await widget.settingsService.setNumberOfLives(newValue);
+                          setState(() {
+                            _numberOfLives = newValue;
+                          });
+                        }
+                      },
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'Select how many lives you start with in each quiz',
+                    style: TextStyle(
+                      color: Colors.grey[600],
+                      fontSize: 12,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Time per Question',
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 14,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  child: DropdownButton<int>(
+                    value: _timePerQuestion,
+                    isExpanded: true,
+                    underline: Container(),
+                    items: [15, 20, 30, 45, 60].map((int value) {
+                      return DropdownMenuItem<int>(
+                        value: value,
+                        child: Text(
+                          '$value seconds',
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: (int? newValue) async {
+                      if (newValue != null) {
+                        await widget.settingsService.setTimePerQuestion(newValue);
+                        setState(() {
+                          _timePerQuestion = newValue;
+                        });
+                      }
+                    },
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  'Set the time limit for each question',
+                  style: TextStyle(
+                    color: Colors.grey[600],
+                    fontSize: 12,
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );

@@ -1,108 +1,142 @@
 import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
 
-class LeaderboardScreen extends StatelessWidget {
+class LeaderboardScreen extends StatefulWidget {
   final AuthService authService;
 
   const LeaderboardScreen({
-    Key? key,
+    Key? key, 
     required this.authService,
   }) : super(key: key);
+
+  @override
+  State<LeaderboardScreen> createState() => _LeaderboardScreenState();
+}
+
+class _LeaderboardScreenState extends State<LeaderboardScreen> {
+  List<Map<String, dynamic>>? _leaderboard;
+  bool _isLoading = true;
+  String _selectedDifficulty = 'beginner'; // Default difficulty
+
+  @override
+  void initState() {
+    super.initState();
+    _loadLeaderboard();
+  }
+
+  Future<void> _loadLeaderboard() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      final leaderboard = await widget.authService.getLeaderboard(_selectedDifficulty);
+      
+      setState(() {
+        _leaderboard = leaderboard;
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+      print('Error loading leaderboard: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: const Text('Leaderboard'),
+        backgroundColor: const Color(0xFFFF9800),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: const Text('Leaderboard'),
-        backgroundColor: const Color(0xFFFF9800),
-      ),
-      body: Column(
-        children: [
-          _buildLeaderboardHeader(),
-          Expanded(
-            child: _buildLeaderboardList(),
+        actions: [
+          // Difficulty selector
+          DropdownButton<String>(
+            value: _selectedDifficulty,
+            dropdownColor: const Color(0xFFFF9800),
+            style: const TextStyle(color: Colors.white),
+            underline: Container(),
+            onChanged: (String? newValue) {
+              if (newValue != null) {
+                setState(() {
+                  _selectedDifficulty = newValue;
+                });
+                _loadLeaderboard();
+              }
+            },
+            items: <String>['beginner', 'intermediate', 'advanced']
+                .map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(
+                  value[0].toUpperCase() + value.substring(1),
+                  style: const TextStyle(color: Colors.white),
+                ),
+              );
+            }).toList(),
+          ),
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            onPressed: _loadLeaderboard,
           ),
         ],
       ),
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : _leaderboard == null || _leaderboard!.isEmpty
+              ? const Center(
+                  child: Text(
+                    'No scores yet. Be the first to play!',
+                    style: TextStyle(fontSize: 18),
+                  ),
+                )
+              : ListView.builder(
+                  itemCount: _leaderboard!.length,
+                  itemBuilder: (context, index) {
+                    final entry = _leaderboard![index];
+                    
+                    return Card(
+                      elevation: 1,
+                      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                      child: ListTile(
+                        leading: CircleAvatar(
+                          backgroundColor: const Color(0xFFFF9800),
+                          child: Text(
+                            '${index + 1}',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        title: Text(
+                          entry['nickname'] ?? 'Unknown',
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                        subtitle: Text('Score: ${entry['score']}'),
+                        trailing: Text(
+                          '${entry['score']}',
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
     );
   }
+}
 
-  Widget _buildLeaderboardHeader() {
-    return Container(
-      padding: const EdgeInsets.all(16.0),
-      color: const Color(0xFFFF9800),
-      child: const Row(
-        children: [
-          Expanded(
-            flex: 1,
-            child: Text(
-              'Rank',
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold
-              ),
-            ),
-          ),
-          Expanded(
-            flex: 2,
-            child: Text(
-              'Player',
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold
-              ),
-            ),
-          ),
-          Expanded(
-            flex: 1,
-            child: Text(
-              'Score',
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildLeaderboardList() {
-    return ListView.builder(
-      itemCount: 20, // Example count
-      itemBuilder: (context, index) {
-        return _buildLeaderboardItem(index + 1, 'Player ${index + 1}', (1000 - index * 50));
-      },
-    );
-  }
-
-  Widget _buildLeaderboardItem(int rank, String name, int score) {
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-      child: ListTile(
-        leading: CircleAvatar(
-          backgroundColor: rank <= 3 ? const Color(0xFFFF9800) : Colors.grey[300],
-          child: Text(
-            rank.toString(),
-            style: TextStyle(
-              color: rank <= 3 ? Colors.white : Colors.black,
-            ),
-          ),
-        ),
-        title: Text(name),
-        trailing: Text(
-          score.toString(),
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 16,
-          ),
-        ),
-      ),
-    );
+// Add this extension to capitalize strings
+extension StringExtension on String {
+  String capitalize() {
+    return "${this[0].toUpperCase()}${this.substring(1)}";
   }
 }
