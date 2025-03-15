@@ -29,6 +29,15 @@ void main() async {
   
   final authService = AuthService(prefs);
   
+  // Preload questions in the background
+  authService.refreshQuestionCache().then((success) {
+    if (success) {
+      debugPrint('Questions cached successfully');
+    } else {
+      debugPrint('Failed to cache questions');
+    }
+  });
+  
   runApp(MyApp(
     authService: authService,
     settingsService: settingsService,
