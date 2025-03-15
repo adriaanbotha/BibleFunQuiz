@@ -24,29 +24,21 @@ void main() async {
   final prefs = await SharedPreferences.getInstance();
   final settingsService = SettingsService(prefs);
   final authService = AuthService(prefs);
-  final connectivityService = ConnectivityService();
 
-  runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => connectivityService),
-      ],
-      child: MyApp(
-        settingsService: settingsService,
-        authService: authService,
-      ),
-    ),
-  );
+  runApp(MyApp(
+    authService: authService,
+    settingsService: settingsService,
+  ));
 }
 
 class MyApp extends StatelessWidget {
-  final SettingsService settingsService;
   final AuthService authService;
+  final SettingsService settingsService;
 
   const MyApp({
-    Key? key, 
-    required this.settingsService,
+    Key? key,
     required this.authService,
+    required this.settingsService,
   }) : super(key: key);
 
   @override
@@ -76,15 +68,25 @@ class MyApp extends StatelessWidget {
                 if (snapshot.hasData && snapshot.data == true) {
                   switch (settings.name) {
                     case '/profile':
-                      return ProfileScreen(authService: authService);
+                      return ProfileScreen(
+                        authService: authService,
+                        settingsService: settingsService,
+                      );
                     case '/settings':
                       return SettingsScreen(settingsService: settingsService);
                     case '/leaderboard':
                       return LeaderboardScreen(authService: authService);
                     case '/quiz':
-                      return QuizScreen(authService: authService);
+                      return QuizScreen(
+                        authService: authService,
+                        settingsService: settingsService,
+                        difficulty: 'beginner',
+                      );
                     default:
-                      return HomeScreen(authService: authService);
+                      return HomeScreen(
+                        authService: authService,
+                        settingsService: settingsService,
+                      );
                   }
                 }
                 return const LoadingScreen();
@@ -97,7 +99,10 @@ class MyApp extends StatelessWidget {
         switch (settings.name) {
           case '/':
             return MaterialPageRoute(
-              builder: (context) => HomeScreen(authService: authService),
+              builder: (context) => HomeScreen(
+                authService: authService,
+                settingsService: settingsService,
+              ),
             );
           case '/login':
             return MaterialPageRoute(
@@ -121,6 +126,10 @@ class MyApp extends StatelessWidget {
             );
         }
       },
+      home: HomeScreen(
+        authService: authService,
+        settingsService: settingsService,
+      ),
     );
   }
 }

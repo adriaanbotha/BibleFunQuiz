@@ -1,95 +1,147 @@
 import 'package:flutter/material.dart';
-import '../globals.dart' as globals;
+import '../services/auth_service.dart';
+import '../services/settings_service.dart';
+import '../screens/quiz_screen.dart';
 import '../widgets/custom_app_bar.dart';
 import '../widgets/app_drawer.dart';
-import '../services/auth_service.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   final AuthService authService;
+  final SettingsService settingsService;
 
   const HomeScreen({
     Key? key,
     required this.authService,
+    required this.settingsService,
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        final ScaffoldState? scaffold = Scaffold.maybeOf(context);
-        if (scaffold?.isDrawerOpen ?? false) {
-          Navigator.of(context).pop();
-          return false;
-        }
-        return true;
-      },
-      child: Scaffold(
-        key: GlobalKey<ScaffoldState>(),
-        appBar: const CustomAppBar(),
-        drawer: AppDrawer(authService: authService),
-        body: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              _buildDifficultyButton('Beginner', Colors.green),
-              const SizedBox(height: 16),
-              _buildDifficultyButton('Intermediate', Colors.orange),
-              const SizedBox(height: 16),
-              _buildDifficultyButton('Advanced', Colors.red),
-              const SizedBox(height: 32),
-              _buildKidsModeButton(),
-              const Spacer(),
-              _buildScriptureOfTheDay(),
-            ],
-          ),
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  void _startBeginnerQuiz() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => QuizScreen(
+          authService: widget.authService,
+          settingsService: widget.settingsService,
+          difficulty: 'beginner',
         ),
       ),
     );
   }
 
-  Widget _buildDifficultyButton(String difficulty, Color color) {
-    return ElevatedButton(
-      onPressed: () {
-        // Handle difficulty selection
-      },
-      style: ElevatedButton.styleFrom(
-        backgroundColor: color,
-        padding: const EdgeInsets.symmetric(vertical: 20),
-      ),
-      child: Text(
-        difficulty,
-        style: const TextStyle(fontSize: 18),
+  void _startIntermediateQuiz() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => QuizScreen(
+          authService: widget.authService,
+          settingsService: widget.settingsService,
+          difficulty: 'intermediate',
+        ),
       ),
     );
   }
 
-  Widget _buildKidsModeButton() {
-    return ElevatedButton(
-      onPressed: () {
-        // Handle kids mode selection
-      },
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.purple,
-        padding: const EdgeInsets.symmetric(vertical: 20),
-      ),
-      child: const Text(
-        'Kids Mode',
-        style: TextStyle(fontSize: 18),
+  void _startAdvancedQuiz() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => QuizScreen(
+          authService: widget.authService,
+          settingsService: widget.settingsService,
+          difficulty: 'advanced',
+        ),
       ),
     );
   }
 
-  Widget _buildScriptureOfTheDay() {
-    return const Card(
-      child: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Text(
-          'Romans 10:17 NKJV\n"So then faith comes by hearing, and hearing by the word of God."',
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 16,
-            fontStyle: FontStyle.italic,
+  void _closeDrawer() {
+    if (_scaffoldKey.currentState?.isDrawerOpen ?? false) {
+      Navigator.of(context).pop();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return WillPopScope(
+      onWillPop: () async {
+        if (_scaffoldKey.currentState?.isDrawerOpen ?? false) {
+          _closeDrawer();
+          return false;
+        }
+        return true;
+      },
+      child: Scaffold(
+        key: _scaffoldKey,
+        appBar: CustomAppBar(
+          title: 'Home',
+          authService: widget.authService,
+          settingsService: widget.settingsService,
+        ),
+        drawer: AppDrawer(
+          authService: widget.authService,
+          settingsService: widget.settingsService,
+          onClose: () async {
+            _closeDrawer();
+            // Wait for the drawer to close before proceeding
+            await Future.delayed(const Duration(milliseconds: 300));
+          },
+        ),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                onPressed: _startBeginnerQuiz,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFFF9800),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 32,
+                    vertical: 16,
+                  ),
+                ),
+                child: const Text(
+                  'Beginner Quiz',
+                  style: TextStyle(fontSize: 18),
+                ),
+              ),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: _startIntermediateQuiz,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFFF9800),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 32,
+                    vertical: 16,
+                  ),
+                ),
+                child: const Text(
+                  'Intermediate Quiz',
+                  style: TextStyle(fontSize: 18),
+                ),
+              ),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: _startAdvancedQuiz,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFFF9800),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 32,
+                    vertical: 16,
+                  ),
+                ),
+                child: const Text(
+                  'Advanced Quiz',
+                  style: TextStyle(fontSize: 18),
+                ),
+              ),
+            ],
           ),
         ),
       ),

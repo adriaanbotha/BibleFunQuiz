@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../services/connectivity_service.dart';
+import '../services/auth_service.dart';
+import '../services/settings_service.dart';
+import 'package:flutter/foundation.dart';
+import '../screens/leaderboard_screen.dart';
+import 'dart:io';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
-  final bool showActions;
-  final bool showLeading;
-  final List<Widget>? additionalActions;
+  final AuthService? authService;
+  final SettingsService? settingsService;
 
   const CustomAppBar({
     Key? key,
-    this.title = 'Bible Quiz',
-    this.showActions = true,
-    this.showLeading = true,
-    this.additionalActions,
+    required this.title,
+    this.authService,
+    this.settingsService,
   }) : super(key: key);
 
   @override
@@ -22,251 +25,105 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return Builder(
-      builder: (BuildContext context) => AppBar(
+      builder: (context) => AppBar(
+        title: Text(title),
         backgroundColor: const Color(0xFFFF9800),
-        elevation: 4,
-        leading: showLeading ? _buildLeadingButton(context) : null,
-        title: Row(
-          children: [
-            Text(
-              title,
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
+        leading: title != 'Login' && title != 'Register'
+            ? IconButton(
+                icon: const Icon(Icons.menu),
+                onPressed: () {
+                  Scaffold.of(context).openDrawer();
+                },
+              )
+            : null,
+        actions: [
+          // Only show connectivity status and menu on screens that need it
+          if (title != 'Login' && title != 'Register') ...[
+            // Leaderboard Button
+            if (title == 'Home')
+              IconButton(
+                icon: const Icon(Icons.leaderboard),
+                onPressed: () {
+                  if (authService != null) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => LeaderboardScreen(
+                          authService: authService!,
+                        ),
+                      ),
+                    );
+                  }
+                },
+              ),
+            
+            // Connectivity Status
+            Builder(
+              builder: (context) => FutureBuilder<bool>(
+                future: checkInternetConnection(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return Icon(
+                      snapshot.data! ? Icons.wifi : Icons.wifi_off,
+                      color: snapshot.data! ? Colors.green : Colors.red,
+                    );
+                  }
+                  return const SizedBox.shrink();
+                },
               ),
             ),
             const SizedBox(width: 8),
-            _buildConnectivityIndicator(),
-          ],
-        ),
-        actions: showActions ? _buildActions(context) : null,
-      ),
-    );
-  }
 
-  Widget _buildLeadingButton(BuildContext context) {
-    return IconButton(
-      icon: const Icon(Icons.menu),
-      onPressed: () {
-        final ScaffoldState? scaffold = Scaffold.maybeOf(context);
-        if (scaffold != null) {
-          scaffold.openDrawer();
-        }
-      },
-      tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
-    );
-  }
-
-  Widget _buildConnectivityIndicator() {
-    return Consumer<ConnectivityService>(
-      builder: (context, connectivity, child) {
-        return Tooltip(
-          message: connectivity.isOnline ? 'Online' : 'Offline',
-          child: Container(
-            padding: const EdgeInsets.all(4),
-            decoration: BoxDecoration(
-              color: connectivity.isOnline ? Colors.green : Colors.grey,
-              borderRadius: BorderRadius.circular(4),
-            ),
-            child: Icon(
-              connectivity.isOnline ? Icons.wifi : Icons.wifi_off,
-              size: 16,
-              color: Colors.white,
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  List<Widget> _buildActions(BuildContext context) {
-    return [
-      // Share Button
-      Builder(
-        builder: (context) => IconButton(
-          icon: const Icon(Icons.share),
-          tooltip: 'Share App',
-          onPressed: () {
-            _showShareDialog(context);
-          },
-        ),
-      ),
-
-      // Invite Button
-      Builder(
-        builder: (context) => IconButton(
-          icon: const Icon(Icons.person_add),
-          tooltip: 'Invite Friends',
-          onPressed: () {
-            _showInviteDialog(context);
-          },
-        ),
-      ),
-
-      // Optional additional actions
-      if (additionalActions != null) ...additionalActions!,
-
-      // Overflow Menu
-      Builder(
-        builder: (context) => PopupMenuButton<String>(
-          onSelected: (value) => _handleMenuSelection(context, value),
-          itemBuilder: (BuildContext context) => [
-            const PopupMenuItem<String>(
-              value: 'offline_mode',
-              child: ListTile(
-                leading: Icon(Icons.offline_bolt),
-                title: Text('Offline Mode'),
-              ),
-            ),
-            const PopupMenuItem<String>(
-              value: 'about',
-              child: ListTile(
-                leading: Icon(Icons.info),
-                title: Text('About'),
-              ),
-            ),
-          ],
-        ),
-      ),
-    ];
-  }
-
-  void _handleMenuSelection(BuildContext context, String value) {
-    switch (value) {
-      case 'offline_mode':
-        _toggleOfflineMode(context);
-        break;
-      case 'about':
-        _showAboutDialog(context);
-        break;
-    }
-  }
-
-  void _showShareDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Share Bible Quiz'),
-          content: const Text(
-            'Share this app with your friends and family to help spread God\'s Word!',
-          ),
-          actions: [
-            TextButton(
-              child: const Text('Cancel'),
-              onPressed: () => Navigator.pop(context),
-            ),
-            TextButton(
-              child: const Text('Share'),
-              onPressed: () {
-                // Implement share functionality
-                Navigator.pop(context);
+            // Popup Menu
+            PopupMenuButton<String>(
+              onSelected: (String choice) async {
+                if (choice == 'Offline Mode') {
+                  // Handle offline mode
+                } else if (choice == 'About') {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: const Text('About'),
+                        content: const Text('Quiz App\nVersion 1.0.0'),
+                        actions: <Widget>[
+                          TextButton(
+                            child: const Text('Close'),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                }
               },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void _showInviteDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Invite Friends'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text('Enter room code to join a game:'),
-              const SizedBox(height: 16),
-              TextField(
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Room Code',
-                  hintText: 'Enter 4-digit code',
-                ),
-                keyboardType: TextInputType.number,
-                maxLength: 4,
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              child: const Text('Cancel'),
-              onPressed: () => Navigator.pop(context),
-            ),
-            TextButton(
-              child: const Text('Join'),
-              onPressed: () {
-                // Implement join room functionality
-                Navigator.pop(context);
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void _toggleOfflineMode(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Offline Mode'),
-          content: const Text(
-            'Would you like to download questions for offline use?',
-          ),
-          actions: [
-            TextButton(
-              child: const Text('Cancel'),
-              onPressed: () => Navigator.pop(context),
-            ),
-            TextButton(
-              child: const Text('Download'),
-              onPressed: () {
-                // Implement offline mode functionality
-                Navigator.pop(context);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Questions downloaded for offline use'),
+              itemBuilder: (BuildContext context) {
+                return [
+                  const PopupMenuItem<String>(
+                    value: 'Offline Mode',
+                    child: Text('Offline Mode'),
                   ),
-                );
+                  const PopupMenuItem<String>(
+                    value: 'About',
+                    child: Text('About'),
+                  ),
+                ];
               },
             ),
           ],
-        );
-      },
+        ],
+      ),
     );
   }
 
-  void _showAboutDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('About Bible Quiz'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
-              Text('Version: 1.0.0'),
-              SizedBox(height: 8),
-              Text('A fun and educational Bible quiz app for all ages!'),
-              SizedBox(height: 16),
-              Text('Made with ❤️ for God\'s glory'),
-            ],
-          ),
-          actions: [
-            TextButton(
-              child: const Text('Close'),
-              onPressed: () => Navigator.pop(context),
-            ),
-          ],
-        );
-      },
-    );
+  Future<bool> checkInternetConnection() async {
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      return result.isNotEmpty && result[0].rawAddress.isNotEmpty;
+    } on SocketException catch (_) {
+      return false;
+    }
   }
 } 

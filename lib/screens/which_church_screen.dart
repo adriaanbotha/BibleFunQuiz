@@ -5,71 +5,16 @@ import '../widgets/custom_app_bar.dart';
 class WhichChurchScreen extends StatelessWidget {
   const WhichChurchScreen({Key? key}) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const CustomAppBar(title: 'Which Church'),
-      body: ListView(
-        padding: const EdgeInsets.all(16.0),
-        children: [
-          _buildIntroSection(),
-          const SizedBox(height: 16),
-          _buildTeacherSection(
-            'Justin Paul Abraham',
-            'Company of Burning Hearts',
-            'https://www.companyofburninghearts.com',
-            'https://www.facebook.com/justinabrahamCOBH',
-            'https://www.instagram.com/justinpaulabraham',
-            'https://www.youtube.com/@CompanyofBurningHearts',
-          ),
-          _buildTeacherSection(
-            'Nancy Coen',
-            'Global Ascension Network',
-            'https://www.globalascensionnetwork.net',
-            'https://www.facebook.com/nancy.coen.9',
-            null,
-            'https://www.youtube.com/@NancyCoenGlobal',
-          ),
-          // Add other teachers similarly
-        ],
-      ),
-    );
+  Future<void> _launchURL(String url) async {
+    final Uri uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 
-  Widget _buildIntroSection() {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
-            Text(
-              'Our Vision of Church',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFFFF9800),
-              ),
-            ),
-            SizedBox(height: 16),
-            Text(
-              'We dream of a church full of love—here\'s what that looks like from Acts!',
-              style: TextStyle(fontSize: 16),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTeacherSection(
-    String name,
-    String ministry,
-    String website,
-    String facebook,
-    String? instagram,
-    String youtube,
-  ) {
+  Widget _buildMinistrySection(String name, String description, Map<String, String> links) {
     return Card(
       margin: const EdgeInsets.only(bottom: 16.0),
       child: Padding(
@@ -85,41 +30,119 @@ class WhichChurchScreen extends StatelessWidget {
                 color: Color(0xFFFF9800),
               ),
             ),
-            Text(
-              ministry,
-              style: const TextStyle(fontSize: 16),
+            const SizedBox(height: 8),
+            Text(description),
+            const SizedBox(height: 12),
+            Wrap(
+              spacing: 8,
+              children: links.entries.map((entry) {
+                IconData icon = Icons.link;
+                if (entry.key.toLowerCase().contains('facebook')) {
+                  icon = Icons.facebook;
+                } else if (entry.key.toLowerCase().contains('instagram')) {
+                  icon = Icons.photo_camera;
+                } else if (entry.key.toLowerCase().contains('youtube')) {
+                  icon = Icons.video_library;
+                }
+                
+                return TextButton.icon(
+                  icon: Icon(icon, color: const Color(0xFFFF9800)),
+                  label: Text(
+                    entry.key,
+                    style: const TextStyle(color: Color(0xFFFF9800)),
+                  ),
+                  onPressed: () => _launchURL(entry.value),
+                );
+              }).toList(),
             ),
-            const SizedBox(height: 16),
-            _buildSocialLink(Icons.language, 'Website', website),
-            _buildSocialLink(Icons.facebook, 'Facebook', facebook),
-            if (instagram != null)
-              _buildSocialLink(Icons.camera_alt, 'Instagram', instagram),
-            _buildSocialLink(Icons.play_circle_fill, 'YouTube', youtube),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildSocialLink(IconData icon, String platform, String url) {
-    return InkWell(
-      onTap: () => _launchURL(url),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Row(
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Which Church?'),
+        backgroundColor: const Color(0xFFFF9800),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(icon, color: const Color(0xFFFF9800)),
-            const SizedBox(width: 8),
-            Text(platform),
+            const Text(
+              'We dream of a church full of love—here\'s what that looks like from Acts!',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 24),
+            _buildMinistrySection(
+              'Justin Paul Abraham',
+              'So inspiring!',
+              {
+                'Website': 'https://www.companyofburninghearts.com',
+                'Facebook': 'https://www.facebook.com/justinabrahamCOBH',
+                'Instagram': 'https://www.instagram.com/justinpaulabraham',
+                'YouTube': 'https://www.youtube.com/@CompanyofBurningHearts',
+              },
+            ),
+            _buildMinistrySection(
+              'Nancy Coen',
+              'A global heart!',
+              {
+                'Website': 'https://www.globalascensionnetwork.net',
+                'Facebook': 'https://www.facebook.com/nancy.coen.9',
+                'YouTube': 'https://www.youtube.com/@NancyCoenGlobal',
+              },
+            ),
+            _buildMinistrySection(
+              'Ian Clayton',
+              'Thunderous wisdom!',
+              {
+                'Website': 'https://www.sonofthunder.org',
+                'Facebook': 'https://www.facebook.com/sonofthunderpublications',
+                'YouTube': 'https://www.youtube.com/@SonofThunderPublications',
+              },
+            ),
+            _buildMinistrySection(
+              'Liz Wright',
+              'Pure joy!',
+              {
+                'Website': 'https://www.lizwrightministries.com',
+                'Facebook': 'https://www.facebook.com/lizwrightministries',
+                'Instagram': 'https://www.instagram.com/lizwrightministries',
+                'YouTube': 'https://www.youtube.com/@LizWrightMinistries',
+              },
+            ),
+            _buildMinistrySection(
+              'Mike Parsons',
+              'Freedom awaits!',
+              {
+                'Website': 'https://freedomarc.org',
+                'Facebook': 'https://www.facebook.com/FreedomApostolicResources',
+                'YouTube': 'https://www.youtube.com/@FreedomARC',
+              },
+            ),
+            Card(
+              child: ListTile(
+                title: const Text('IMC Members'),
+                subtitle: const Text('A special place for your faith!'),
+                trailing: const Icon(Icons.arrow_forward, color: Color(0xFFFF9800)),
+                onTap: () => _launchURL('https://imcmembers.com'),
+              ),
+            ),
           ],
         ),
       ),
     );
-  }
-
-  Future<void> _launchURL(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
-    }
   }
 } 

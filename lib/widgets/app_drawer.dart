@@ -1,162 +1,140 @@
 import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
+import '../services/settings_service.dart';
+import '../screens/profile_screen.dart';
+import '../screens/settings_screen.dart';
+import '../screens/instructions_screen.dart';
+import '../screens/login_screen.dart';
+import '../screens/which_church_screen.dart';
+import '../screens/gospel_screen.dart';
 
 class AppDrawer extends StatelessWidget {
   final AuthService authService;
+  final SettingsService settingsService;
+  final VoidCallback onClose;
 
   const AppDrawer({
     Key? key,
     required this.authService,
+    required this.settingsService,
+    required this.onClose,
   }) : super(key: key);
+
+  Future<void> _handleNavigation(BuildContext context, Widget screen) async {
+    onClose(); // Close the drawer
+    // Wait for the drawer animation to complete
+    await Future.delayed(const Duration(milliseconds: 300));
+    if (context.mounted) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => screen),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    final isLoggedIn = authService.isLoggedIn();
-    final nickname = authService.getNickname();
-
     return Drawer(
-      child: Column(
+      child: ListView(
+        padding: EdgeInsets.zero,
         children: [
-          _buildDrawerHeader(nickname),
-          Expanded(
-            child: ListView(
-              padding: EdgeInsets.zero,
+          DrawerHeader(
+            decoration: const BoxDecoration(
+              color: Color(0xFFFF9800),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                _buildMenuItem(
-                  icon: Icons.home,
-                  title: 'Home',
-                  onTap: () => Navigator.pushReplacementNamed(context, '/'),
+                const Text(
+                  'Bible Quest',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                  ),
                 ),
-                if (isLoggedIn) ...[
-                  _buildMenuItem(
-                    icon: Icons.person,
-                    title: 'Profile',
-                    onTap: () {
-                      Navigator.pop(context); // Close drawer first
-                      Navigator.pushNamed(context, '/profile');
-                    },
-                  ),
-                  _buildMenuItem(
-                    icon: Icons.settings,
-                    title: 'Settings',
-                    onTap: () {
-                      Navigator.pop(context);
-                      Navigator.pushNamed(context, '/settings');
-                    },
-                  ),
-                  _buildMenuItem(
-                    icon: Icons.leaderboard,
-                    title: 'Leaderboard',
-                    onTap: () {
-                      Navigator.pop(context);
-                      Navigator.pushNamed(context, '/leaderboard');
-                    },
-                  ),
-                ],
-                _buildMenuItem(
-                  icon: Icons.help,
-                  title: 'Instructions',
-                  onTap: () {
-                    Navigator.pop(context);
-                    Navigator.pushNamed(context, '/instructions');
+                const SizedBox(height: 8),
+                FutureBuilder<String>(
+                  future: Future.value(authService.getNickname()),
+                  builder: (context, snapshot) {
+                    return Text(
+                      'Welcome, ${snapshot.data ?? 'User'}!',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                      ),
+                    );
                   },
                 ),
-                _buildMenuItem(
-                  icon: Icons.church,
-                  title: 'Which Church',
-                  onTap: () {
-                    Navigator.pop(context);
-                    Navigator.pushNamed(context, '/which-church');
-                  },
-                ),
-                _buildMenuItem(
-                  icon: Icons.book,
-                  title: 'Gospel',
-                  onTap: () {
-                    Navigator.pop(context);
-                    Navigator.pushNamed(context, '/gospel');
-                  },
-                ),
-                const Divider(),
-                if (isLoggedIn)
-                  _buildMenuItem(
-                    icon: Icons.logout,
-                    title: 'Logout',
-                    onTap: () async {
-                      await authService.logout();
-                      if (context.mounted) {
-                        Navigator.pushNamedAndRemoveUntil(
-                          context,
-                          '/login',
-                          (route) => false,
-                        );
-                      }
-                    },
-                  )
-                else
-                  _buildMenuItem(
-                    icon: Icons.login,
-                    title: 'Login',
-                    onTap: () {
-                      Navigator.pop(context);
-                      Navigator.pushNamed(context, '/login');
-                    },
-                  ),
               ],
             ),
           ),
+          ListTile(
+            leading: const Icon(Icons.person),
+            title: const Text('Profile'),
+            onTap: () => _handleNavigation(
+              context,
+              ProfileScreen(
+                authService: authService,
+                settingsService: settingsService,
+              ),
+            ),
+          ),
+          ListTile(
+            leading: const Icon(Icons.church),
+            title: const Text('Which Church?'),
+            onTap: () => _handleNavigation(
+              context,
+              const WhichChurchScreen(),
+            ),
+          ),
+          ListTile(
+            leading: const Icon(Icons.book),
+            title: const Text('The Gospel'),
+            onTap: () => _handleNavigation(
+              context,
+              const GospelScreen(),
+            ),
+          ),
+          ListTile(
+            leading: const Icon(Icons.settings),
+            title: const Text('Settings'),
+            onTap: () => _handleNavigation(
+              context,
+              SettingsScreen(
+                settingsService: settingsService,
+              ),
+            ),
+          ),
+          ListTile(
+            leading: const Icon(Icons.help),
+            title: const Text('Instructions'),
+            onTap: () => _handleNavigation(
+              context,
+              const InstructionsScreen(),
+            ),
+          ),
+          const Divider(),
+          ListTile(
+            leading: const Icon(Icons.logout),
+            title: const Text('Logout'),
+            onTap: () async {
+              onClose();
+              await authService.logout();
+              if (context.mounted) {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => LoginScreen(
+                      authService: authService,
+                    ),
+                  ),
+                );
+              }
+            },
+          ),
         ],
       ),
-    );
-  }
-
-  Widget _buildDrawerHeader(String? nickname) {
-    return DrawerHeader(
-      decoration: const BoxDecoration(
-        color: Color(0xFFFF9800),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const CircleAvatar(
-            radius: 30,
-            backgroundColor: Colors.white,
-            child: Icon(
-              Icons.person,
-              size: 35,
-              color: Color(0xFFFF9800),
-            ),
-          ),
-          const SizedBox(height: 10),
-          Text(
-            nickname != null ? 'Welcome, $nickname!' : 'Welcome!',
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const Text(
-            'Bible Quiz App',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 14,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildMenuItem({
-    required IconData icon,
-    required String title,
-    required VoidCallback onTap,
-  }) {
-    return ListTile(
-      leading: Icon(icon, color: const Color(0xFFFF9800)),
-      title: Text(title),
-      onTap: onTap,
     );
   }
 
