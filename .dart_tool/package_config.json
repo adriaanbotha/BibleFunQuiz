@@ -536,10 +536,10 @@
       "languageVersion": "2.18"
     }
   ],
-  "generated": "2025-03-15T12:15:13.011343Z",
+  "generated": "2025-03-16T11:14:58.432941Z",
   "generator": "pub",
-  "generatorVersion": "3.7.0",
+  "generatorVersion": "3.7.2",
   "flutterRoot": "file:///Users/adriaan/development/flutter",
-  "flutterVersion": "3.29.1",
+  "flutterVersion": "3.29.2",
   "pubCache": "file:///Users/adriaan/.pub-cache"
 }

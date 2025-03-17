@@ -20,7 +20,7 @@ class InstructionsScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: const [
             Text(
-              'How to Play',
+              'Welcome to Bible Quest!',
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -29,45 +29,52 @@ class InstructionsScreen extends StatelessWidget {
             ),
             SizedBox(height: 16),
             Text(
-              '1. Choose your difficulty level on the home screen:\n'
-              '   • Beginner (10 points per correct answer)\n'
-              '   • Intermediate (20 points per correct answer)\n'
-              '   • Advanced (30 points per correct answer)',
+              '1. Choosing Your Journey\n\n'
+              'Begin your biblical adventure by selecting one of three carefully designed difficulty levels, each offering unique challenges and rewards:\n\n'
+              '   • Beginner: Perfect for those starting their journey, featuring fundamental biblical questions and earning 10 points per correct answer.\n'
+              '   • Intermediate: Designed for those familiar with Scripture, offering more challenging questions and 20 points per correct answer.\n'
+              '   • Advanced: Created for biblical scholars, presenting complex theological questions and rewarding 30 points per correct answer.',
               style: TextStyle(fontSize: 16),
             ),
-            SizedBox(height: 16),
+            SizedBox(height: 24),
             Text(
-              '2. Game Rules:\n'
-              '   • You start with 3 lives\n'
-              '   • Each question has a 30-second time limit\n'
-              '   • Incorrect answers or time-outs cost one life\n'
-              '   • Game ends when you run out of lives',
+              '2. Understanding the Game Mechanics\n\n'
+              'Your quest begins with three precious lives, representing your chances to explore and learn. Each question presents a unique challenge:\n\n'
+              '   • You\'ll start your journey with 3 lives, symbolizing your opportunities to learn and grow.\n'
+              '   • Every question gives you 30 seconds to ponder and answer, encouraging both thoughtful consideration and quick thinking.\n'
+              '   • Incorrect answers or running out of time will cost you one life, teaching valuable lessons about patience and wisdom.\n'
+              '   • Your journey concludes when all lives are depleted, but remember - every ending is a chance for a new beginning.',
               style: TextStyle(fontSize: 16),
             ),
-            SizedBox(height: 16),
+            SizedBox(height: 24),
             Text(
-              '3. Scoring:\n'
-              '   • Points are awarded based on difficulty\n'
-              '   • Bonus points for remaining lives\n'
-              '   • Your high scores appear on the leaderboard',
+              '3. Earning Your Rewards\n\n'
+              'Bible Quest features a comprehensive scoring system that rewards both knowledge and strategy:\n\n'
+              '   • Your base points are determined by the difficulty level you\'ve chosen, reflecting your courage to face greater challenges.\n'
+              '   • Additional bonus points are awarded for each life preserved, encouraging careful and thoughtful gameplay.\n'
+              '   • Your achievements are immortalized on our global leaderboard, where you can compare your biblical knowledge with fellow questers.\n'
+              '   • Special achievements and milestones unlock as you progress, marking your growth in biblical understanding.',
               style: TextStyle(fontSize: 16),
             ),
-            SizedBox(height: 16),
+            SizedBox(height: 24),
             Text(
-              '4. Settings:\n'
-              '   • Customize sound effects\n'
-              '   • Toggle reference display\n'
-              '   • Adjust lives system\n'
-              '   • Change time per question',
+              '4. Personalizing Your Experience\n\n'
+              'Bible Quest can be tailored to your preferences through various settings:\n\n'
+              '   • Customize your audio experience with optional sound effects that celebrate your victories and gentle reminders for incorrect answers.\n'
+              '   • Choose whether to display biblical references alongside questions, perfect for those wanting to deepen their study.\n'
+              '   • Adjust the number of lives to match your comfort level and learning style.\n'
+              '   • Modify the time allowed for each question, allowing for a more relaxed or challenging experience.',
               style: TextStyle(fontSize: 16),
             ),
-            SizedBox(height: 16),
+            SizedBox(height: 24),
             Text(
-              'Tips:\n'
-              '• Read questions carefully\n'
-              '• Watch your time\n'
-              '• Start with beginner level to practice\n'
-              '• Check your progress in the Profile screen',
+              'Pro Tips for Success\n\n'
+              'Here are some valuable strategies to enhance your Bible Quest journey:\n\n'
+              '• Take time to carefully read and understand each question - the answer often lies in the details.\n'
+              '• Manage your time wisely, but don\'t let the timer rush your thoughtful consideration of each answer.\n'
+              '• If you\'re new to Bible study, start with the beginner level to build a strong foundation of knowledge.\n'
+              '• Regularly visit your Profile screen to track your progress and identify areas for growth.\n'
+              '• Remember that every question, whether answered correctly or not, is an opportunity to learn and grow in your biblical knowledge.',
               style: TextStyle(fontSize: 16),
             ),
           ],
