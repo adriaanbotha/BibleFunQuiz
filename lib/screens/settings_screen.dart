@@ -20,7 +20,7 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   bool _soundEnabled = true;
   bool _livesEnabled = true;
-  int _numberOfLives = 3;
+  int _numberOfLives = 5;
   bool _timerEnabled = true;
   int _timePerQuestion = 30;
   bool _showReferences = true;

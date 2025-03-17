@@ -7,7 +7,7 @@ class SettingsService {
   // Default settings
   static const bool DEFAULT_SOUND_ENABLED = true;
   static const bool DEFAULT_LIVES_ENABLED = true;
-  static const int DEFAULT_NUMBER_OF_LIVES = 3;
+  static const int DEFAULT_NUMBER_OF_LIVES = 5;
   static const bool DEFAULT_TIMER_ENABLED = true;
   static const int DEFAULT_TIME_PER_QUESTION = 30;
   static const bool DEFAULT_SHOW_REFERENCES = true;
