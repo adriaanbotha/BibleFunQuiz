@@ -8,6 +8,7 @@ import '../screens/login_screen.dart';
 import '../screens/which_church_screen.dart';
 import '../screens/gospel_screen.dart';
 import '../screens/unification_screen.dart';
+import '../screens/donate_screen.dart';
 
 class AppDrawer extends StatelessWidget {
   final AuthService authService;
@@ -111,6 +112,14 @@ class AppDrawer extends StatelessWidget {
             onTap: () => _handleNavigation(
               context,
               const UnificationScreen(),
+            ),
+          ),
+          ListTile(
+            leading: const Icon(Icons.favorite),
+            title: const Text('Support Us'),
+            onTap: () => _handleNavigation(
+              context,
+              const DonateScreen(),
             ),
           ),
           ListTile(

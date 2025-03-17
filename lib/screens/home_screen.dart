@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
 import '../services/settings_service.dart';
 import '../screens/quiz_screen.dart';
+import '../screens/donate_screen.dart';
 import '../widgets/custom_app_bar.dart';
 import '../widgets/app_drawer.dart';
 import 'dart:io' show Platform;
@@ -277,6 +278,27 @@ class _HomeScreenState extends State<HomeScreen> {
                       color: Colors.black87,
                     ),
                     textAlign: TextAlign.center,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton.icon(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const DonateScreen(),
+                      ),
+                    );
+                  },
+                  icon: const Icon(Icons.favorite),
+                  label: const Text('Support Bible Fun Quiz'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFFFF9800),
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
                   ),
                 ),
               ],
