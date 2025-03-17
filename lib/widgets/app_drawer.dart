@@ -7,6 +7,7 @@ import '../screens/instructions_screen.dart';
 import '../screens/login_screen.dart';
 import '../screens/which_church_screen.dart';
 import '../screens/gospel_screen.dart';
+import '../screens/unification_screen.dart';
 
 class AppDrawer extends StatelessWidget {
   final AuthService authService;
@@ -81,6 +82,14 @@ class AppDrawer extends StatelessWidget {
             ),
           ),
           ListTile(
+            leading: const Icon(Icons.help),
+            title: const Text('Instructions'),
+            onTap: () => _handleNavigation(
+              context,
+              const InstructionsScreen(),
+            ),
+          ),
+          ListTile(
             leading: const Icon(Icons.church),
             title: const Text('Which Church?'),
             onTap: () => _handleNavigation(
@@ -97,6 +106,14 @@ class AppDrawer extends StatelessWidget {
             ),
           ),
           ListTile(
+            leading: const Icon(Icons.people),
+            title: const Text('Unification of the Church'),
+            onTap: () => _handleNavigation(
+              context,
+              const UnificationScreen(),
+            ),
+          ),
+          ListTile(
             leading: const Icon(Icons.settings),
             title: const Text('Settings'),
             onTap: () => _handleNavigation(
@@ -104,14 +121,6 @@ class AppDrawer extends StatelessWidget {
               SettingsScreen(
                 settingsService: settingsService,
               ),
-            ),
-          ),
-          ListTile(
-            leading: const Icon(Icons.help),
-            title: const Text('Instructions'),
-            onTap: () => _handleNavigation(
-              context,
-              const InstructionsScreen(),
             ),
           ),
           const Divider(),

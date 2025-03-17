@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'which_church_screen.dart';
 
 class GospelScreen extends StatelessWidget {
   const GospelScreen({Key? key}) : super(key: key);
@@ -45,17 +46,82 @@ class GospelScreen extends StatelessWidget {
             ),
             SizedBox(height: 8),
             Text(
-              'Dear God,\n\n'
-              'I know I am a sinner and need Your forgiveness. I believe that Jesus Christ died for my sins. '
-              'I am willing to turn from my sins. I now invite Jesus Christ to come into my heart and life as my personal Savior. '
-              'I am willing to follow and obey Christ as my Lord.\n\n'
-              'In Jesus\' name,\nAmen',
+              'Dear Lord,\n\n'
+              'I acknowledge I am a sinner and in need of a Saviour and Your forgiveness. I believe that Jesus Christ died for my sins. '
+              'I am willing to turn from my sins. I invite You Lord Jesus Christ to come into my heart and life as my personal Savior. '
+              'I am willing to follow and obey You as my Lord.\n\n'
+              'Lord, I know acknowledge that You are my Savior, My Deliverer, my Protection, my Provider, You are my All and in All!\n\n'
+              'Direct my steps to a church that is like the book of Acts!, Alive and showing the fruit of the Spirit! and walkign in Signs, Miracles and wonders!\n\n'
+              'Thank you for loving me first, while I was yet a sinner\n\n'
+              'Protect me from the spirit of Religion and help me to be Free, since when Christ sets you free you shall be free indeed\n\n'
+              'I pray that in your precious name Jesus Christ of Nazareth, Amen!',
               style: TextStyle(
                 fontSize: 16,
                 fontStyle: FontStyle.italic,
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildChurchSuggestion(BuildContext context) {
+    return Center(
+      child: Card(
+        elevation: 2,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const Text(
+                'Finding Your Church Family',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFFFF9800),
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 12),
+              const Text(
+                'A vibrant, Spirit-filled church should be:\n\n'
+                '• Grounded in Biblical teaching\n'
+                '• Filled with genuine worship\n'
+                '• Moving in the gifts of the Spirit\n'
+                '• Demonstrating the love of Christ\n'
+                '• Welcoming to all people\n'
+                '• Supporting spiritual growth\n'
+                '• Active in community outreach\n\n'
+                'See the online churches as suggestion by clicking the button below\n',
+                style: TextStyle(fontSize: 16),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 16),
+              Center(
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const WhichChurchScreen()),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFFFF9800),
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  ),
+                  child: const Text(
+                    'Find a Church Near You',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -103,6 +169,8 @@ class GospelScreen extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             _buildPrayerCard(),
+            const SizedBox(height: 24),
+            _buildChurchSuggestion(context),
             const SizedBox(height: 24),
           ],
         ),
