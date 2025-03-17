@@ -95,6 +95,7 @@ Welcome to the Bible Quiz App’s joyful journey! We’re thrilled to craft this
   - **Donate Page (2.5.5)**:  
     - "Thank you, friends! Your generosity keeps this app ad-free and growing—please help us share God’s Word with kids everywhere!"  
     - Options: Patreon (`https://patreon.com/biblequizapp`)—“Join our family!”; PayPal, Stripe, Google Pay, Apple Pay (`#FF9800`)—“Any gift is a blessing!”
+    - Also add links to the followingAdd donation page for links to patreon, bitpaid, https://nowpayments.io/payment-tools
 
 **Deliverables**: A joyful app with a vibrant UI, kind messages, phone-join via PIN/room code, Kids Mode settings, and pages full of love—ready for all ages!
 
