@@ -30,7 +30,8 @@ class InstructionsScreen extends StatelessWidget {
             SizedBox(height: 16),
             Text(
               '1. Choosing Your Journey\n\n'
-              'Begin your biblical adventure by selecting one of three carefully designed difficulty levels, each offering unique challenges and rewards:\n\n'
+              'Begin your biblical adventure by selecting one of four carefully designed difficulty levels, each offering unique challenges and rewards:\n\n'
+              '   • Children\'s: Perfect for young learners, featuring simple and engaging biblical questions and earning 5 points per correct answer.\n'
               '   • Beginner: Perfect for those starting their journey, featuring fundamental biblical questions and earning 10 points per correct answer.\n'
               '   • Intermediate: Designed for those familiar with Scripture, offering more challenging questions and 20 points per correct answer.\n'
               '   • Advanced: Created for biblical scholars, presenting complex theological questions and rewarding 30 points per correct answer.',

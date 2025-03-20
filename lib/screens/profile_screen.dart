@@ -181,6 +181,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               'Scores by Difficulty:',
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
+                            Text('Children\'s: ${_statistics['scoresByDifficulty']?['children'] ?? 0}'),
                             Text('Beginner: ${_statistics['scoresByDifficulty']?['beginner'] ?? 0}'),
                             Text('Intermediate: ${_statistics['scoresByDifficulty']?['intermediate'] ?? 0}'),
                             Text('Advanced: ${_statistics['scoresByDifficulty']?['advanced'] ?? 0}'),

@@ -9,7 +9,7 @@ import '../screens/leaderboard_screen.dart';
 class QuizScreen extends StatefulWidget {
   final AuthService authService;
   final SettingsService settingsService;
-  final String difficulty; // 'beginner', 'intermediate', or 'advanced'
+  final String difficulty; // 'children', 'beginner', 'intermediate', or 'advanced'
 
   const QuizScreen({
     Key? key,
@@ -191,6 +191,8 @@ class _QuizScreenState extends State<QuizScreen> {
 
   int _calculateBasePoints() {
     switch(widget.difficulty) {
+      case 'children':
+        return 5;
       case 'beginner':
         return 10;
       case 'intermediate':
@@ -362,7 +364,9 @@ class _QuizScreenState extends State<QuizScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('${widget.difficulty[0].toUpperCase()}${widget.difficulty.substring(1)} Quiz'),
+        title: Text(widget.difficulty == 'children' 
+          ? 'Children\'s Quiz'
+          : '${widget.difficulty[0].toUpperCase()}${widget.difficulty.substring(1)} Quiz'),
         backgroundColor: const Color(0xFFFF9800),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),

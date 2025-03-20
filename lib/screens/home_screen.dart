@@ -24,6 +24,19 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
+  void _startChildrenQuiz() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => QuizScreen(
+          authService: widget.authService,
+          settingsService: widget.settingsService,
+          difficulty: 'children',
+        ),
+      ),
+    );
+  }
+
   void _startBeginnerQuiz() {
     Navigator.push(
       context,
@@ -81,6 +94,31 @@ class _HomeScreenState extends State<HomeScreen> {
                 width: double.infinity,
                 height: 48,
                 child: ElevatedButton(
+                  onPressed: _startChildrenQuiz,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFFFF6B35),
+                    foregroundColor: Colors.white,
+                    textStyle: const TextStyle(fontSize: 16),
+                    elevation: 4,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Icon(Icons.child_care, size: 20),
+                      SizedBox(width: 8),
+                      Text('Children\'s Quiz'),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
+              SizedBox(
+                width: double.infinity,
+                height: 48,
+                child: ElevatedButton(
                   onPressed: _startBeginnerQuiz,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFFFF9800),
@@ -130,6 +168,31 @@ class _HomeScreenState extends State<HomeScreen> {
           constraints: const BoxConstraints(maxWidth: 280),
           child: Column(
             children: [
+              SizedBox(
+                width: double.infinity,
+                height: 48,
+                child: ElevatedButton(
+                  onPressed: _startChildrenQuiz,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFFFF6B35),
+                    foregroundColor: Colors.white,
+                    textStyle: const TextStyle(fontSize: 16),
+                    elevation: 4,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Icon(Icons.child_care, size: 20),
+                      SizedBox(width: 8),
+                      Text('Children\'s Quiz'),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
               SizedBox(
                 width: double.infinity,
                 height: 48,
