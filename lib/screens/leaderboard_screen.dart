@@ -16,7 +16,7 @@ class LeaderboardScreen extends StatefulWidget {
 class _LeaderboardScreenState extends State<LeaderboardScreen> {
   List<Map<String, dynamic>>? _leaderboard;
   bool _isLoading = true;
-  String _selectedDifficulty = 'beginner'; // Default difficulty
+  String _selectedDifficulty = 'children'; // Set default to children's quiz
 
   @override
   void initState() {
@@ -48,8 +48,12 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Leaderboard'),
-        backgroundColor: const Color(0xFFFF9800),
+        title: Text(_selectedDifficulty == 'children' 
+          ? 'Children\'s Leaderboard'
+          : '${_selectedDifficulty[0].toUpperCase()}${_selectedDifficulty.substring(1)} Leaderboard'),
+        backgroundColor: _selectedDifficulty == 'children' 
+          ? const Color(0xFFFF6B35)  // Reddish-orange for children's
+          : const Color(0xFFFF9800), // Regular orange for others
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.of(context).pop(),
@@ -58,7 +62,9 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
           // Difficulty selector
           DropdownButton<String>(
             value: _selectedDifficulty,
-            dropdownColor: const Color(0xFFFF9800),
+            dropdownColor: _selectedDifficulty == 'children' 
+              ? const Color(0xFFFF6B35)  // Reddish-orange for children's
+              : const Color(0xFFFF9800), // Regular orange for others
             style: const TextStyle(color: Colors.white),
             underline: Container(),
             onChanged: (String? newValue) {
@@ -69,13 +75,22 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
                 _loadLeaderboard();
               }
             },
-            items: <String>['beginner', 'intermediate', 'advanced']
+            items: <String>['children', 'beginner', 'intermediate', 'advanced']
                 .map<DropdownMenuItem<String>>((String value) {
               return DropdownMenuItem<String>(
                 value: value,
-                child: Text(
-                  value[0].toUpperCase() + value.substring(1),
-                  style: const TextStyle(color: Colors.white),
+                child: Row(
+                  children: [
+                    if (value == 'children') 
+                      const Icon(Icons.child_care, size: 20, color: Colors.white),
+                    const SizedBox(width: 8),
+                    Text(
+                      value == 'children' 
+                        ? 'Children\'s'
+                        : value[0].toUpperCase() + value.substring(1),
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                  ],
                 ),
               );
             }).toList(),
