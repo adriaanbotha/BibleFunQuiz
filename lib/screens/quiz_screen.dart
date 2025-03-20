@@ -32,6 +32,7 @@ class _QuizScreenState extends State<QuizScreen> {
   String? _lastAnswerFeedback;
   bool? _lastAnswerCorrect;
   String? _lastQuestionReference;
+  List<List<String>> _shuffledOptions = [];
   
   // Add new variables for lives and timer
   int _lives = 3;  // Default lives
@@ -119,6 +120,13 @@ class _QuizScreenState extends State<QuizScreen> {
       if (_questionsPerQuiz != null && _questionsPerQuiz! > 0) {
         filteredQuestions.length = _questionsPerQuiz!.clamp(0, filteredQuestions.length);
       }
+
+      // Shuffle options for each question
+      _shuffledOptions = filteredQuestions.map((q) {
+        final options = List<String>.from(q['options']);
+        options.shuffle();
+        return options;
+      }).toList();
 
       setState(() {
         _questions = filteredQuestions;
@@ -603,7 +611,7 @@ class _QuizScreenState extends State<QuizScreen> {
                               const SizedBox(height: 24),
                               
                               // Answer Options
-                              ..._questions[_currentQuestionIndex]['options']
+                              ..._shuffledOptions[_currentQuestionIndex]
                                   .map<Widget>((option) => Padding(
                                         padding: const EdgeInsets.symmetric(vertical: 8.0),
                                         child: ElevatedButton(
