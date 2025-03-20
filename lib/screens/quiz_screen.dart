@@ -43,6 +43,7 @@ class _QuizScreenState extends State<QuizScreen> {
   bool _livesEnabled = true;
   int _timePerQuestion = 30;  // Default value
   bool _isTimerInitialized = false;  // Add this flag
+  String? _selectedBibleBook;
 
   @override
   void initState() {
@@ -66,6 +67,7 @@ class _QuizScreenState extends State<QuizScreen> {
     _questionsPerQuiz = await widget.settingsService.getQuestionsPerQuiz();
     _showReferences = await widget.settingsService.getShowReferences();
     _timePerQuestion = await widget.settingsService.getTimePerQuestion();
+    _selectedBibleBook = await widget.settingsService.getSelectedBibleBook();
     
     setState(() {
       _isLoading = false;
@@ -91,14 +93,35 @@ class _QuizScreenState extends State<QuizScreen> {
         return;
       }
 
+      // Filter questions by selected Bible book if specified
+      final filteredQuestions = _selectedBibleBook != null
+          ? questions.where((q) {
+              final reference = q['reference'] as String;
+              final book = reference.split(' ')[0];
+              return book == _selectedBibleBook;
+            }).toList()
+          : questions;
+
+      if (filteredQuestions.isEmpty) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('No questions available for ${_selectedBibleBook}. Please try a different book or difficulty.'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+        return;
+      }
+
       // Shuffle questions and limit to settings amount
-      questions.shuffle();
+      filteredQuestions.shuffle();
       if (_questionsPerQuiz != null && _questionsPerQuiz! > 0) {
-        questions.length = _questionsPerQuiz!.clamp(0, questions.length);
+        filteredQuestions.length = _questionsPerQuiz!.clamp(0, filteredQuestions.length);
       }
 
       setState(() {
-        _questions = questions;
+        _questions = filteredQuestions;
         _isLoading = false;
       });
     } catch (e) {

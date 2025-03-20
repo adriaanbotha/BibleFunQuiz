@@ -25,6 +25,7 @@ class SettingsService {
   static const String KEY_RANDOMIZE_QUESTIONS = 'randomize_questions';
   static const String KEY_QUESTION_COUNT = 'question_count';
   static const String KEY_DIFFICULTY = 'difficulty';
+  static const String KEY_SELECTED_BIBLE_BOOK = 'selected_bible_book';
 
   // Initialize SharedPreferences
   Future<void> init() async {
@@ -130,6 +131,21 @@ class SettingsService {
     await _prefs.setString(KEY_DIFFICULTY, value);
   }
 
+  // Bible book filter settings
+  Future<String?> getSelectedBibleBook() async {
+    await init();
+    return _prefs.getString(KEY_SELECTED_BIBLE_BOOK);
+  }
+
+  Future<void> setSelectedBibleBook(String? value) async {
+    await init();
+    if (value == null) {
+      await _prefs.remove(KEY_SELECTED_BIBLE_BOOK);
+    } else {
+      await _prefs.setString(KEY_SELECTED_BIBLE_BOOK, value);
+    }
+  }
+
   // Reset all settings to defaults
   Future<void> resetToDefaults() async {
     await init();
@@ -142,6 +158,7 @@ class SettingsService {
     await setRandomizeQuestions(DEFAULT_RANDOMIZE_QUESTIONS);
     await setQuestionCount(DEFAULT_QUESTION_COUNT);
     await setDifficulty(DEFAULT_DIFFICULTY);
+    await setSelectedBibleBook(null);  // Reset to show all books
   }
 
   Future<int> getQuestionsPerQuiz() async {
