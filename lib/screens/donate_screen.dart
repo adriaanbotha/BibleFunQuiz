@@ -67,7 +67,7 @@ class DonateScreen extends StatelessWidget {
                 'Join Our Patreon Family',
                 'Support us monthly and get exclusive benefits!',
                 Icons.pets,
-                () => _launchUrl('https://patreon.com/biblequizapp'),
+                () => _launchUrl('https://patreon.com/AdriaanBotha'),
               ),
               const SizedBox(height: 16),
 
