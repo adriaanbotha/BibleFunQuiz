@@ -9,6 +9,8 @@ import '../screens/which_church_screen.dart';
 import '../screens/gospel_screen.dart';
 import '../screens/unification_screen.dart';
 import '../screens/donate_screen.dart';
+import '../screens/leaderboard_screen.dart';
+import '../screens/bible_study_methods_screen.dart';
 
 class AppDrawer extends StatelessWidget {
   final AuthService authService;
@@ -83,11 +85,27 @@ class AppDrawer extends StatelessWidget {
             ),
           ),
           ListTile(
+            leading: const Icon(Icons.leaderboard),
+            title: const Text('Leaderboard'),
+            onTap: () => _handleNavigation(
+              context,
+              LeaderboardScreen(authService: authService),
+            ),
+          ),
+          ListTile(
             leading: const Icon(Icons.help),
             title: const Text('Instructions'),
             onTap: () => _handleNavigation(
               context,
               const InstructionsScreen(),
+            ),
+          ),
+          ListTile(
+            leading: const Icon(Icons.book),
+            title: const Text('Bible Study Methods'),
+            onTap: () => _handleNavigation(
+              context,
+              const BibleStudyMethodsScreen(),
             ),
           ),
           ListTile(

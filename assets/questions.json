@@ -1,4 +1,5 @@
 {
+  
     "children": [
       {"question": "What did God create on the first day?", "options": ["Animals", "Light", "People", "Trees"], "answer": "Light", "reference": "Genesis 1:3-5"},
       {"question": "Who were the first two people God made?", "options": ["Noah and Sarah", "Adam and Eve", "Moses and Miriam", "Abraham and Isaac"], "answer": "Adam and Eve", "reference": "Genesis 2:7, 2:22"},
@@ -68,7 +69,27 @@
       {"question": "How many commandments did God give Moses?", "options": ["Five", "Ten", "Twelve", "Fifteen"], "answer": "Ten", "reference": "Exodus 20:1-17"},
       {"question": "What is the Golden Rule Jesus taught?", "options": ["Do to others as you want done to you", "Be strong", "Work hard", "Obey your king"], "answer": "Do to others as you want done to you", "reference": "Matthew 7:12"},
       {"question": "Who wrote most of the Psalms?", "options": ["Moses", "David", "Solomon", "Paul"], "answer": "David", "reference": "Psalms (various)"},
-      {"question": "What are the four books about Jesus’ life called?", "options": ["Prophets", "Gospels", "Letters", "History"], "answer": "Gospels", "reference": "Matthew, Mark, Luke, John"}
+      {"question": "What are the four books about Jesus’ life called?", "options": ["Prophets", "Gospels", "Letters", "History"], "answer": "Gospels", "reference": "Matthew, Mark, Luke, John"},
+      {"question": "In the parable of the sower, where did some seeds fall that didn’t grow well?", "options": ["On good soil", "On the path", "In a river", "On a hill"], "answer": "On the path", "reference": "Matthew 13:4"},
+      {"question": "What did the man find hidden in a field in the parable of the hidden treasure?", "options": ["A pearl", "A treasure", "A lamp", "A sheep"], "answer": "A treasure", "reference": "Matthew 13:44"},
+      {"question": "In the parable of the mustard seed, what does the tiny seed grow into?", "options": ["A big tree", "A flower", "A vine", "A bush"], "answer": "A big tree", "reference": "Matthew 13:31-32"},
+      {"question": "What did the wise man build his house on in the parable of the wise and foolish builders?", "options": ["Sand", "Rock", "Mud", "Grass"], "answer": "Rock", "reference": "Matthew 7:24"},
+      {"question": "In the parable of the talents, how many talents did the master give to the first servant?", "options": ["One", "Two", "Five", "Ten"], "answer": "Five", "reference": "Matthew 25:15"},
+      {"question": "What did the shepherd do when he found his lost sheep in the parable of the lost sheep?", "options": ["Left it", "Sold it", "Rejoiced", "Hid it"], "answer": "Rejoiced", "reference": "Luke 15:5-6"},
+      {"question": "In the parable of the prodigal son, what did the son waste his money on?", "options": ["Helping others", "Wild living", "Buying sheep", "Building a house"], "answer": "Wild living", "reference": "Luke 15:13"},
+      {"question": "What did the woman lose in the parable of the lost coin?", "options": ["A ring", "A coin", "A lamp", "A sheep"], "answer": "A coin", "reference": "Luke 15:8"},
+      {"question": "In the parable of the Good Samaritan, who stopped to help the hurt man?", "options": ["A priest", "A Levite", "A Samaritan", "A king"], "answer": "A Samaritan", "reference": "Luke 10:33-34"},
+      {"question": "What did the rich man refuse to share in the parable of the rich man and Lazarus?", "options": ["His food", "His gold", "His house", "All of these"], "answer": "All of these", "reference": "Luke 16:19-21"},
+      {"question": "Who was swallowed by a big fish for disobeying God?", "options": ["Elijah", "Jonah", "Daniel", "Samuel"], "answer": "Jonah", "reference": "Jonah 1:17"},
+      {"question": "What did God send to feed the Israelites in the desert?", "options": ["Bread and fish", "Manna and quail", "Fruit and nuts", "Meat and cheese"], "answer": "Manna and quail", "reference": "Exodus 16:13-15"},
+      {"question": "Who led the Israelites into the Promised Land after Moses?", "options": ["Aaron", "Joshua", "Caleb", "Gideon"], "answer": "Joshua", "reference": "Joshua 1:1-2"},
+      {"question": "What did Samson use to defeat the Philistines?", "options": ["A sword", "A jawbone", "A spear", "A bow"], "answer": "A jawbone", "reference": "Judges 15:15"},
+      {"question": "Who interpreted the king’s dreams in Babylon?", "options": ["Joseph", "Daniel", "David", "Elijah"], "answer": "Daniel", "reference": "Daniel 2:27-28"},
+      {"question": "What did Jesus use to heal a blind man?", "options": ["Water", "Mud", "Oil", "Bread"], "answer": "Mud", "reference": "John 9:6-7"},
+      {"question": "Who denied knowing Jesus three times?", "options": ["Peter", "John", "James", "Andrew"], "answer": "Peter", "reference": "Matthew 26:69-75"},
+      {"question": "What fell down when the Israelites marched around it?", "options": ["A mountain", "The walls of Jericho", "A tower", "A bridge"], "answer": "The walls of Jericho", "reference": "Joshua 6:20"},
+      {"question": "Who was the first king of Israel?", "options": ["David", "Saul", "Solomon", "Samuel"], "answer": "Saul", "reference": "1 Samuel 10:1"},
+      {"question": "What did Jesus tell the rich young man to do to follow Him?", "options": ["Pray every day", "Sell all he had", "Build a church", "Feed the hungry"], "answer": "Sell all he had", "reference": "Matthew 19:21"}
     ],
   "beginner": [
     {"question": "Who built the ark?", "options": ["Moses", "Noah", "Abraham", "Jacob"], "answer": "Noah", "reference": "Genesis 6:14"},
