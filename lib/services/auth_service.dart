@@ -365,23 +365,26 @@ class AuthService {
       final Map<String, dynamic> jsonData = json.decode(jsonString);
       
       // Get questions for each difficulty level
+      final childrenQuestions = jsonData['children'] as List<dynamic>;
       final beginnerQuestions = jsonData['beginner'] as List<dynamic>;
       final intermediateQuestions = jsonData['intermediate'] as List<dynamic>;
       final advancedQuestions = jsonData['advanced'] as List<dynamic>;
       
       debugPrint('Loading questions to Upstash...');
+      debugPrint('Children\'s: ${childrenQuestions.length}');
       debugPrint('Beginner: ${beginnerQuestions.length}');
       debugPrint('Intermediate: ${intermediateQuestions.length}');
       debugPrint('Advanced: ${advancedQuestions.length}');
 
       // Store questions by difficulty
+      await _storeQuestionsByDifficulty('children', childrenQuestions);
       await _storeQuestionsByDifficulty('beginner', beginnerQuestions);
       await _storeQuestionsByDifficulty('intermediate', intermediateQuestions);
       await _storeQuestionsByDifficulty('advanced', advancedQuestions);
 
       // Store the total counts
       final countResponse = await http.post(
-        Uri.parse('$baseUrl/mset/questions:beginner:count/${beginnerQuestions.length}/questions:intermediate:count/${intermediateQuestions.length}/questions:advanced:count/${advancedQuestions.length}'),
+        Uri.parse('$baseUrl/mset/questions:children:count/${childrenQuestions.length}/questions:beginner:count/${beginnerQuestions.length}/questions:intermediate:count/${intermediateQuestions.length}/questions:advanced:count/${advancedQuestions.length}'),
         headers: {
           'Authorization': 'Bearer $apiKey',
         },
@@ -465,7 +468,7 @@ class AuthService {
 
   Future<bool> clearQuestions() async {
     try {
-      final difficulties = ['beginner', 'intermediate', 'advanced'];
+      final difficulties = ['children', 'beginner', 'intermediate', 'advanced'];
       
       for (final difficulty in difficulties) {
         // Get count for this difficulty
@@ -626,23 +629,21 @@ class AuthService {
 
   Future<List<Map<String, dynamic>>> getQuestionsByDifficulty(String difficulty) async {
     try {
-      // First try to get questions from cache
+      // Try to get cached questions first
       final cachedQuestions = await _getCachedQuestions(difficulty);
       if (cachedQuestions.isNotEmpty) {
         return cachedQuestions;
       }
 
-      // If cache is empty or expired, fetch from server
+      // If no cached questions, fetch from server
       final questions = await _fetchQuestionsFromServer(difficulty);
       if (questions.isNotEmpty) {
-        // Cache the questions
         await _cacheQuestions(difficulty, questions);
       }
       return questions;
     } catch (e) {
-      debugPrint('Error getting questions: $e');
-      // Try to get from cache as fallback
-      return await _getCachedQuestions(difficulty);
+      debugPrint('Error getting questions by difficulty: $e');
+      return [];
     }
   }
 
@@ -722,7 +723,7 @@ class AuthService {
   // Add method to force refresh cache
   Future<bool> refreshQuestionCache() async {
     try {
-      final difficulties = ['beginner', 'intermediate', 'advanced'];
+      final difficulties = ['children', 'beginner', 'intermediate', 'advanced'];
       for (final difficulty in difficulties) {
         final questions = await _fetchQuestionsFromServer(difficulty);
         if (questions.isNotEmpty) {
@@ -738,7 +739,7 @@ class AuthService {
 
   // Add method to clear cache
   Future<void> clearQuestionCache() async {
-    final difficulties = ['beginner', 'intermediate', 'advanced'];
+    final difficulties = ['children', 'beginner', 'intermediate', 'advanced'];
     for (final difficulty in difficulties) {
       await _prefs.remove('${_cachedQuestionsKey}_$difficulty');
       await _prefs.remove('${_questionsLastUpdatedKey}_$difficulty');
