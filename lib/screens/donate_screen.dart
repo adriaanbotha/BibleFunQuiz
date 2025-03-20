@@ -181,7 +181,7 @@ class DonateScreen extends StatelessWidget {
           _buildPaymentOption(
             'PayPal',
             Icons.payment,
-            () => _launchUrl('https://paypal.me/biblequest'),
+            () => _launchUrl('https://www.paypal.com/paypalme/BibleFunQuiz'),
           ),
           _buildPaymentOption(
             'Stripe',
