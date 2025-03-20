@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bible Fun Quiz - Interactive Bible Learning Game</title>
+    <style>
+        :root {
+            --primary-color: #FF9800;
+            --secondary-color: #FFB300;
+            --text-color: #333;
+            --background-color: #fff;
+            --accent-color: #FFB300;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        body {
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--background-color);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 60px 0;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+
+        .subtitle {
+            font-size: 1.5em;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 15px 30px;
+            background-color: white;
+            color: var(--primary-color);
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 1.2em;
+            transition: transform 0.3s ease;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+        }
+
+        section {
+            padding: 60px 0;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .feature-card h3 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        .feature-card p {
+            color: var(--text-color);
+        }
+
+        .download-section {
+            background-color: #f8f9fa;
+            text-align: center;
+        }
+
+        .download-options {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .download-button {
+            display: inline-flex;
+            align-items: center;
+            padding: 15px 30px;
+            background-color: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .download-button:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .donate-section {
+            text-align: center;
+        }
+
+        .donate-button {
+            display: inline-block;
+            padding: 15px 40px;
+            background-color: var(--accent-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-top: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .donate-button:hover {
+            transform: translateY(-3px);
+        }
+
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 40px;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+            
+            .subtitle {
+                font-size: 1.2em;
+            }
+            
+            .features {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Bible Fun Quiz</h1>
+            <p class="subtitle">Make Bible Learning Fun for Everyone!</p>
+            <a href="#download" class="cta-button">Download Now</a>
+        </div>
+    </header>
+
+    <section>
+        <div class="container">
+            <h2>About the Game</h2>
+            <p>Bible Fun Quiz is an engaging and interactive quiz game that makes learning about the Bible fun and accessible for everyone. Whether you're a child or an adult, this game offers an exciting way to test your knowledge and learn more about the Bible.</p>
+            
+            <div class="features">
+                <div class="feature-card">
+                    <h3>Multiple Difficulty Levels</h3>
+                    <p>Choose from various difficulty levels to match your knowledge and challenge yourself.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Kids Mode</h3>
+                    <p>Special mode designed for children aged 4-7, 8-11, and 12+ with age-appropriate questions.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Ad-Free Experience</h3>
+                    <p>Enjoy a clean, distraction-free learning environment without any advertisements.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="download" class="download-section">
+        <div class="container">
+            <h2>Download Bible Fun Quiz</h2>
+            <p>Available for multiple platforms. Choose your preferred version below:</p>
+            
+            <div class="download-options">
+                <a href="#" class="download-button">Download for Windows</a>
+                <a href="#" class="download-button">Download for macOS</a>
+                <a href="#" class="download-button">Download for Linux</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="donate-section">
+        <div class="container">
+            <h2>Support Bible Fun Quiz</h2>
+            <p>Help us continue developing and improving Bible Fun Quiz by supporting our project. Your contribution helps us:</p>
+            <ul style="list-style: none; margin: 20px 0;">
+                <li>Create new quiz content</li>
+                <li>Develop more features</li>
+                <li>Keep the app ad-free</li>
+                <li>Support our development team</li>
+            </ul>
+            <a href="https://patreon.com/AdriaanBotha" class="donate-button">Support on Patreon</a>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Bible Fun Quiz. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html> 

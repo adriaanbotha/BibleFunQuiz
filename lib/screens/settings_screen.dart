@@ -27,6 +27,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   bool _randomizeQuestions = true;
   int _questionCount = 25;
   bool _isLoading = true;
+  String? _selectedBibleBook;
 
   @override
   void initState() {
@@ -45,6 +46,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final showReferences = await widget.settingsService.getShowReferences();
     final randomizeQuestions = await widget.settingsService.getRandomizeQuestions();
     final questionCount = await widget.settingsService.getQuestionCount();
+    final selectedBibleBook = await widget.settingsService.getSelectedBibleBook();
 
     setState(() {
       _soundEnabled = soundEnabled;
@@ -55,6 +57,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       _showReferences = showReferences;
       _randomizeQuestions = randomizeQuestions;
       _questionCount = questionCount;
+      _selectedBibleBook = selectedBibleBook;
       _isLoading = false;
     });
   }
@@ -258,6 +261,316 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               await widget.settingsService.setQuestionCount(newValue);
                               setState(() {
                                 _questionCount = newValue;
+                              });
+                            }
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const Divider(),
+
+                // Bible Book Filter
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Bible Book Filter',
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 14,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                        child: DropdownButton<String?>(
+                          value: _selectedBibleBook,
+                          isExpanded: true,
+                          underline: Container(),
+                          hint: const Text('All Books'),
+                          items: [
+                            const DropdownMenuItem<String?>(
+                              value: null,
+                              child: Text('All Books'),
+                            ),
+                            const DropdownMenuItem<String?>(
+                              value: 'Genesis',
+                              child: Text('Genesis'),
+                            ),
+                            const DropdownMenuItem<String?>(
+                              value: 'Exodus',
+                              child: Text('Exodus'),
+                            ),
+                            const DropdownMenuItem<String?>(
+                              value: 'Leviticus',
+                              child: Text('Leviticus'),
+                            ),
+                            const DropdownMenuItem<String?>(
+                              value: 'Numbers',
+                              child: Text('Numbers'),
+                            ),
+                            const DropdownMenuItem<String?>(
+                              value: 'Deuteronomy',
+                              child: Text('Deuteronomy'),
+                            ),
+                            const DropdownMenuItem<String?>(
+                              value: 'Joshua',
+                              child: Text('Joshua'),
+                            ),
+                            const DropdownMenuItem<String?>(
+                              value: 'Judges',
+                              child: Text('Judges'),
+                            ),
+                            const DropdownMenuItem<String?>(
+                              value: 'Ruth',
+                              child: Text('Ruth'),
+                            ),
+                            const DropdownMenuItem<String?>(
+                              value: '1 Samuel',
+                              child: Text('1 Samuel'),
+                            ),
+                            const DropdownMenuItem<String?>(
+                              value: '2 Samuel',
+                              child: Text('2 Samuel'),
+                            ),
+                            const DropdownMenuItem<String?>(
+                              value: '1 Kings',
+                              child: Text('1 Kings'),
+                            ),
+                            const DropdownMenuItem<String?>(
+                              value: '2 Kings',
+                              child: Text('2 Kings'),
+                            ),
+                            const DropdownMenuItem<String?>(
+                              value: '1 Chronicles',
+                              child: Text('1 Chronicles'),
+                            ),
+                            const DropdownMenuItem<String?>(
+                              value: '2 Chronicles',
+                              child: Text('2 Chronicles'),
+                            ),
+                            const DropdownMenuItem<String?>(
+                              value: 'Ezra',
+                              child: Text('Ezra'),
+                            ),
+                            const DropdownMenuItem<String?>(
+                              value: 'Nehemiah',
+                              child: Text('Nehemiah'),
+                            ),
+                            const DropdownMenuItem<String?>(
+                              value: 'Esther',
+                              child: Text('Esther'),
+                            ),
+                            const DropdownMenuItem<String?>(
+                              value: 'Job',
+                              child: Text('Job'),
+                            ),
+                            const DropdownMenuItem<String?>(
+                              value: 'Psalms',
+                              child: Text('Psalms'),
+                            ),
+                            const DropdownMenuItem<String?>(
+                              value: 'Proverbs',
+                              child: Text('Proverbs'),
+                            ),
+                            const DropdownMenuItem<String?>(
+                              value: 'Ecclesiastes',
+                              child: Text('Ecclesiastes'),
+                            ),
+                            const DropdownMenuItem<String?>(
+                              value: 'Song of Solomon',
+                              child: Text('Song of Solomon'),
+                            ),
+                            const DropdownMenuItem<String?>(
+                              value: 'Isaiah',
+                              child: Text('Isaiah'),
+                            ),
+                            const DropdownMenuItem<String?>(
+                              value: 'Jeremiah',
+                              child: Text('Jeremiah'),
+                            ),
+                            const DropdownMenuItem<String?>(
+                              value: 'Lamentations',
+                              child: Text('Lamentations'),
+                            ),
+                            const DropdownMenuItem<String?>(
+                              value: 'Ezekiel',
+                              child: Text('Ezekiel'),
+                            ),
+                            const DropdownMenuItem<String?>(
+                              value: 'Daniel',
+                              child: Text('Daniel'),
+                            ),
+                            const DropdownMenuItem<String?>(
+                              value: 'Hosea',
+                              child: Text('Hosea'),
+                            ),
+                            const DropdownMenuItem<String?>(
+                              value: 'Joel',
+                              child: Text('Joel'),
+                            ),
+                            const DropdownMenuItem<String?>(
+                              value: 'Amos',
+                              child: Text('Amos'),
+                            ),
+                            const DropdownMenuItem<String?>(
+                              value: 'Obadiah',
+                              child: Text('Obadiah'),
+                            ),
+                            const DropdownMenuItem<String?>(
+                              value: 'Jonah',
+                              child: Text('Jonah'),
+                            ),
+                            const DropdownMenuItem<String?>(
+                              value: 'Micah',
+                              child: Text('Micah'),
+                            ),
+                            const DropdownMenuItem<String?>(
+                              value: 'Nahum',
+                              child: Text('Nahum'),
+                            ),
+                            const DropdownMenuItem<String?>(
+                              value: 'Habakkuk',
+                              child: Text('Habakkuk'),
+                            ),
+                            const DropdownMenuItem<String?>(
+                              value: 'Zephaniah',
+                              child: Text('Zephaniah'),
+                            ),
+                            const DropdownMenuItem<String?>(
+                              value: 'Haggai',
+                              child: Text('Haggai'),
+                            ),
+                            const DropdownMenuItem<String?>(
+                              value: 'Zechariah',
+                              child: Text('Zechariah'),
+                            ),
+                            const DropdownMenuItem<String?>(
+                              value: 'Malachi',
+                              child: Text('Malachi'),
+                            ),
+                            const DropdownMenuItem<String?>(
+                              value: 'Matthew',
+                              child: Text('Matthew'),
+                            ),
+                            const DropdownMenuItem<String?>(
+                              value: 'Mark',
+                              child: Text('Mark'),
+                            ),
+                            const DropdownMenuItem<String?>(
+                              value: 'Luke',
+                              child: Text('Luke'),
+                            ),
+                            const DropdownMenuItem<String?>(
+                              value: 'John',
+                              child: Text('John'),
+                            ),
+                            const DropdownMenuItem<String?>(
+                              value: 'Acts',
+                              child: Text('Acts'),
+                            ),
+                            const DropdownMenuItem<String?>(
+                              value: 'Romans',
+                              child: Text('Romans'),
+                            ),
+                            const DropdownMenuItem<String?>(
+                              value: '1 Corinthians',
+                              child: Text('1 Corinthians'),
+                            ),
+                            const DropdownMenuItem<String?>(
+                              value: '2 Corinthians',
+                              child: Text('2 Corinthians'),
+                            ),
+                            const DropdownMenuItem<String?>(
+                              value: 'Galatians',
+                              child: Text('Galatians'),
+                            ),
+                            const DropdownMenuItem<String?>(
+                              value: 'Ephesians',
+                              child: Text('Ephesians'),
+                            ),
+                            const DropdownMenuItem<String?>(
+                              value: 'Philippians',
+                              child: Text('Philippians'),
+                            ),
+                            const DropdownMenuItem<String?>(
+                              value: 'Colossians',
+                              child: Text('Colossians'),
+                            ),
+                            const DropdownMenuItem<String?>(
+                              value: '1 Thessalonians',
+                              child: Text('1 Thessalonians'),
+                            ),
+                            const DropdownMenuItem<String?>(
+                              value: '2 Thessalonians',
+                              child: Text('2 Thessalonians'),
+                            ),
+                            const DropdownMenuItem<String?>(
+                              value: '1 Timothy',
+                              child: Text('1 Timothy'),
+                            ),
+                            const DropdownMenuItem<String?>(
+                              value: '2 Timothy',
+                              child: Text('2 Timothy'),
+                            ),
+                            const DropdownMenuItem<String?>(
+                              value: 'Titus',
+                              child: Text('Titus'),
+                            ),
+                            const DropdownMenuItem<String?>(
+                              value: 'Philemon',
+                              child: Text('Philemon'),
+                            ),
+                            const DropdownMenuItem<String?>(
+                              value: 'Hebrews',
+                              child: Text('Hebrews'),
+                            ),
+                            const DropdownMenuItem<String?>(
+                              value: 'James',
+                              child: Text('James'),
+                            ),
+                            const DropdownMenuItem<String?>(
+                              value: '1 Peter',
+                              child: Text('1 Peter'),
+                            ),
+                            const DropdownMenuItem<String?>(
+                              value: '2 Peter',
+                              child: Text('2 Peter'),
+                            ),
+                            const DropdownMenuItem<String?>(
+                              value: '1 John',
+                              child: Text('1 John'),
+                            ),
+                            const DropdownMenuItem<String?>(
+                              value: '2 John',
+                              child: Text('2 John'),
+                            ),
+                            const DropdownMenuItem<String?>(
+                              value: '3 John',
+                              child: Text('3 John'),
+                            ),
+                            const DropdownMenuItem<String?>(
+                              value: 'Jude',
+                              child: Text('Jude'),
+                            ),
+                            const DropdownMenuItem<String?>(
+                              value: 'Revelation',
+                              child: Text('Revelation'),
+                            ),
+                          ],
+                          onChanged: (String? newValue) async {
+                            if (newValue != _selectedBibleBook) {
+                              await widget.settingsService.setSelectedBibleBook(newValue);
+                              setState(() {
+                                _selectedBibleBook = newValue;
                               });
                             }
                           },
