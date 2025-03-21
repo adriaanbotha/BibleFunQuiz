@@ -81,9 +81,9 @@
     },
     {
       "name": "collection",
-      "rootUri": "file:///Users/adriaan/.pub-cache/hosted/pub.dev/collection-1.19.1",
+      "rootUri": "file:///Users/adriaan/.pub-cache/hosted/pub.dev/collection-1.18.0",
       "packageUri": "lib/",
-      "languageVersion": "3.4"
+      "languageVersion": "2.18"
     },
     {
       "name": "connectivity_plus",
@@ -524,7 +524,7 @@
       "languageVersion": "3.2"
     }
   ],
-  "generated": "2025-03-21T03:15:53.533149Z",
+  "generated": "2025-03-21T03:24:23.668876Z",
   "generator": "pub",
   "generatorVersion": "3.7.2",
   "flutterRoot": "file:///Users/adriaan/development/flutter",
