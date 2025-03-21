@@ -533,10 +533,10 @@
       "name": "bible_quest",
       "rootUri": "../",
       "packageUri": "lib/",
-      "languageVersion": "2.18"
+      "languageVersion": "3.2"
     }
   ],
-  "generated": "2025-03-21T02:04:22.394254Z",
+  "generated": "2025-03-21T03:01:40.621995Z",
   "generator": "pub",
   "generatorVersion": "3.7.2",
   "flutterRoot": "file:///Users/adriaan/development/flutter",
