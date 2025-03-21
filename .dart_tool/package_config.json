@@ -87,7 +87,7 @@
     },
     {
       "name": "connectivity_plus",
-      "rootUri": "file:///Users/adriaan/.pub-cache/hosted/pub.dev/connectivity_plus-5.0.2",
+      "rootUri": "file:///Users/adriaan/.pub-cache/hosted/pub.dev/connectivity_plus-4.0.2",
       "packageUri": "lib/",
       "languageVersion": "2.18"
     },
@@ -135,15 +135,9 @@
     },
     {
       "name": "file",
-      "rootUri": "file:///Users/adriaan/.pub-cache/hosted/pub.dev/file-7.0.1",
+      "rootUri": "file:///Users/adriaan/.pub-cache/hosted/pub.dev/file-6.1.4",
       "packageUri": "lib/",
-      "languageVersion": "3.0"
-    },
-    {
-      "name": "fixnum",
-      "rootUri": "file:///Users/adriaan/.pub-cache/hosted/pub.dev/fixnum-1.1.1",
-      "packageUri": "lib/",
-      "languageVersion": "3.1"
+      "languageVersion": "2.12"
     },
     {
       "name": "flutter",
@@ -153,9 +147,9 @@
     },
     {
       "name": "flutter_lints",
-      "rootUri": "file:///Users/adriaan/.pub-cache/hosted/pub.dev/flutter_lints-4.0.0",
+      "rootUri": "file:///Users/adriaan/.pub-cache/hosted/pub.dev/flutter_lints-2.0.3",
       "packageUri": "lib/",
-      "languageVersion": "3.1"
+      "languageVersion": "2.19"
     },
     {
       "name": "flutter_test",
@@ -171,7 +165,7 @@
     },
     {
       "name": "google_fonts",
-      "rootUri": "file:///Users/adriaan/.pub-cache/hosted/pub.dev/google_fonts-6.2.1",
+      "rootUri": "file:///Users/adriaan/.pub-cache/hosted/pub.dev/google_fonts-5.1.0",
       "packageUri": "lib/",
       "languageVersion": "2.14"
     },
@@ -219,9 +213,9 @@
     },
     {
       "name": "lints",
-      "rootUri": "file:///Users/adriaan/.pub-cache/hosted/pub.dev/lints-4.0.0",
+      "rootUri": "file:///Users/adriaan/.pub-cache/hosted/pub.dev/lints-2.1.1",
       "packageUri": "lib/",
-      "languageVersion": "3.1"
+      "languageVersion": "3.0"
     },
     {
       "name": "matcher",
@@ -327,9 +321,9 @@
     },
     {
       "name": "share_plus",
-      "rootUri": "file:///Users/adriaan/.pub-cache/hosted/pub.dev/share_plus-7.2.2",
+      "rootUri": "file:///Users/adriaan/.pub-cache/hosted/pub.dev/share_plus-6.3.4",
       "packageUri": "lib/",
-      "languageVersion": "2.18"
+      "languageVersion": "2.12"
     },
     {
       "name": "share_plus_platform_interface",
@@ -390,12 +384,6 @@
       "rootUri": "file:///Users/adriaan/.pub-cache/hosted/pub.dev/source_span-1.10.1",
       "packageUri": "lib/",
       "languageVersion": "3.1"
-    },
-    {
-      "name": "sprintf",
-      "rootUri": "file:///Users/adriaan/.pub-cache/hosted/pub.dev/sprintf-7.0.0",
-      "packageUri": "lib/",
-      "languageVersion": "2.12"
     },
     {
       "name": "stack_trace",
@@ -489,9 +477,9 @@
     },
     {
       "name": "uuid",
-      "rootUri": "file:///Users/adriaan/.pub-cache/hosted/pub.dev/uuid-4.5.1",
+      "rootUri": "file:///Users/adriaan/.pub-cache/hosted/pub.dev/uuid-3.0.7",
       "packageUri": "lib/",
-      "languageVersion": "3.0"
+      "languageVersion": "2.12"
     },
     {
       "name": "vector_math",
@@ -513,7 +501,7 @@
     },
     {
       "name": "win32",
-      "rootUri": "file:///Users/adriaan/.pub-cache/hosted/pub.dev/win32-5.11.0",
+      "rootUri": "file:///Users/adriaan/.pub-cache/hosted/pub.dev/win32-5.12.0",
       "packageUri": "lib/",
       "languageVersion": "3.7"
     },
@@ -536,7 +524,7 @@
       "languageVersion": "3.2"
     }
   ],
-  "generated": "2025-03-21T03:06:56.268527Z",
+  "generated": "2025-03-21T03:15:53.533149Z",
   "generator": "pub",
   "generatorVersion": "3.7.2",
   "flutterRoot": "file:///Users/adriaan/development/flutter",
