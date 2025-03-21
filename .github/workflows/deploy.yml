@@ -40,7 +40,18 @@ jobs:
         with:
           flutter-version: '3.16.0'
           channel: 'stable'
-          cache: true
+          cache: false
+
+      - name: Cache Flutter dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.pub-cache
+            ~/.pub
+            build/
+          key: ${{ runner.os }}-flutter-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-flutter-
 
       - name: Disable analytics
         run: |
