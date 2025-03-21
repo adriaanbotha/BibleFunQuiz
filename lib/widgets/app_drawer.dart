@@ -24,16 +24,19 @@ class AppDrawer extends StatelessWidget {
     required this.onClose,
   }) : super(key: key);
 
-  Future<void> _handleNavigation(BuildContext context, Widget screen) async {
-    onClose(); // Close the drawer
-    // Wait for the drawer animation to complete
-    await Future.delayed(const Duration(milliseconds: 300));
-    if (context.mounted) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => screen),
-      );
-    }
+  void _handleNavigation(BuildContext context, Widget screen) {
+    // Close the drawer immediately
+    onClose();
+    
+    // Use a microtask to ensure the drawer is closed before navigation
+    Future.microtask(() {
+      if (context.mounted) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => screen),
+        );
+      }
+    });
   }
 
   @override
