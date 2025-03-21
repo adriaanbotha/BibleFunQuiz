@@ -5,7 +5,7 @@ license: Proprietary
 publish_to: 'none'
 
 environment:
-  sdk: '>=2.18.0 <3.0.0' # Compatible Flutter SDK range
+  sdk: '>=3.2.0 <4.0.0'  # Updated to match your current Dart SDK version
 
 dependencies:
   flutter:
@@ -16,7 +16,7 @@ dependencies:
   share_plus: ^7.2.0 # For home_screen.dart
   http_client: ^1.5.3
   http: ^1.2.1
-  crypto: ^3.0.5
+  crypto: ^3.0.3  # Downgraded to a version compatible with Dart SDK 3.2.0
   uuid: ^4.4.2
   shared_preferences: ^2.2.0
   connectivity_plus: ^5.0.2
