@@ -1,10 +1,10 @@
-name: 🚀 Deploy to GitHub Pages
+name: Deploy to GitHub Pages
 
 # Trigger on pushes to main branch
 on:
   # Runs on pushes targeting the default branch
   push:
-    branches: ["main"]
+    branches: [ main ]
     
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -47,19 +47,22 @@ jobs:
           flutter --disable-analytics
           dart --disable-analytics
 
-      - name: 📦 Install dependencies
-        run: flutter pub get
+      - name: 📦 Install web dependencies
+        run: |
+          cp pubspec.web.yaml pubspec.yaml
+          flutter pub get
 
       - name: 🔨 Build web app
         run: flutter build web --base-href /bible_quest/
 
       - name: Setup Pages
-        uses: actions/configure-pages@v4
+        id: pages
+        uses: actions/configure-pages@v3
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v2
         with:
-          path: build/web
+          path: 'build/web'
 
   deploy:
     name: 🚀 Deploy to GitHub Pages
@@ -71,4 +74,4 @@ jobs:
     steps:
       - name: 🌐 Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4 
+        uses: actions/deploy-pages@v2 

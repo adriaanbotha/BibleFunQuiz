@@ -15,45 +15,45 @@
     },
     {
       "name": "audioplayers",
-      "rootUri": "file:///Users/adriaan/.pub-cache/hosted/pub.dev/audioplayers-5.2.1",
+      "rootUri": "file:///Users/adriaan/.pub-cache/hosted/pub.dev/audioplayers-4.1.0",
       "packageUri": "lib/",
-      "languageVersion": "3.0"
+      "languageVersion": "2.18"
     },
     {
       "name": "audioplayers_android",
-      "rootUri": "file:///Users/adriaan/.pub-cache/hosted/pub.dev/audioplayers_android-4.0.3",
+      "rootUri": "file:///Users/adriaan/.pub-cache/hosted/pub.dev/audioplayers_android-3.0.2",
       "packageUri": "lib/",
-      "languageVersion": "3.0"
+      "languageVersion": "2.18"
     },
     {
       "name": "audioplayers_darwin",
-      "rootUri": "file:///Users/adriaan/.pub-cache/hosted/pub.dev/audioplayers_darwin-5.0.2",
+      "rootUri": "file:///Users/adriaan/.pub-cache/hosted/pub.dev/audioplayers_darwin-4.1.0",
       "packageUri": "lib/",
-      "languageVersion": "3.0"
+      "languageVersion": "2.18"
     },
     {
       "name": "audioplayers_linux",
-      "rootUri": "file:///Users/adriaan/.pub-cache/hosted/pub.dev/audioplayers_linux-3.1.0",
+      "rootUri": "file:///Users/adriaan/.pub-cache/hosted/pub.dev/audioplayers_linux-2.1.0",
       "packageUri": "lib/",
-      "languageVersion": "3.0"
+      "languageVersion": "2.18"
     },
     {
       "name": "audioplayers_platform_interface",
-      "rootUri": "file:///Users/adriaan/.pub-cache/hosted/pub.dev/audioplayers_platform_interface-6.1.0",
+      "rootUri": "file:///Users/adriaan/.pub-cache/hosted/pub.dev/audioplayers_platform_interface-5.0.1",
       "packageUri": "lib/",
-      "languageVersion": "3.0"
+      "languageVersion": "2.18"
     },
     {
       "name": "audioplayers_web",
-      "rootUri": "file:///Users/adriaan/.pub-cache/hosted/pub.dev/audioplayers_web-4.1.0",
+      "rootUri": "file:///Users/adriaan/.pub-cache/hosted/pub.dev/audioplayers_web-3.1.0",
       "packageUri": "lib/",
-      "languageVersion": "3.0"
+      "languageVersion": "2.18"
     },
     {
       "name": "audioplayers_windows",
-      "rootUri": "file:///Users/adriaan/.pub-cache/hosted/pub.dev/audioplayers_windows-3.1.0",
+      "rootUri": "file:///Users/adriaan/.pub-cache/hosted/pub.dev/audioplayers_windows-2.0.2",
       "packageUri": "lib/",
-      "languageVersion": "3.0"
+      "languageVersion": "2.18"
     },
     {
       "name": "boolean_selector",
@@ -165,19 +165,19 @@
     },
     {
       "name": "google_fonts",
-      "rootUri": "file:///Users/adriaan/.pub-cache/hosted/pub.dev/google_fonts-5.1.0",
+      "rootUri": "file:///Users/adriaan/.pub-cache/hosted/pub.dev/google_fonts-4.0.4",
       "packageUri": "lib/",
       "languageVersion": "2.14"
     },
     {
       "name": "http",
-      "rootUri": "file:///Users/adriaan/.pub-cache/hosted/pub.dev/http-1.3.0",
+      "rootUri": "file:///Users/adriaan/.pub-cache/hosted/pub.dev/http-0.13.6",
       "packageUri": "lib/",
-      "languageVersion": "3.4"
+      "languageVersion": "2.19"
     },
     {
       "name": "http_client",
-      "rootUri": "file:///Users/adriaan/.pub-cache/hosted/pub.dev/http_client-1.5.3",
+      "rootUri": "file:///Users/adriaan/.pub-cache/hosted/pub.dev/http_client-1.5.2",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -524,7 +524,7 @@
       "languageVersion": "3.2"
     }
   ],
-  "generated": "2025-03-21T03:15:53.533149Z",
+  "generated": "2025-03-21T03:48:33.489442Z",
   "generator": "pub",
   "generatorVersion": "3.7.2",
   "flutterRoot": "file:///Users/adriaan/development/flutter",
