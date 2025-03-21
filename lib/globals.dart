@@ -3,7 +3,7 @@ import '../services/upstash_service.dart' as upstash;
 
 const Color primaryColor = Color(0xFF2E7D32);
 const Color accentColor = Color(0xFFFFC107);
-const String appName = 'Bible Quest';
+const String appName = 'Bible Fun Quiz';
 
 String? currentUserId;
 String? currentUsername;

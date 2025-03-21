@@ -1,6 +1,18 @@
 # Bible Study Methods for Kids
 
-This guide outlines common Bible study methods and how they can be adapted for children’s lessons. Each method suggests question types (linked to prior work) to engage kids with Scripture in fun, meaningful ways.
+## Spiritual Foundation
+**Key Scripture**: "So then faith comes by hearing, and hearing by the word of God." - Romans 10:17
+
+All Bible study should be led by the Holy Spirit through a personal relationship with Jesus Christ. As Jesus Himself said, "I am the way, the truth, and the life" (John 14:6). He is the Word made flesh (John 1:14), and through Him we can understand and teach the Word effectively. The key to effective Bible study is relationship - relationship with the Father, Son, and Holy Spirit. As we develop this relationship, we learn to hear His voice and understand His Word more deeply.
+
+Remember:
+- Bible study is not just about knowledge, but about relationship
+- The Holy Spirit is our teacher and guide
+- Jesus is the Word and the way to understanding
+- All study should be prayerful and Spirit-led
+- The goal is to know Him, not just know about Him
+
+This guide outlines common Bible study methods and how they can be adapted for children's lessons. Each method suggests question types (linked to prior work) to engage kids with Scripture in fun, meaningful ways.
 
 ## Inductive Bible Study Method
 **Approach**: Observe, interpret, apply—start with the text, understand its meaning, and connect it to life.  
@@ -20,7 +32,7 @@ This guide outlines common Bible study methods and how they can be adapted for c
 **Bible Basis**: Thematic verses (e.g., Matthew 22, Genesis 9).
 
 ## Character Study Method
-**Approach**: Focus on a person’s life, actions, and lessons.  
+**Approach**: Focus on a person's life, actions, and lessons.  
 **For Kids**: Makes heroes and heroines memorable.  
 **Question Types**:  
 - Factual Recall: "Who was David?"  
@@ -49,8 +61,8 @@ This guide outlines common Bible study methods and how they can be adapted for c
 **Approach**: Explore the meaning of specific words.  
 **For Kids**: Builds concepts with simple terms.  
 **Question Types**:  
-- Teaching: "What does ‘faith’ mean here?"  
-- Object: "What’s a talent in this story?"  
+- Teaching: "What does 'faith' mean here?"  
+- Object: "What's a talent in this story?"  
 **Bible Basis**: Key words (e.g., Matthew 25, Hebrews 11).
 
 ## Devotional Method
