@@ -22,13 +22,19 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+<<<<<<< Updated upstream
       # Set up Flutter
       - name: Set up Flutter
+=======
+      - name: 🎯 Set up Flutter
+>>>>>>> Stashed changes
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.16.0'
           channel: 'stable'
+          cache: true
 
+<<<<<<< Updated upstream
       # Install dependencies
       - name: Install dependencies
         run: flutter pub get
@@ -40,6 +46,19 @@ jobs:
       # Upload artifact
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
+=======
+      - name: 📦 Install dependencies
+        run: flutter pub get
+
+      - name: 🔨 Build web app
+        run: flutter build web --base-href /bible_quest/
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+>>>>>>> Stashed changes
         with:
           path: build/web
 
@@ -52,4 +71,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v2 
+        uses: actions/deploy-pages@v4 
