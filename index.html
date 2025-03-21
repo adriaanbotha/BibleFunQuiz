@@ -194,23 +194,67 @@
 
         .donate-section {
             text-align: center;
+            padding: 60px 0;
+            background-color: #f8f9fa;
+        }
+
+        .donation-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 30px;
         }
 
         .donate-button {
-            display: inline-block;
-            padding: 15px 40px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px 30px;
             background-color: var(--accent-color);
             color: white;
             text-decoration: none;
             border-radius: 30px;
             font-weight: bold;
             font-size: 1.2em;
-            margin-top: 20px;
-            transition: transform 0.3s ease;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+            min-width: 250px;
+            gap: 12px;
+        }
+
+        .button-icon {
+            width: 24px;
+            height: 24px;
+            flex-shrink: 0;
         }
 
         .donate-button:hover {
             transform: translateY(-3px);
+            background-color: var(--secondary-color);
+        }
+
+        .donate-button img {
+            height: 24px;
+            margin-right: 12px;
+            vertical-align: middle;
+        }
+
+        .patreon-button {
+            background-color: #FF424D;
+        }
+
+        .patreon-button:hover {
+            background-color: #FF424D;
+            opacity: 0.9;
+        }
+
+        .paypal-button {
+            background-color: #003087;
+        }
+
+        .paypal-button:hover {
+            background-color: #003087;
+            opacity: 0.9;
         }
 
         footer {
@@ -304,13 +348,17 @@
                 <li>Keep the app ad-free</li>
                 <li>Support our development team</li>
             </ul>
-            <div class="download-options">
-                <a href="https://www.paypal.com/paypalme/BibleFunQuiz" target="_blank" class="donate-button">
-                    <img src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/PP_logo_h_100x26.png" alt="PayPal" height="20" style="margin-right: 10px;">
+            <div class="donation-buttons">
+                <a href="https://www.paypal.com/paypalme/BibleFunQuiz" target="_blank" class="donate-button paypal-button">
+                    <svg class="button-icon" viewBox="0 0 24 24" width="24" height="24">
+                        <path fill="currentColor" d="M20.067 8.478c.492.315.844.825.983 1.39.185.716.181 1.498-.043 2.28-.49 1.723-1.51 2.435-2.892 2.435h-.395c-.316 0-.576.24-.636.537l-.05.187-.447 2.763-.062.27c-.072.362-.37.63-.752.63H12.93c-.346 0-.607-.225-.566-.531l.086-.386.411-2.54.019-.127c.06-.362.36-.626.752-.626h.395c1.383 0 2.402-.712 2.893-2.435.224-.782.228-1.564.043-2.28-.14-.565-.491-1.075-.984-1.39m-1.154-1.982c-.301-.947-.957-1.284-1.769-1.284H12.93c-.348 0-.614.23-.666.552l-1.557 9.252c-.07.41.25.78.666.78h2.833c.316 0 .576-.24.636-.537l.05-.187.447-2.763.062-.27c.072-.362.37-.63.752-.63h.395c1.383 0 2.402-.712 2.893-2.435.224-.782.228-1.564.043-2.28-.14-.565-.491-1.075-.984-1.39m-4.713.982h1.006c.346 0 .607.225.566.531l-.086.386-.411 2.54-.019.127c-.06.362-.36.626-.752.626h-.395c-1.383 0-2.402.712-2.893 2.435-.224.782-.228 1.564-.043 2.28.14.565.491 1.075.984 1.39.301.947.957 1.284 1.769 1.284h2.833c.348 0 .614-.23.666-.552l1.557-9.252c.07-.41-.25-.78-.666-.78h-2.833c-.346 0-.607-.225-.566-.531"></path>
+                    </svg>
                     Donate with PayPal
                 </a>
-                <a href="https://patreon.com/AdriaanBotha" target="_blank" class="donate-button">
-                    <img src="https://c5.patreon.com/external/logo/guidelines/wordmark_white.png" alt="Patreon" height="20" style="margin-right: 10px;">
+                <a href="https://patreon.com/AdriaanBotha" target="_blank" class="donate-button patreon-button">
+                    <svg class="button-icon" viewBox="0 0 24 24" width="24" height="24">
+                        <path fill="currentColor" d="M14.82 2.41c3.96 0 7.18 3.24 7.18 7.21 0 3.96-3.22 7.18-7.18 7.18-3.97 0-7.21-3.22-7.21-7.18 0-3.97 3.24-7.21 7.21-7.21M2 21.6h3.5V2.41H2V21.6z"></path>
+                    </svg>
                     Support on Patreon
                 </a>
             </div>
