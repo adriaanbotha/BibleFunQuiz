@@ -10,22 +10,27 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  google_fonts: ^6.1.0 # Add this
-  audioplayers: ^5.2.0 # For quiz_screen.dart
-  url_launcher: ^6.1.10 # For home_screen.dart
-  share_plus: ^7.2.0 # For home_screen.dart
+  google_fonts: ^5.1.0
+  audioplayers: ^5.2.1
+  url_launcher: ^6.1.10
+  share_plus: ^6.3.4
   http_client: ^1.5.3
-  http: ^1.1.2  # Downgraded to a version compatible with Dart SDK 3.2.0
-  crypto: ^3.0.3  # Downgraded to a version compatible with Dart SDK 3.2.0
-  uuid: ^4.4.2
+  http: ^1.1.0
+  crypto: ^3.0.3
+  uuid: ^3.0.7
   shared_preferences: ^2.2.0
-  connectivity_plus: ^5.0.2
-  provider: ^6.1.1
+  connectivity_plus: ^4.0.2
+  provider: ^6.0.5
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^4.0.0 # For code linting (optional)
+  flutter_lints: ^2.0.3
+
+# Override dependencies to fix compatibility issues
+dependency_overrides:
+  win32: ^5.0.0
+  collection: ^1.18.0
 
 flutter:
   uses-material-design: true
