@@ -22,10 +22,17 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       
+      - name: Clear GitHub Actions cache
+        run: |
+          rm -rf ~/.pub-cache
+          rm -rf ~/.pub
+          rm -rf build/
+      
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.16.0'
           channel: 'stable'
+          cache: false
       
       - name: Install web dependencies
         run: |
