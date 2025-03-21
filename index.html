@@ -43,24 +43,42 @@
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 20px;
+            position: relative;
+            z-index: 1;
         }
 
         header {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            background: url('images/bible-fun-quiz-bg.jpg') center/cover no-repeat;
             color: white;
-            padding: 60px 0;
+            padding: 120px 0;
             text-align: center;
+            position: relative;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255, 152, 0, 0.9), rgba(255, 179, 0, 0.85));
+            z-index: 0;
         }
 
         h1 {
-            font-size: 3em;
+            font-size: 4em;
             margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            position: relative;
         }
 
         .subtitle {
-            font-size: 1.5em;
+            font-size: 1.8em;
             margin-bottom: 30px;
-            opacity: 0.9;
+            opacity: 0.95;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+            position: relative;
         }
 
         .cta-button {
