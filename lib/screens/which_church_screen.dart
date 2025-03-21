@@ -77,6 +77,51 @@ class WhichChurchScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Disclaimer Card
+            Card(
+              color: Colors.amber[50],
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(Icons.info_outline, color: Colors.amber[900], size: 24),
+                        const SizedBox(width: 8),
+                        Text(
+                          'Important Disclaimer',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.amber[900],
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      'The author of this app has been following these ministries for several years and, through the guidance of the Holy Spirit, has become convinced that they represent the direction the church should be moving in today. While the author personally knows these ministries through their teachings and ministry, they do not know the author and are in no way associated with this Bible app. They may not even be aware of its existence. This list is shared with the strong conviction that the Holy Spirit has directed these steps and that these ministries embody the church\'s true direction in this season.',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.amber[900],
+                        height: 1.5,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      'The church described in the Book of Acts serves as our model for what the church should look like today. Through relationship and unity in the Father, Son, and Holy Spirit, a church should be alive, not religious, but free in Christ and moving in miracles, signs, and wonders. The fruit of this freedom should be evident in the church. Always seek such churches and stay free from the spirit of religion.',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.amber[900],
+                        height: 1.5,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 24),
             const Text(
               'We dream of a church full of love—here\'s what that looks like from the Book of Acts!',
               style: TextStyle(
@@ -84,7 +129,6 @@ class WhichChurchScreen extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 24),
             _buildMinistrySection(
               'Nancy Coen',
               'A global heart!',
