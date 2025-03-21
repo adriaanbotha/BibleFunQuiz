@@ -48,11 +48,12 @@
         }
 
         header {
-            background: url('images/bible-fun-quiz-bg.jpg') center/cover no-repeat;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             color: white;
             padding: 120px 0;
             text-align: center;
             position: relative;
+            background-color: #FF9800;
         }
 
         header::before {
@@ -62,8 +63,19 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(135deg, rgba(255, 152, 0, 0.9), rgba(255, 179, 0, 0.85));
+            background: linear-gradient(135deg, rgba(255, 152, 0, 0.3), rgba(255, 179, 0, 0.2));
             z-index: 0;
+        }
+
+        .hero-image {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            height: auto;
+            z-index: 0;
+            opacity: 0.15;
         }
 
         h1 {
@@ -201,6 +213,7 @@
 <body>
     <header>
         <div class="container">
+            <img src="images/hero.png" alt="Bible Fun Quiz" class="hero-image">
             <h1>Bible Fun Quiz</h1>
             <p class="subtitle">Make Bible Learning Fun for Everyone!</p>
             <a href="#download" class="cta-button">Download Now</a>
