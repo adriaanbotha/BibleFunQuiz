@@ -35,31 +35,13 @@ jobs:
       - name: 📚 Checkout repository
         uses: actions/checkout@v3
 
-<<<<<<< Updated upstream
-      # Set up Flutter
-      - name: Set up Flutter
-=======
       - name: 🎯 Set up Flutter
->>>>>>> Stashed changes
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.16.0'
           channel: 'stable'
           cache: true
 
-<<<<<<< Updated upstream
-      # Install dependencies
-      - name: 📦 Install dependencies
-        run: flutter pub get
-
-      # Build web app
-      - name: 🔨 Build web app
-        run: flutter build web --base-href /bible_quest/
-
-      # Upload artifact
-      - name: 📤 Upload artifact
-        uses: actions/upload-pages-artifact@v2
-=======
       - name: 📦 Install dependencies
         run: flutter pub get
 
@@ -71,7 +53,6 @@ jobs:
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
->>>>>>> Stashed changes
         with:
           path: build/web
 
