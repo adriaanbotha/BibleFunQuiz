@@ -19,6 +19,74 @@ class BibleStudyMethodsScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Spiritual Foundation Card
+            Card(
+              elevation: 2,
+              color: const Color(0xFFFFF3E0),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(Icons.auto_awesome, color: Colors.amber[900], size: 24),
+                        const SizedBox(width: 8),
+                        Text(
+                          'Spiritual Foundation',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.amber[900],
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      '"So then faith comes by hearing, and hearing by the word of God." - Romans 10:17',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontStyle: FontStyle.italic,
+                        color: Colors.amber[900],
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      'All Bible study should be led by the Holy Spirit through a personal relationship with Jesus Christ. As Jesus Himself said, "I am the way, the truth, and the life" (John 14:6). He is the Word made flesh (John 1:14), and through Him we can understand and teach the Word effectively. The key to effective Bible study is relationship - relationship with the Father, Son, and Holy Spirit. As we develop this relationship, we learn to hear His voice and understand His Word more deeply.',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.amber[900],
+                        height: 1.5,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      'Remember:',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.amber[900],
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      '• Bible study is not just about knowledge, but about relationship\n'
+                      '• The Holy Spirit is our teacher and guide\n'
+                      '• Jesus is the Word and the way to understanding\n'
+                      '• All study should be prayerful and Spirit-led\n'
+                      '• The goal is to know Him, not just know about Him',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.amber[900],
+                        height: 1.5,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 24),
             // Kids Section
             _buildSection(
               'For Kids',
