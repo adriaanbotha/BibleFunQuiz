@@ -83,162 +83,94 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildQuizButtons() {
-    if (Platform.isMacOS) {
-      // Desktop layout with stacked buttons
-      return Center(
-        child: Container(
-          constraints: const BoxConstraints(maxWidth: 400),
-          child: Column(
-            children: [
-              SizedBox(
-                width: double.infinity,
-                height: 48,
-                child: ElevatedButton(
-                  onPressed: _startChildrenQuiz,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFFF6B35),
-                    foregroundColor: Colors.white,
-                    textStyle: const TextStyle(fontSize: 16),
-                    elevation: 4,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      Icon(Icons.child_care, size: 20),
-                      SizedBox(width: 8),
-                      Text('Children\'s Quiz'),
-                    ],
+    // Use a responsive layout that works on all platforms
+    return Center(
+      child: Container(
+        constraints: const BoxConstraints(maxWidth: 400),
+        child: Column(
+          children: [
+            SizedBox(
+              width: double.infinity,
+              height: 48,
+              child: ElevatedButton(
+                onPressed: _startChildrenQuiz,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFFF6B35),
+                  foregroundColor: Colors.white,
+                  textStyle: const TextStyle(fontSize: 16),
+                  elevation: 4,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-              ),
-              const SizedBox(height: 12),
-              SizedBox(
-                width: double.infinity,
-                height: 48,
-                child: ElevatedButton(
-                  onPressed: _startBeginnerQuiz,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFFF9800),
-                    foregroundColor: Colors.white,
-                    textStyle: const TextStyle(fontSize: 16),
-                  ),
-                  child: const Text('Beginner Quiz'),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Icon(Icons.child_care, size: 20),
+                    SizedBox(width: 8),
+                    Text('Children\'s Quiz'),
+                  ],
                 ),
               ),
-              const SizedBox(height: 12),
-              SizedBox(
-                width: double.infinity,
-                height: 48,
-                child: ElevatedButton(
-                  onPressed: _startIntermediateQuiz,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFFF9800),
-                    foregroundColor: Colors.white,
-                    textStyle: const TextStyle(fontSize: 16),
+            ),
+            const SizedBox(height: 12),
+            SizedBox(
+              width: double.infinity,
+              height: 48,
+              child: ElevatedButton(
+                onPressed: _startBeginnerQuiz,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFFF9800),
+                  foregroundColor: Colors.white,
+                  textStyle: const TextStyle(fontSize: 16),
+                  elevation: 4,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                  child: const Text('Intermediate Quiz'),
                 ),
+                child: const Text('Beginner Quiz'),
               ),
-              const SizedBox(height: 12),
-              SizedBox(
-                width: double.infinity,
-                height: 48,
-                child: ElevatedButton(
-                  onPressed: _startAdvancedQuiz,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFFF9800),
-                    foregroundColor: Colors.white,
-                    textStyle: const TextStyle(fontSize: 16),
+            ),
+            const SizedBox(height: 12),
+            SizedBox(
+              width: double.infinity,
+              height: 48,
+              child: ElevatedButton(
+                onPressed: _startIntermediateQuiz,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFFF9800),
+                  foregroundColor: Colors.white,
+                  textStyle: const TextStyle(fontSize: 16),
+                  elevation: 4,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                  child: const Text('Advanced Quiz'),
                 ),
+                child: const Text('Intermediate Quiz'),
               ),
-            ],
-          ),
+            ),
+            const SizedBox(height: 12),
+            SizedBox(
+              width: double.infinity,
+              height: 48,
+              child: ElevatedButton(
+                onPressed: _startAdvancedQuiz,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFFF9800),
+                  foregroundColor: Colors.white,
+                  textStyle: const TextStyle(fontSize: 16),
+                  elevation: 4,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                child: const Text('Advanced Quiz'),
+              ),
+            ),
+          ],
         ),
-      );
-    } else {
-      // Mobile layout with full-width stacked buttons
-      return SizedBox(
-        width: double.infinity,
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 280),
-          child: Column(
-            children: [
-              SizedBox(
-                width: double.infinity,
-                height: 48,
-                child: ElevatedButton(
-                  onPressed: _startChildrenQuiz,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFFF6B35),
-                    foregroundColor: Colors.white,
-                    textStyle: const TextStyle(fontSize: 16),
-                    elevation: 4,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      Icon(Icons.child_care, size: 20),
-                      SizedBox(width: 8),
-                      Text('Children\'s Quiz'),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(height: 12),
-              SizedBox(
-                width: double.infinity,
-                height: 48,
-                child: ElevatedButton(
-                  onPressed: _startBeginnerQuiz,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFFF9800),
-                    foregroundColor: Colors.white,
-                    textStyle: const TextStyle(fontSize: 16),
-                  ),
-                  child: const Text('Beginner Quiz'),
-                ),
-              ),
-              const SizedBox(height: 12),
-              SizedBox(
-                width: double.infinity,
-                height: 48,
-                child: ElevatedButton(
-                  onPressed: _startIntermediateQuiz,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFFF9800),
-                    foregroundColor: Colors.white,
-                    textStyle: const TextStyle(fontSize: 16),
-                  ),
-                  child: const Text('Intermediate Quiz'),
-                ),
-              ),
-              const SizedBox(height: 12),
-              SizedBox(
-                width: double.infinity,
-                height: 48,
-                child: ElevatedButton(
-                  onPressed: _startAdvancedQuiz,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFFF9800),
-                    foregroundColor: Colors.white,
-                    textStyle: const TextStyle(fontSize: 16),
-                  ),
-                  child: const Text('Advanced Quiz'),
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
-    }
+      ),
+    );
   }
 
   @override
