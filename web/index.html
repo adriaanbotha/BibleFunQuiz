@@ -18,21 +18,41 @@
 
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="description" content="A new Flutter project.">
+  <meta name="description" content="Bible Fun Quiz - An engaging way to learn the Word of God">
 
   <!-- iOS meta tags & icons -->
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="bible_quest">
+  <meta name="apple-mobile-web-app-title" content="Bible Fun Quiz">
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="favicon.png"/>
 
-  <title>bible_quest</title>
+  <title>Bible Fun Quiz</title>
   <link rel="manifest" href="manifest.json">
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-  <script src="flutter_bootstrap.js" async></script>
+  <div class="loading-container">
+    <img src="images/hero.jpg" alt="Bible Fun Quiz" class="hero-image">
+    <div>Loading...</div>
+  </div>
+
+  <div class="donation-buttons">
+    <a href="https://www.paypal.com/paypalme/BibleFunQuiz" target="_blank" class="donation-button paypal-button">
+      <img src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/PP_logo_h_100x26.png" alt="PayPal" height="20">
+      Donate with PayPal
+    </a>
+    <a href="https://patreon.com/AdriaanBotha" target="_blank" class="donation-button patreon-button">
+      <img src="https://c5.patreon.com/external/logo/guidelines/wordmark_white.png" alt="Patreon" height="20">
+      Support on Patreon
+    </a>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/flutter_bootstrap.js" async></script>
 </body>
 </html>
