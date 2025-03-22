@@ -182,9 +182,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             // Popup Menu
             PopupMenuButton<String>(
               onSelected: (String choice) async {
-                if (choice == 'Offline Mode') {
-                  // Handle offline mode
-                } else if (choice == 'About') {
+                if (choice == 'About') {
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
@@ -206,10 +204,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               },
               itemBuilder: (BuildContext context) {
                 return [
-                  const PopupMenuItem<String>(
-                    value: 'Offline Mode',
-                    child: Text('Offline Mode'),
-                  ),
                   const PopupMenuItem<String>(
                     value: 'About',
                     child: Text('About'),
