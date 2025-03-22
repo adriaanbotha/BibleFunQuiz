@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../services/auth_service.dart';
+import '../services/connectivity_service.dart';
+import '../widgets/connectivity_indicator.dart';
 
 class LeaderboardScreen extends StatefulWidget {
   final AuthService authService;
 
   const LeaderboardScreen({
-    Key? key, 
+    Key? key,
     required this.authService,
   }) : super(key: key);
 
@@ -14,8 +17,9 @@ class LeaderboardScreen extends StatefulWidget {
 }
 
 class _LeaderboardScreenState extends State<LeaderboardScreen> {
-  List<Map<String, dynamic>>? _leaderboard;
+  List<Map<String, dynamic>> _leaderboardData = [];
   bool _isLoading = true;
+  String? _error;
   String _selectedDifficulty = 'children'; // Set default to children's quiz
 
   @override
@@ -27,20 +31,20 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
   Future<void> _loadLeaderboard() async {
     setState(() {
       _isLoading = true;
+      _error = null;
     });
 
     try {
-      final leaderboard = await widget.authService.getLeaderboard(_selectedDifficulty);
-      
+      final data = await widget.authService.getLeaderboard(_selectedDifficulty);
       setState(() {
-        _leaderboard = leaderboard;
+        _leaderboardData = data;
         _isLoading = false;
       });
     } catch (e) {
       setState(() {
+        _error = e.toString();
         _isLoading = false;
       });
-      print('Error loading leaderboard: $e');
     }
   }
 
@@ -50,14 +54,10 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
       appBar: AppBar(
         title: Text(_selectedDifficulty == 'children' 
           ? 'Children\'s Leaderboard'
-          : '${_selectedDifficulty[0].toUpperCase()}${_selectedDifficulty.substring(1)} Leaderboard'),
+          : '${_selectedDifficulty.capitalize()} Leaderboard'),
         backgroundColor: _selectedDifficulty == 'children' 
           ? const Color(0xFFFF6B35)  // Reddish-orange for children's
           : const Color(0xFFFF9800), // Regular orange for others
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
         actions: [
           // Difficulty selector
           DropdownButton<String>(
@@ -87,7 +87,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
                     Text(
                       value == 'children' 
                         ? 'Children\'s'
-                        : value[0].toUpperCase() + value.substring(1),
+                        : value.capitalize(),
                       style: const TextStyle(color: Colors.white),
                     ),
                   ],
@@ -101,50 +101,153 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
           ),
         ],
       ),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : _leaderboard == null || _leaderboard!.isEmpty
-              ? const Center(
-                  child: Text(
-                    'No scores yet. Be the first to play!',
-                    style: TextStyle(fontSize: 18),
-                  ),
-                )
-              : ListView.builder(
-                  itemCount: _leaderboard!.length,
-                  itemBuilder: (context, index) {
-                    final entry = _leaderboard![index];
-                    
-                    return Card(
-                      elevation: 1,
-                      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                      child: ListTile(
-                        leading: CircleAvatar(
-                          backgroundColor: const Color(0xFFFF9800),
-                          child: Text(
-                            '${index + 1}',
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        title: Text(
-                          entry['nickname'] ?? 'Unknown',
-                          style: const TextStyle(fontSize: 16),
-                        ),
-                        subtitle: Text('Score: ${entry['score']}'),
-                        trailing: Text(
-                          '${entry['score']}',
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
+      body: Consumer<ConnectivityService>(
+        builder: (context, connectivityService, child) {
+          if (!connectivityService.isOnline) {
+            return Center(
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(
+                      Icons.wifi_off,
+                      size: 64,
+                      color: Colors.grey,
+                    ),
+                    const SizedBox(height: 16),
+                    const Text(
+                      'Leaderboard Unavailable',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.grey,
                       ),
-                    );
-                  },
+                    ),
+                    const SizedBox(height: 8),
+                    const Text(
+                      'Please check your internet connection to view the leaderboard.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.grey,
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                    const ConnectivityIndicator(
+                      showLabel: true,
+                      size: 24,
+                    ),
+                  ],
                 ),
+              ),
+            );
+          }
+
+          if (_isLoading) {
+            return const Center(
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFFF9800)),
+              ),
+            );
+          }
+
+          if (_error != null) {
+            return Center(
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(
+                      Icons.error_outline,
+                      size: 64,
+                      color: Colors.red,
+                    ),
+                    const SizedBox(height: 16),
+                    const Text(
+                      'Error Loading Leaderboard',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.red,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      _error!,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        color: Colors.red,
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                    ElevatedButton(
+                      onPressed: _loadLeaderboard,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFFF9800),
+                        foregroundColor: Colors.white,
+                      ),
+                      child: const Text('Try Again'),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }
+
+          if (_leaderboardData.isEmpty) {
+            return const Center(
+              child: Text(
+                'No leaderboard data available',
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.grey,
+                ),
+              ),
+            );
+          }
+
+          return ListView.builder(
+            itemCount: _leaderboardData.length,
+            itemBuilder: (context, index) {
+              final entry = _leaderboardData[index];
+              return ListTile(
+                leading: CircleAvatar(
+                  backgroundColor: const Color(0xFFFF9800),
+                  child: Text(
+                    '${index + 1}',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                title: Text(
+                  entry['nickname'] ?? 'Anonymous',
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                subtitle: Text(
+                  'Score: ${entry['score'] ?? 0}',
+                  style: const TextStyle(
+                    color: Colors.grey,
+                  ),
+                ),
+                trailing: Text(
+                  '${entry['completedQuizzes'] ?? 0} quizzes',
+                  style: const TextStyle(
+                    color: Colors.grey,
+                    fontSize: 12,
+                  ),
+                ),
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }
