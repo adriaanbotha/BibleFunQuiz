@@ -1,35 +1,23 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 
 class ConnectivityService extends ChangeNotifier {
   bool _isOnline = true;
-  final Connectivity _connectivity = Connectivity();
-
-  ConnectivityService() {
-    _initConnectivity();
-    _setupListener();
-  }
-
   bool get isOnline => _isOnline;
 
-  Future<void> _initConnectivity() async {
-    try {
-      final result = await _connectivity.checkConnectivity();
-      _updateConnectionStatus(result);
-    } catch (e) {
-      debugPrint('Connectivity check failed: $e');
-      _isOnline = false;
-    }
-    notifyListeners();
-  }
-
-  void _setupListener() {
-    _connectivity.onConnectivityChanged.listen((result) {
-      _updateConnectionStatus(result);
+  ConnectivityService() {
+    // Initial check
+    checkConnectivity();
+    
+    // Listen to connectivity changes
+    Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
+      _isOnline = result != ConnectivityResult.none;
+      notifyListeners();
     });
   }
 
-  void _updateConnectionStatus(ConnectivityResult result) {
+  Future<void> checkConnectivity() async {
+    final result = await Connectivity().checkConnectivity();
     _isOnline = result != ConnectivityResult.none;
     notifyListeners();
   }

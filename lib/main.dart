@@ -28,6 +28,7 @@ void main() async {
   await settingsService.init();
   
   final authService = AuthService(prefs);
+  final connectivityService = ConnectivityService();
   
   // Preload questions in the background
   authService.refreshQuestionCache().then((success) {
@@ -38,21 +39,20 @@ void main() async {
     }
   });
   
-  runApp(MyApp(
-    authService: authService,
-    settingsService: settingsService,
-  ));
+  runApp(
+    MultiProvider(
+      providers: [
+        Provider<AuthService>.value(value: authService),
+        Provider<SettingsService>.value(value: settingsService),
+        ChangeNotifierProvider<ConnectivityService>.value(value: connectivityService),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
-  final AuthService authService;
-  final SettingsService settingsService;
-
-  const MyApp({
-    Key? key,
-    required this.authService,
-    required this.settingsService,
-  }) : super(key: key);
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +69,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       home: FutureBuilder<bool>(
-        future: authService.isLoggedIn(),
+        future: context.read<AuthService>().isLoggedIn(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Scaffold(
@@ -81,13 +81,13 @@ class MyApp extends StatelessWidget {
           
           if (isLoggedIn) {
             return HomeScreen(
-              authService: authService,
-              settingsService: settingsService,
+              authService: context.read<AuthService>(),
+              settingsService: context.read<SettingsService>(),
             );
           } else {
             return LoginScreen(
-              authService: authService,
-              settingsService: settingsService,
+              authService: context.read<AuthService>(),
+              settingsService: context.read<SettingsService>(),
             );
           }
         },

@@ -6,7 +6,7 @@ import '../services/auth_service.dart';
 import '../services/settings_service.dart';
 import 'package:flutter/foundation.dart';
 import '../screens/leaderboard_screen.dart';
-import 'dart:io';
+import '../widgets/connectivity_indicator.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -163,19 +163,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               ),
             
             // Connectivity Status
-            Builder(
-              builder: (context) => FutureBuilder<bool>(
-                future: checkInternetConnection(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return Icon(
-                      snapshot.data! ? Icons.wifi : Icons.wifi_off,
-                      color: snapshot.data! ? Colors.green : Colors.red,
-                    );
-                  }
-                  return const SizedBox.shrink();
-                },
-              ),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 8.0),
+              child: ConnectivityIndicator(),
             ),
             const SizedBox(width: 8),
 
@@ -215,14 +205,5 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         ],
       ),
     );
-  }
-
-  Future<bool> checkInternetConnection() async {
-    try {
-      final result = await InternetAddress.lookup('google.com');
-      return result.isNotEmpty && result[0].rawAddress.isNotEmpty;
-    } on SocketException catch (_) {
-      return false;
-    }
   }
 } 
