@@ -1,4 +1,4 @@
-package com.example.bible_quest
+package com.adriaanbotha.bible_quest
 
 import io.flutter.embedding.android.FlutterActivity
 
