@@ -54,7 +54,7 @@ class AppDrawer extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 const Text(
-                  'Bible Quest',
+                  'Bible Funz Quiz',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 24,

@@ -18,7 +18,7 @@ class AppNavigationDrawer extends StatelessWidget {
               color: AppTheme.primaryColor,
             ),
             child: const Text(
-              'Bible Quest',
+              'Bible Funz Quiz',
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 24,
