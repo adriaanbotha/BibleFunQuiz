@@ -46,6 +46,12 @@ flutter_icons:
   image_path: "assets/icon/icon.png"
   adaptive_icon_background: "#FF9800"
   adaptive_icon_foreground: "assets/icon/icon_foreground.png"
+  adaptive_icon_padding: true
+  adaptive_icon_foreground_scale: 0.8
+  adaptive_icon_foreground_scale_x: 0.85
+  adaptive_icon_foreground_scale_y: 0.85
+  adaptive_icon_foreground_offset_x: -0.05  # Move 5% to the left
+  adaptive_icon_foreground_offset_y: 0.0
 
 
     
