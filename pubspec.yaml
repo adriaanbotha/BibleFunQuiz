@@ -25,7 +25,8 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^2.0.3
+  flutter_launcher_icons: ^0.13.1
+  flutter_lints: ^2.0.0
 
 dependency_overrides:
   win32: ^5.0.0
@@ -38,6 +39,13 @@ flutter:
     - assets/sounds/
     - assets/questions.json
     - assets/fallback_questions.json
+
+flutter_icons:
+  android: true
+  ios: false
+  image_path: "assets/icon/icon.png"
+  adaptive_icon_background: "#FF9800"
+  adaptive_icon_foreground: "assets/icon/icon_foreground.png"
 
 
     
