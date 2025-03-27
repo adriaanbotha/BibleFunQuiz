@@ -266,6 +266,33 @@
             opacity: 0.9;
         }
 
+        .qr-code-section {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .qr-code {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto;
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .qr-code img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .qr-code-text {
+            margin-top: 15px;
+            color: #666;
+            font-size: 1.1em;
+        }
+
         footer {
             background-color: #333;
             color: white;
@@ -376,6 +403,12 @@
                     </svg>
                     Donate with Stripe
                 </a>
+            </div>
+            <div class="qr-code-section">
+                <div class="qr-code">
+                    <img src="images/stripe-qr.png" alt="Stripe Payment QR Code">
+                </div>
+                <p class="qr-code-text">Scan to donate with Stripe</p>
             </div>
         </div>
     </section>
