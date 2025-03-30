@@ -13,6 +13,12 @@ class AuthService {
   static const String _cachedQuestionsKey = 'cached_questions';
   static const String _questionsLastUpdatedKey = 'questions_last_updated';
   
+  // Avatar List - Biblical characters
+  static const List<String> avatarOptions = [
+    'noah', 'moses', 'david', 'daniel', 'esther', 'ruth', 
+    'abraham', 'joshua', 'solomon', 'samson', 'deborah', 'miriam'
+  ];
+  
   // Upstash Configuration
   static const String baseUrl = 'https://relative-bison-60370.upstash.io';
   static const String apiKey = 'AevSAAIjcDFkNzY3YjFiZTZhNWI0ZjlhODlkOGE3NTgyOTY3MWQyOHAxMA';
@@ -39,11 +45,12 @@ class AuthService {
           return false;
         }
 
-        // Create new user data
+        // Create new user data with default avatar
         final user = {
           'email': email,
           'password': password,
           'nickname': nickname,
+          'avatar': 'noah', // Default avatar
           'createdAt': DateTime.now().toIso8601String(),
         };
 
@@ -121,6 +128,7 @@ class AuthService {
         'email': email,
         'password': password,
         'nickname': email.split('@')[0],
+        'avatar': 'noah', // Default avatar
       });
 
       await _saveLocalUsers(users);
@@ -180,6 +188,28 @@ class AuthService {
   Future<void> _saveUserData(String email, String nickname) async {
     await _prefs.setString('current_user_email', email);
     await _prefs.setString('current_user_nickname', nickname);
+    
+    // Get avatar if exists, otherwise set default
+    final response = await http.post(
+      Uri.parse('$baseUrl/get/user:$email'),
+      headers: {
+        'Authorization': 'Bearer $apiKey',
+      },
+    );
+    
+    if (response.statusCode == 200) {
+      final userData = json.decode(response.body);
+      if (userData['result'] != null) {
+        final user = json.decode(userData['result']);
+        if (user['avatar'] != null) {
+          await _prefs.setString('current_user_avatar', user['avatar']);
+          return;
+        }
+      }
+    }
+    
+    // Set default if not found
+    await _prefs.setString('current_user_avatar', 'noah');
   }
 
   Future<void> logout() async {
@@ -202,6 +232,14 @@ class AuthService {
 
   String? getNickname() {
     return _prefs.getString('current_user_nickname');
+  }
+
+  String? getAvatar() {
+    return _prefs.getString('current_user_avatar') ?? 'noah';
+  }
+  
+  List<String> getAvatarOptions() {
+    return avatarOptions;
   }
 
   // For debugging
@@ -822,10 +860,25 @@ class AuthService {
         );
       }
 
-      // Add new score
+      // Get user's avatar
+      String avatar = 'noah'; // Default avatar
+      final userResponse = await http.post(
+        Uri.parse('$baseUrl/get/user:$email'),
+        headers: {
+          'Authorization': 'Bearer $apiKey',
+        },
+      );
+      
+      if (userResponse.statusCode == 200 && json.decode(userResponse.body)['result'] != null) {
+        final userData = json.decode(json.decode(userResponse.body)['result']);
+        avatar = userData['avatar'] ?? 'noah';
+      }
+
+      // Add new score with avatar information
       leaderboard.add({
         'email': email,
         'nickname': nickname,
+        'avatar': avatar,
         'score': score,
         'date': DateTime.now().toIso8601String(),
       });
@@ -1055,6 +1108,48 @@ class AuthService {
     } catch (e) {
       debugPrint('Error getting feedback: $e');
       return [];
+    }
+  }
+
+  Future<bool> updateAvatar(String email, String newAvatar) async {
+    try {
+      // Check if avatar is valid
+      if (!avatarOptions.contains(newAvatar)) {
+        debugPrint('Invalid avatar selection');
+        return false;
+      }
+
+      final response = await http.post(
+        Uri.parse('$baseUrl/get/user:$email'),
+        headers: {
+          'Authorization': 'Bearer $apiKey',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final userData = json.decode(response.body);
+        if (userData['result'] != null) {
+          final user = json.decode(userData['result']);
+          user['avatar'] = newAvatar;
+
+          // Update user data in Upstash
+          final updateResponse = await http.post(
+            Uri.parse('$baseUrl/set/user:$email/${json.encode(user)}'),
+            headers: {
+              'Authorization': 'Bearer $apiKey',
+            },
+          );
+
+          if (updateResponse.statusCode == 200) {
+            await _prefs.setString('current_user_avatar', newAvatar);
+            return true;
+          }
+        }
+      }
+      return false;
+    } catch (e) {
+      debugPrint('Error updating avatar: $e');
+      return false;
     }
   }
 } 

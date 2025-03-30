@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
 import '../services/settings_service.dart';
+import '../utilities/avatar_utility.dart';
 import '../screens/profile_screen.dart';
 import '../screens/settings_screen.dart';
 import '../screens/instructions_screen.dart';
@@ -53,12 +54,46 @@ class AppDrawer extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                const Text(
-                  'Bible Funz Quiz',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                  ),
+                Row(
+                  children: [
+                    // User avatar
+                    FutureBuilder<String?>(
+                      future: Future.value(authService.getAvatar()),
+                      builder: (context, snapshot) {
+                        final avatar = snapshot.data ?? 'noah';
+                        return CircleAvatar(
+                          radius: 30,
+                          backgroundColor: Colors.white.withOpacity(0.3),
+                          child: ClipOval(
+                            child: Image.asset(
+                              AvatarUtility.getAvatarPath(avatar),
+                              width: 60,
+                              height: 60,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                return Icon(
+                                  AvatarUtility.getAvatarFallbackIcon(avatar),
+                                  size: 30,
+                                  color: Colors.white,
+                                );
+                              },
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                    const SizedBox(width: 16),
+                    // App name
+                    const Expanded(
+                      child: Text(
+                        'Bible Funz Quiz',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 24,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 8),
                 FutureBuilder<String>(

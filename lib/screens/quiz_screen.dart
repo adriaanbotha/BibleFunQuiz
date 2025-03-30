@@ -121,10 +121,15 @@ class _QuizScreenState extends State<QuizScreen> {
         filteredQuestions.length = _questionsPerQuiz!.clamp(0, filteredQuestions.length);
       }
 
-      // Shuffle options for each question
+      // Thoroughly shuffle options for each question to avoid patterns
       _shuffledOptions = filteredQuestions.map((q) {
         final options = List<String>.from(q['options']);
-        options.shuffle();
+        
+        // Extra shuffling to ensure randomization
+        for (int i = 0; i < 3; i++) {
+          options.shuffle();
+        }
+        
         return options;
       }).toList();
 
@@ -160,6 +165,22 @@ class _QuizScreenState extends State<QuizScreen> {
     });
   }
 
+  // Add a method to shuffle the answer options for the current question
+  void _shuffleCurrentQuestionOptions() {
+    if (_questions.isEmpty || _currentQuestionIndex >= _questions.length) return;
+    
+    final options = List<String>.from(_questions[_currentQuestionIndex]['options']);
+    
+    // Perform multiple shuffles to ensure thorough randomization
+    for (int i = 0; i < 3; i++) {
+      options.shuffle();
+    }
+    
+    setState(() {
+      _shuffledOptions[_currentQuestionIndex] = options;
+    });
+  }
+
   Future<void> _playSound(bool isCorrect) async {
     if (!_soundEnabled) return;
 
@@ -190,6 +211,8 @@ class _QuizScreenState extends State<QuizScreen> {
         _showGameOver();
       } else if (_currentQuestionIndex < _questions.length - 1) {
         _currentQuestionIndex++;
+        // Shuffle options for the next question
+        _shuffleCurrentQuestionOptions();
         _startTimer();
       } else {
         _showFinalScore();
@@ -235,6 +258,8 @@ class _QuizScreenState extends State<QuizScreen> {
         _showGameOver();
       } else if (_currentQuestionIndex < _questions.length - 1) {
         _currentQuestionIndex++;
+        // Shuffle options for the next question
+        _shuffleCurrentQuestionOptions();
         _startTimer();
       } else {
         _showFinalScore();
@@ -294,6 +319,15 @@ class _QuizScreenState extends State<QuizScreen> {
                 _score = 0;
                 _currentScore = 0;  // Reset current score
                 _lives = 3;
+                
+                // Reshuffle options for all questions
+                _shuffledOptions = _questions.map((q) {
+                  final options = List<String>.from(q['options']);
+                  options.shuffle();
+                  return options;
+                }).toList();
+                
+                // Start the timer after reshuffling
                 _startTimer();
               });
             },
@@ -370,6 +404,14 @@ class _QuizScreenState extends State<QuizScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Initialize the quiz when it's first loaded
+    if (!_isLoading && _questions.isNotEmpty && !_isTimerInitialized) {
+      _isTimerInitialized = true;
+      // Shuffle options for the first question before starting
+      _shuffleCurrentQuestionOptions();
+      _startTimer();
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.difficulty == 'children' 

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../globals.dart' as globals;
 import '../services/profanity_filter.dart';
+import '../utilities/avatar_utility.dart';
+import '../widgets/avatar_selector.dart';
 import 'login_screen.dart';
 import '../services/auth_service.dart';
 import '../services/settings_service.dart';
@@ -25,11 +27,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
   bool _isEditing = false;
   Map<String, dynamic> _statistics = {};
   bool _isLoading = true;
+  late String _currentAvatar;
 
   @override
   void initState() {
     super.initState();
     _nicknameController.text = widget.authService.getNickname() ?? '';
+    _currentAvatar = widget.authService.getAvatar() ?? 'noah';
     _loadStats();
   }
 
@@ -84,6 +88,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
       }
     }
   }
+  
+  Future<void> _updateAvatar(String newAvatar) async {
+    final email = widget.authService.getCurrentEmail();
+    if (email != null) {
+      final success = await widget.authService.updateAvatar(email, newAvatar);
+      if (mounted) {
+        if (success) {
+          setState(() => _currentAvatar = newAvatar);
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Avatar updated successfully'),
+              backgroundColor: Colors.green,
+            ),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Failed to update avatar'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      }
+    }
+  }
 
   Future<void> _loadStats() async {
     setState(() => _isLoading = true);
@@ -95,6 +124,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
         _isLoading = false;
       });
     }
+  }
+  
+  void _showAvatarSelector() {
+    showDialog(
+      context: context,
+      builder: (context) => AvatarSelector(
+        authService: widget.authService,
+        currentAvatar: _currentAvatar,
+        onAvatarSelected: _updateAvatar,
+      ),
+    );
   }
 
   @override
@@ -120,18 +160,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
             : SingleChildScrollView(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     const SizedBox(height: 20),
-                    const CircleAvatar(
-                      radius: 60,
-                      backgroundColor: Color(0xFFFF9800),
-                      child: Icon(
-                        Icons.person,
-                        size: 60,
-                        color: Colors.white,
-                      ),
-                    ),
+                    _buildAvatarSection(),
                     const SizedBox(height: 20),
                     _buildNicknameSection(),
                     const SizedBox(height: 30),
@@ -193,6 +225,67 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
       ),
+    );
+  }
+  
+  Widget _buildAvatarSection() {
+    return Column(
+      children: [
+        Stack(
+          children: [
+            CircleAvatar(
+              radius: 60,
+              backgroundColor: AvatarUtility.getAvatarColor(_currentAvatar).withOpacity(0.3),
+              child: ClipOval(
+                child: Image.asset(
+                  AvatarUtility.getAvatarPath(_currentAvatar),
+                  width: 120,
+                  height: 120,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Icon(
+                      AvatarUtility.getAvatarFallbackIcon(_currentAvatar),
+                      size: 60,
+                      color: AvatarUtility.getAvatarColor(_currentAvatar),
+                    );
+                  },
+                ),
+              ),
+            ),
+            Positioned(
+              right: 0,
+              bottom: 0,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFF9800),
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Colors.white, width: 2),
+                ),
+                child: IconButton(
+                  icon: const Icon(Icons.edit, color: Colors.white, size: 20),
+                  onPressed: _showAvatarSelector,
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        Text(
+          AvatarUtility.getAvatarName(_currentAvatar),
+          style: const TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        Text(
+          AvatarUtility.getAvatarDescription(_currentAvatar),
+          textAlign: TextAlign.center,
+          style: const TextStyle(
+            color: Colors.grey,
+            fontStyle: FontStyle.italic,
+          ),
+        ),
+      ],
     );
   }
 

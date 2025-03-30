@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../services/auth_service.dart';
 import '../services/connectivity_service.dart';
+import '../utilities/avatar_utility.dart';
 import '../widgets/connectivity_indicator.dart';
 
 class LeaderboardScreen extends StatefulWidget {
@@ -213,36 +214,102 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
             itemCount: _leaderboardData.length,
             itemBuilder: (context, index) {
               final entry = _leaderboardData[index];
+              final avatar = entry['avatar'] ?? 'noah';
+              
               return ListTile(
-                leading: CircleAvatar(
-                  backgroundColor: const Color(0xFFFF9800),
-                  child: Text(
-                    '${index + 1}',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
+                // Position number in leading
+                leading: Stack(
+                  children: [
+                    CircleAvatar(
+                      radius: 24,
+                      backgroundColor: AvatarUtility.getAvatarColor(avatar).withOpacity(0.2),
+                      child: ClipOval(
+                        child: Image.asset(
+                          AvatarUtility.getAvatarPath(avatar),
+                          width: 48,
+                          height: 48,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Icon(
+                              AvatarUtility.getAvatarFallbackIcon(avatar),
+                              size: 28,
+                              color: AvatarUtility.getAvatarColor(avatar),
+                            );
+                          },
+                        ),
+                      ),
                     ),
-                  ),
+                    // Positioned rank badge for top 3
+                    if (index < 3)
+                      Positioned(
+                        right: 0,
+                        bottom: 0,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: index == 0 
+                                ? Colors.amber // Gold
+                                : index == 1 
+                                  ? Colors.grey.shade300 // Silver
+                                  : Colors.brown.shade300, // Bronze
+                            shape: BoxShape.circle,
+                            border: Border.all(color: Colors.white, width: 2),
+                          ),
+                          width: 20,
+                          height: 20,
+                          alignment: Alignment.center,
+                          child: Text(
+                            '${index + 1}',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
                 ),
-                title: Text(
-                  entry['nickname'] ?? 'Anonymous',
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
+                title: Row(
+                  children: [
+                    if (index >= 3) 
+                      Container(
+                        width: 20,
+                        margin: const EdgeInsets.only(right: 8),
+                        alignment: Alignment.center,
+                        child: Text(
+                          '${index + 1}',
+                          style: const TextStyle(
+                            color: Colors.grey,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    Expanded(
+                      child: Text(
+                        entry['nickname'] ?? 'Anonymous',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    Text(
+                      '${entry['score'] ?? 0}',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ],
                 ),
                 subtitle: Text(
-                  'Score: ${entry['score'] ?? 0}',
-                  style: const TextStyle(
-                    color: Colors.grey,
-                  ),
-                ),
-                trailing: Text(
-                  '${entry['completedQuizzes'] ?? 0} quizzes',
+                  'Biblical figure: ${AvatarUtility.getAvatarName(avatar)}',
                   style: const TextStyle(
                     color: Colors.grey,
                     fontSize: 12,
                   ),
                 ),
+                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               );
             },
           );
