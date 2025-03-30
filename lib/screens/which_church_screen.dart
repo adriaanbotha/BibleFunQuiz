@@ -135,7 +135,7 @@ class WhichChurchScreen extends StatelessWidget {
               {
                 'Website': 'https://www.globalascensionnetwork.net',
                 'Facebook': 'https://www.facebook.com/nancy.coen.9',
-                'YouTube': 'https://www.youtube.com/@NancyCoenGlobal',
+                'YouTube': 'https://www.youtube.com/@globalsons',
               },
             ),
             _buildMinistrySection(
