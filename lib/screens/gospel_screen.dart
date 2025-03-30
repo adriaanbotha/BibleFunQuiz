@@ -50,11 +50,11 @@ class GospelScreen extends StatelessWidget {
               'I acknowledge I am a sinner and in need of a Saviour and Your forgiveness. I believe that Jesus Christ died for my sins. '
               'I am willing to turn from my sins. I invite You Lord Jesus Christ to come into my heart and life as my personal Savior. '
               'I am willing to follow and obey You as my Lord.\n\n'
-              'Lord, I know acknowledge that You are my Savior, My Deliverer, my Protection, my Provider, You are my All and in All!\n\n'
-              'Direct my steps to a church that is like the book of Acts!, Alive and showing the fruit of the Spirit! and walkign in Signs, Miracles and wonders!\n\n'
-              'Thank you for loving me first, while I was yet a sinner\n\n'
-              'Protect me from the spirit of Religion and help me to be Free, since when Christ sets you free you shall be free indeed\n\n'
-              'I pray that in your precious name Jesus Christ of Nazareth, Amen!',
+              'Lord, I now acknowledge that You are my Savior, My Deliverer, my Protection, my Provider, You are my All and in All!\n\n'
+              'Direct my steps to a church that is like the book of Acts, Alive and showing the fruit of the Spirit and walking in Signs, Miracles and Wonders!\n\n'
+              'Thank you for loving me first, while I was yet a sinner.\n\n'
+              'Protect me from the spirit of Religion and help me to be Free, since when Christ sets you free you shall be free indeed.\n\n'
+              'I pray this in your precious name Jesus Christ of Nazareth, Amen!',
               style: TextStyle(
                 fontSize: 16,
                 fontStyle: FontStyle.italic,
