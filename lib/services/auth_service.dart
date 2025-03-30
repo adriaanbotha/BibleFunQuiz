@@ -907,7 +907,7 @@ class AuthService {
 
   Future<bool> clearLeaderboards() async {
     try {
-      final difficulties = ['beginner', 'intermediate', 'advanced'];
+      final difficulties = ['children', 'beginner', 'intermediate', 'advanced'];
       for (final difficulty in difficulties) {
         await http.post(
           Uri.parse('$baseUrl/del/leaderboard:$difficulty'),
@@ -927,24 +927,15 @@ class AuthService {
   Future<void> clearLeaderboard() async {
     try {
       // Clear leaderboards for all difficulties
-      await http.post(
-        Uri.parse('$baseUrl/del/leaderboard:beginner'),
-        headers: {
-          'Authorization': 'Bearer $apiKey',
-        },
-      );
-      await http.post(
-        Uri.parse('$baseUrl/del/leaderboard:intermediate'),
-        headers: {
-          'Authorization': 'Bearer $apiKey',
-        },
-      );
-      await http.post(
-        Uri.parse('$baseUrl/del/leaderboard:advanced'),
-        headers: {
-          'Authorization': 'Bearer $apiKey',
-        },
-      );
+      final difficulties = ['children', 'beginner', 'intermediate', 'advanced'];
+      for (final difficulty in difficulties) {
+        await http.post(
+          Uri.parse('$baseUrl/del/leaderboard:$difficulty'),
+          headers: {
+            'Authorization': 'Bearer $apiKey',
+          },
+        );
+      }
       debugPrint('Leaderboard cleared successfully');
     } catch (e) {
       debugPrint('Error clearing leaderboard: $e');
