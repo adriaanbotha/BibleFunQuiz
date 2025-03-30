@@ -134,7 +134,6 @@ class WhichChurchScreen extends StatelessWidget {
               'A global heart!',
               {
                 'Website': 'https://www.globalascensionnetwork.net',
-                'Facebook': 'https://www.facebook.com/nancy.coen.9',
                 'YouTube': 'https://www.youtube.com/@globalsons',
               },
             ),
@@ -144,6 +143,7 @@ class WhichChurchScreen extends StatelessWidget {
               {
                 'Website': 'https://www.companyofburninghearts.com',
                 'YouTube': 'https://www.youtube.com/@JustinPaulAbraham',
+                'Patreon': 'https://www.patreon.com/c/justinpaulabraham',
               },
             ),
             _buildMinistrySection(
