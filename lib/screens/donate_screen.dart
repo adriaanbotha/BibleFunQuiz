@@ -218,15 +218,29 @@ class DonateScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
-          _buildPaymentOption(
-            'BitPay',
-            Icons.currency_bitcoin,
-            () => _launchUrl('https://bitpay.com/biblequest'),
-          ),
-          _buildPaymentOption(
-            'NOWPayments',
-            Icons.payment,
-            () => _launchUrl('https://nowpayments.io/payment-tools'),
+          // NOWPayments donation button
+          ElevatedButton(
+            onPressed: () => _launchUrl('https://nowpayments.io/donation?api_key=FFGVD8E-SMB4F70-JRFYCCC-WBCF0PT'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.black,
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(Icons.currency_bitcoin, color: Colors.white),
+                const SizedBox(width: 8),
+                Text(
+                  'Donate with Crypto',
+                  style: GoogleFonts.poppins(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),
