@@ -186,7 +186,7 @@ class DonateScreen extends StatelessWidget {
           _buildPaymentOption(
             'Stripe',
             Icons.credit_card,
-            () => _launchUrl('https://donate.stripe.com/eVa3cO3X94Fd59m7ss'),
+            () => _launchUrl('https://buy.stripe.com/6oE3dd6oVbQD9WgaEG'),
           ),
           _buildPaymentOption(
             'Google Pay',
