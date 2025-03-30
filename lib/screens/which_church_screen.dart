@@ -143,9 +143,7 @@ class WhichChurchScreen extends StatelessWidget {
               'So inspiring!',
               {
                 'Website': 'https://www.companyofburninghearts.com',
-                'Facebook': 'https://www.facebook.com/justinabrahamCOBH',
-                'Instagram': 'https://www.instagram.com/justinpaulabraham',
-                'YouTube': 'https://www.youtube.com/@CompanyofBurningHearts',
+                'YouTube': 'https://www.youtube.com/@JustinPaulAbraham',
               },
             ),
             _buildMinistrySection(
@@ -161,10 +159,10 @@ class WhichChurchScreen extends StatelessWidget {
               'Liz Wright',
               'Pure joy!',
               {
-                'Website': 'https://www.lizwrightministries.com',
+                'Website': 'https://imcmembers.com/',
                 'Facebook': 'https://www.facebook.com/lizwrightministries',
                 'Instagram': 'https://www.instagram.com/lizwrightministries',
-                'YouTube': 'https://www.youtube.com/@LizWrightMinistries',
+                'YouTube': 'https://www.youtube.com/@LizWright',
               },
             ),
             _buildMinistrySection(
@@ -172,8 +170,7 @@ class WhichChurchScreen extends StatelessWidget {
               'Freedom awaits!',
               {
                 'Website': 'https://freedomarc.org',
-                'Facebook': 'https://www.facebook.com/FreedomApostolicResources',
-                'YouTube': 'https://www.youtube.com/@FreedomARC',
+                'YouTube': 'https://www.youtube.com/@MikeParsonsFAM',
               },
             ),
           ],
