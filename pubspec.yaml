@@ -1,6 +1,6 @@
 name: bible_quest
 description: A Bible trivia game to grow in faith and knowledge.
-version: 1.0.0+1
+version: 1.0.1+2
 license: Proprietary
 publish_to: 'none'
 
