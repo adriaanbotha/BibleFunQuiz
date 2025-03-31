@@ -79,6 +79,11 @@ class _QuizScreenState extends State<QuizScreen> {
   Future<void> _loadQuestions() async {
     setState(() => _isLoading = true);
     try {
+      bool isOnline = await widget.authService.checkOnlineStatus();
+      if (!isOnline) {
+        debugPrint('Device is offline, attempting to load cached questions');
+      }
+
       // Get questions for the specified difficulty
       final questions = await widget.authService.getQuestionsByDifficulty(widget.difficulty);
       
@@ -86,11 +91,13 @@ class _QuizScreenState extends State<QuizScreen> {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              content: Text('No questions available. Please check your connection.'),
+              content: Text('No questions available. Check your connection or try restarting the app.'),
               backgroundColor: Colors.red,
+              duration: Duration(seconds: 5),
             ),
           );
         }
+        setState(() => _isLoading = false);
         return;
       }
 
@@ -109,9 +116,11 @@ class _QuizScreenState extends State<QuizScreen> {
             SnackBar(
               content: Text('No questions available for ${_selectedBibleBook}. Please try a different book or difficulty.'),
               backgroundColor: Colors.red,
+              duration: Duration(seconds: 5),
             ),
           );
         }
+        setState(() => _isLoading = false);
         return;
       }
 
@@ -137,12 +146,20 @@ class _QuizScreenState extends State<QuizScreen> {
         _questions = filteredQuestions;
         _isLoading = false;
       });
+      
+      // If the app successfully loaded questions, start the quiz
+      if (!_isTimerInitialized && _questions.isNotEmpty) {
+        _isTimerInitialized = true;
+        _shuffleCurrentQuestionOptions();
+        _startTimer();
+      }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Error loading questions: $e'),
+            content: Text('Error loading questions: $e\nCheck your internet connection or restart the app.'),
             backgroundColor: Colors.red,
+            duration: Duration(seconds: 5),
           ),
         );
       }

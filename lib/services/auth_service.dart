@@ -22,6 +22,9 @@ class AuthService {
   // Upstash Configuration
   static const String baseUrl = 'https://relative-bison-60370.upstash.io';
   static const String apiKey = 'AevSAAIjcDFkNzY3YjFiZTZhNWI0ZjlhODlkOGE3NTgyOTY3MWQyOHAxMA';
+  
+  // Network request timeout
+  static const Duration networkTimeout = Duration(seconds: 10);
 
   AuthService(this._prefs);
 
@@ -36,7 +39,7 @@ class AuthService {
         headers: {
           'Authorization': 'Bearer $apiKey',
         },
-      );
+      ).timeout(networkTimeout);
 
       if (checkUserResponse.statusCode == 200) {
         final userData = json.decode(checkUserResponse.body);
@@ -87,7 +90,7 @@ class AuthService {
         headers: {
           'Authorization': 'Bearer $apiKey',
         },
-      );
+      ).timeout(networkTimeout);
 
       debugPrint('Login response: ${response.body}');
 
@@ -280,6 +283,7 @@ class AuthService {
         headers: {'Authorization': 'Bearer $apiKey'},
       ).timeout(const Duration(seconds: 5));
       
+      debugPrint('Online check response: ${response.statusCode}');
       return response.statusCode == 200;
     } catch (e) {
       debugPrint('Online check failed: $e');
@@ -792,7 +796,7 @@ class AuthService {
         headers: {
           'Authorization': 'Bearer $apiKey',
         },
-      );
+      ).timeout(networkTimeout);
 
       if (response.statusCode == 200) {
         final userData = json.decode(response.body)['result'];
@@ -831,7 +835,7 @@ class AuthService {
             headers: {
               'Authorization': 'Bearer $apiKey',
             },
-          );
+          ).timeout(networkTimeout);
 
           if (updateResponse.statusCode == 200) {
             await this.updateLeaderboard(email, user['nickname'] ?? email, score, difficulty);
@@ -840,6 +844,7 @@ class AuthService {
       }
     } catch (e) {
       debugPrint('Error updating user stats: $e');
+      // Continue with the app even if stats update fails
     }
   }
 
@@ -851,7 +856,7 @@ class AuthService {
         headers: {
           'Authorization': 'Bearer $apiKey',
         },
-      );
+      ).timeout(networkTimeout);
 
       List<Map<String, dynamic>> leaderboard = [];
       if (response.statusCode == 200 && json.decode(response.body)['result'] != null) {
@@ -860,25 +865,11 @@ class AuthService {
         );
       }
 
-      // Get user's avatar
-      String avatar = 'noah'; // Default avatar
-      final userResponse = await http.post(
-        Uri.parse('$baseUrl/get/user:$email'),
-        headers: {
-          'Authorization': 'Bearer $apiKey',
-        },
-      );
-      
-      if (userResponse.statusCode == 200 && json.decode(userResponse.body)['result'] != null) {
-        final userData = json.decode(json.decode(userResponse.body)['result']);
-        avatar = userData['avatar'] ?? 'noah';
-      }
-
-      // Add new score with avatar information
+      // Add new score
       leaderboard.add({
         'email': email,
         'nickname': nickname,
-        'avatar': avatar,
+        'avatar': getAvatar() ?? 'noah',
         'score': score,
         'date': DateTime.now().toIso8601String(),
       });
@@ -895,9 +886,10 @@ class AuthService {
         headers: {
           'Authorization': 'Bearer $apiKey',
         },
-      );
+      ).timeout(networkTimeout);
     } catch (e) {
       debugPrint('Error updating leaderboard: $e');
+      // Continue with the app even if leaderboard update fails
     }
   }
 
@@ -908,7 +900,7 @@ class AuthService {
         headers: {
           'Authorization': 'Bearer $apiKey',
         },
-      );
+      ).timeout(networkTimeout);
 
       if (response.statusCode == 200 && json.decode(response.body)['result'] != null) {
         return List<Map<String, dynamic>>.from(
