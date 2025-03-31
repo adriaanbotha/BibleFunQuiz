@@ -3,11 +3,49 @@ import 'package:flutter/material.dart';
 class InstructionsScreen extends StatelessWidget {
   const InstructionsScreen({Key? key}) : super(key: key);
 
+  Widget _buildSection(String title, String content) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 24.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            decoration: BoxDecoration(
+              color: const Color(0xFFFF9800),
+              borderRadius: BorderRadius.circular(8),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  blurRadius: 4,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Text(
+              title,
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          Text(
+            content,
+            style: const TextStyle(fontSize: 16, height: 1.5),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Instructions'),
+        title: const Text('How to Play'),
         backgroundColor: const Color(0xFFFF9800),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -18,65 +56,56 @@ class InstructionsScreen extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
-            Text(
-              'Welcome to Bible Quest!',
+          children: [
+            const Text(
+              '🎮 Welcome to Bible Quest! 🎯',
               style: TextStyle(
-                fontSize: 24,
+                fontSize: 28,
                 fontWeight: FontWeight.bold,
                 color: Color(0xFFFF9800),
               ),
             ),
-            SizedBox(height: 16),
-            Text(
-              '1. Choosing Your Journey\n\n'
-              'Begin your biblical adventure by selecting one of four carefully designed difficulty levels, each offering unique challenges and rewards:\n\n'
-              '   • Children\'s: Perfect for young learners, featuring simple and engaging biblical questions and earning 5 points per correct answer.\n'
-              '   • Beginner: Perfect for those starting their journey, featuring fundamental biblical questions and earning 10 points per correct answer.\n'
-              '   • Intermediate: Designed for those familiar with Scripture, offering more challenging questions and 20 points per correct answer.\n'
-              '   • Advanced: Created for biblical scholars, presenting complex theological questions and rewarding 30 points per correct answer.',
-              style: TextStyle(fontSize: 16),
+            const SizedBox(height: 16),
+            _buildSection(
+              '🌟 Choose Your Adventure!',
+              'Get ready for an exciting biblical journey! Pick your perfect challenge:\n\n'
+              '🎈 Children\'s Quest: A fun-filled adventure for young explorers! (5 points per correct answer)\n'
+              '🌱 Beginner\'s Path: Start your journey with friendly questions! (10 points)\n'
+              '⭐ Faith Explorer: Ready for bigger challenges? Try this! (20 points)\n'
+              '🏆 Bible Master: For those seeking the ultimate challenge! (30 points)',
             ),
-            SizedBox(height: 24),
-            Text(
-              '2. Understanding the Game Mechanics\n\n'
-              'Your quest begins with three precious lives, representing your chances to explore and learn. Each question presents a unique challenge:\n\n'
-              '   • You\'ll start your journey with 3 lives, symbolizing your opportunities to learn and grow.\n'
-              '   • Every question gives you 30 seconds to ponder and answer, encouraging both thoughtful consideration and quick thinking.\n'
-              '   • Incorrect answers or running out of time will cost you one life, teaching valuable lessons about patience and wisdom.\n'
-              '   • Your journey concludes when all lives are depleted, but remember - every ending is a chance for a new beginning.',
-              style: TextStyle(fontSize: 16),
+            _buildSection(
+              '❤️ Your Quest Journey',
+              'Every hero needs strength for their journey:\n\n'
+              '🎯 Start with 5 precious hearts - these are your chances to explore and learn!\n'
+              '⏰ Each question gives you 30 exciting seconds to ponder and answer\n'
+              '💫 Wrong answers or time-outs cost one heart - but don\'t worry, that\'s how we learn!\n'
+              '🌈 When your hearts run out, it\'s time for a new adventure!',
             ),
-            SizedBox(height: 24),
-            Text(
-              '3. Earning Your Rewards\n\n'
-              'Bible Quest features a comprehensive scoring system that rewards both knowledge and strategy:\n\n'
-              '   • Your base points are determined by the difficulty level you\'ve chosen, reflecting your courage to face greater challenges.\n'
-              '   • Additional bonus points are awarded for each life preserved, encouraging careful and thoughtful gameplay.\n'
-              '   • Your achievements are immortalized on our global leaderboard, where you can compare your biblical knowledge with fellow questers.\n'
-              '   • Special achievements and milestones unlock as you progress, marking your growth in biblical understanding.',
-              style: TextStyle(fontSize: 16),
+            _buildSection(
+              '🏅 Earning Treasures',
+              'Collect points and achievements on your quest:\n\n'
+              '🎯 Score points based on your chosen difficulty level\n'
+              '💝 Bonus points for keeping your hearts safe\n'
+              '🏆 See your name shine on our global leaderboard\n'
+              '⭐ Unlock special achievements as you grow in knowledge',
             ),
-            SizedBox(height: 24),
-            Text(
-              '4. Personalizing Your Experience\n\n'
-              'Bible Quest can be tailored to your preferences through various settings:\n\n'
-              '   • Customize your audio experience with optional sound effects that celebrate your victories and gentle reminders for incorrect answers.\n'
-              '   • Choose whether to display biblical references alongside questions, perfect for those wanting to deepen their study.\n'
-              '   • Adjust the number of lives to match your comfort level and learning style.\n'
-              '   • Modify the time allowed for each question, allowing for a more relaxed or challenging experience.',
-              style: TextStyle(fontSize: 16),
+            _buildSection(
+              '⚙️ Customize Your Quest',
+              'Make the journey truly yours:\n\n'
+              '🔊 Toggle fun sound effects for more excitement\n'
+              '📖 Show or hide Bible references - your choice!\n'
+              '❤️ Adjust your hearts to match your style\n'
+              '⏱️ Set your own time limit for each question',
             ),
-            SizedBox(height: 24),
-            Text(
-              'Pro Tips for Success\n\n'
-              'Here are some valuable strategies to enhance your Bible Quest journey:\n\n'
-              '• Take time to carefully read and understand each question - the answer often lies in the details.\n'
-              '• Manage your time wisely, but don\'t let the timer rush your thoughtful consideration of each answer.\n'
-              '• If you\'re new to Bible study, start with the beginner level to build a strong foundation of knowledge.\n'
-              '• Regularly visit your Profile screen to track your progress and identify areas for growth.\n'
-              '• Remember that every question, whether answered correctly or not, is an opportunity to learn and grow in your biblical knowledge.',
-              style: TextStyle(fontSize: 16),
+            _buildSection(
+              '💡 Pro Tips for Success',
+              'Secret strategies for your biblical adventure:\n\n'
+              '🎯 Take your time to read each question carefully - the answer might be hiding in plain sight!\n'
+              '⏰ Don\'t let the timer rush you - wisdom comes to those who think!\n'
+              '🌱 New to the journey? Start with Children\'s or Beginner\'s quests\n'
+              '📊 Check your Profile to see how you\'re growing\n'
+              '🌟 Remember: Every question is a chance to learn something amazing!',
             ),
           ],
         ),
