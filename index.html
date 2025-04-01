@@ -201,13 +201,17 @@
 
         .play-now-button {
             background-color: #4CAF50;
-            margin-top: 20px;
+            color: white;
+            margin-bottom: 15px;
             font-weight: bold;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
 
         .play-now-button:hover {
             background-color: #43A047;
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
         }
 
         .donate-section {
@@ -362,7 +366,10 @@
             <div class="header-content">
                 <h1>Bible Fun Quiz</h1>
                 <p class="subtitle">Make Bible Learning Fun for Everyone!</p>
-                <a href="#download" class="cta-button">Download Now</a>
+                <a href="/BibleFunQuiz/app/" class="cta-button play-now-button">Play Now</a>
+                <div style="margin-top: 20px;">
+                    <a href="#download" class="cta-button">Download App</a>
+                </div>
             </div>
         </div>
     </header>
@@ -399,7 +406,6 @@
                 <a href="#" class="download-button">Download for macOS</a>
                 <a href="#" class="download-button">Download for Linux</a>
                 <a href="#" class="download-button">Download for Android</a>
-                <a href="/BibleFunQuiz/app/" class="download-button play-now-button">Play in Browser</a>
             </div>
         </div>
     </section>
