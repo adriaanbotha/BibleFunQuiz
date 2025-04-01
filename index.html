@@ -207,6 +207,57 @@
             background-color: #003087;
             color: white;
         }
+
+        .footer-links {
+            margin: 20px 0;
+        }
+
+        .footer-links a {
+            margin: 0 10px;
+            color: #FF9800;
+            text-decoration: none;
+        }
+
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+
+        .payment-methods {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .payment-method {
+            text-align: center;
+            padding: 20px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .payment-method h3 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .qr-code {
+            width: 200px;
+            height: 200px;
+            margin: 20px auto;
+            display: block;
+        }
+
+        .stripe-button {
+            border-color: #6772E5;
+            color: #6772E5;
+        }
+
+        .stripe-button:hover {
+            background-color: #6772E5;
+            color: white;
+        }
     </style>
 </head>
 <body>
@@ -258,13 +309,31 @@
         <div class="donation-content">
             <h2>Support Our Mission</h2>
             <p>Help us keep Bible Fun Quiz free and growing! Your support makes a difference.</p>
-            <div class="button-container">
-                <a href="https://patreon.com/AdriaanBotha" class="button donation-button patreon-button">
-                    Support on Patreon
-                </a>
-                <a href="https://paypal.me/adriaanbotha" class="button donation-button paypal-button">
-                    Donate with PayPal
-                </a>
+            
+            <div class="payment-methods">
+                <div class="payment-method">
+                    <h3>Patreon</h3>
+                    <img src="assets/images/stripe-qr.png" alt="Patreon QR Code" class="qr-code">
+                    <a href="https://patreon.com/AdriaanBotha" target="_blank" class="button donation-button patreon-button">
+                        Support on Patreon
+                    </a>
+                </div>
+
+                <div class="payment-method">
+                    <h3>PayPal</h3>
+                    <img src="assets/images/stripe-qr.png" alt="PayPal QR Code" class="qr-code">
+                    <a href="https://www.paypal.com/paypalme/BibleFunQuiz" target="_blank" class="button donation-button paypal-button">
+                        Donate with PayPal
+                    </a>
+                </div>
+
+                <div class="payment-method">
+                    <h3>Stripe</h3>
+                    <img src="assets/images/stripe-qr.png" alt="Stripe QR Code" class="qr-code">
+                    <a href="https://buy.stripe.com/6oE3dd6oVbQD9WgaEG" target="_blank" class="button donation-button stripe-button">
+                        Pay with Stripe
+                    </a>
+                </div>
             </div>
         </div>
     </section>
@@ -272,7 +341,11 @@
     <footer class="footer">
         <p>Made with ❤️ for families and children</p>
         <p>Contact us: <a href="mailto:contact@biblefunquiz.com">contact@biblefunquiz.com</a></p>
-        <p>© 2024 Bible Fun Quiz. All rights reserved.</p>
+        <div class="footer-links">
+            <a href="privacy.html">Privacy Policy</a> • 
+            <a href="terms.html">Terms of Use</a>
+        </div>
+        <p>© 2025 Bible Fun Quiz. All rights reserved.</p>
     </footer>
 </body>
 </html> 
