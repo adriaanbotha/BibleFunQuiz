@@ -1,8 +1,0 @@
-/build
-/.dart_tool
-.flutter-plugins-dependencies
-.dart_tool/package_config_subset
-.dart_tool/package_config.json
-.flutter-plugins-dependencies
-.dart_tool/package_config.json
-.dart_tool/version
