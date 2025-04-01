@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+    <meta name="description" content="Bible Fun Quiz - An engaging way to learn the Word of God">
+
+    <!-- iOS meta tags & icons -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="Bible Fun Quiz">
+    <link rel="apple-touch-icon" href="icons/Icon-192.png">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="favicon.png"/>
+    <link rel="manifest" href="manifest.json">
+    
+    <title>Bible Fun Quiz - Interactive Bible Learning Game</title>
+    <style>
+        :root {
+            --primary-color: #FF9800;
+            --secondary-color: #FFB300;
+            --text-color: #333;
+            --background-color: #fff;
+            --accent-color: #FFB300;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        body {
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--background-color);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        header {
+            background: linear-gradient(135deg, #FF9800, #FFB300);
+            position: relative;
+            color: white;
+            padding: 180px 0;
+            text-align: center;
+            overflow: hidden;
+            min-height: 100vh;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at center, rgba(255,255,255,0.1) 0%, rgba(255,152,0,0.2) 100%);
+            z-index: 1;
+        }
+
+        .hero-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .hero-image {
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            object-fit: cover;
+            opacity: 0.15;
+            filter: brightness(1.2);
+            transform: scale(1.1);
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 5em;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        .subtitle {
+            font-size: 2em;
+            margin-bottom: 40px;
+            opacity: 0.95;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        .cta-button {
+            position: relative;
+            z-index: 2;
+            display: inline-block;
+            padding: 20px 40px;
+            background-color: white;
+            color: var(--primary-color);
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 1.5em;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        section {
+            padding: 60px 0;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .feature-card h3 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        .feature-card p {
+            color: var(--text-color);
+        }
+
+        .download-section {
+            background-color: #f8f9fa;
+            text-align: center;
+        }
+
+        .download-options {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .download-button {
+            display: inline-flex;
+            align-items: center;
+            padding: 15px 30px;
+            background-color: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: bold;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            margin-bottom: 15px;
+            min-width: 250px;
+            justify-content: center;
+        }
+
+        .download-button:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-3px);
+        }
+
+        .play-now-button {
+            background-color: #4CAF50;
+            margin-top: 20px;
+            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .play-now-button:hover {
+            background-color: #43A047;
+        }
+
+        .donate-section {
+            text-align: center;
+            padding: 60px 0;
+            background-color: #f8f9fa;
+        }
+
+        .donation-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+
+        .donate-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px 30px;
+            background-color: var(--accent-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 1.2em;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+            min-width: 250px;
+            gap: 12px;
+        }
+
+        .button-icon {
+            width: 24px;
+            height: 24px;
+            flex-shrink: 0;
+        }
+
+        .donate-button:hover {
+            transform: translateY(-3px);
+            background-color: var(--secondary-color);
+        }
+
+        .patreon-button {
+            background-color: #FF424D;
+        }
+
+        .patreon-button:hover {
+            background-color: #FF424D;
+            opacity: 0.9;
+        }
+
+        .paypal-button {
+            background-color: #003087;
+        }
+
+        .paypal-button:hover {
+            background-color: #003087;
+            opacity: 0.9;
+        }
+
+        .stripe-button {
+            background-color: #635BFF;
+        }
+
+        .stripe-button:hover {
+            background-color: #635BFF;
+            opacity: 0.9;
+        }
+
+        .qr-code-section {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .qr-code {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto;
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .qr-code img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .qr-code-text {
+            margin-top: 15px;
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 40px;
+        }
+
+        .footer-links {
+            margin-top: 15px;
+        }
+
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            opacity: 1;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 100px 0;
+            }
+            
+            h1 {
+                font-size: 3em;
+            }
+            
+            .subtitle {
+                font-size: 1.5em;
+            }
+
+            .cta-button {
+                font-size: 1.2em;
+                padding: 15px 30px;
+            }
+            
+            .features {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="hero-container">
+                <img src="images/hero.png" alt="Bible Fun Quiz" class="hero-image">
+            </div>
+            <div class="header-content">
+                <h1>Bible Fun Quiz</h1>
+                <p class="subtitle">Make Bible Learning Fun for Everyone!</p>
+                <a href="#download" class="cta-button">Download Now</a>
+            </div>
+        </div>
+    </header>
+
+    <section>
+        <div class="container">
+            <h2>About the Game</h2>
+            <p>Bible Fun Quiz is an engaging and interactive quiz game that makes learning about the Bible fun and accessible for everyone. Whether you're a child or an adult, this game offers an exciting way to test your knowledge and learn more about the Bible.</p>
+            
+            <div class="features">
+                <div class="feature-card">
+                    <h3>Multiple Difficulty Levels</h3>
+                    <p>Choose from various difficulty levels to match your knowledge and challenge yourself.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Kids Mode</h3>
+                    <p>Special mode designed for children aged 4-7, 8-11, and 12+ with age-appropriate questions.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>Ad-Free Experience</h3>
+                    <p>Enjoy a clean, distraction-free learning environment without any advertisements.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="download" class="download-section">
+        <div class="container">
+            <h2>Download Bible Fun Quiz</h2>
+            <p>Available for multiple platforms. Choose your preferred version below:</p>
+            
+            <div class="download-options">
+                <a href="#" class="download-button">Download for Windows</a>
+                <a href="#" class="download-button">Download for macOS</a>
+                <a href="#" class="download-button">Download for Linux</a>
+                <a href="#" class="download-button">Download for Android</a>
+                <a href="https://adriaanbotha.github.io/BibleFunQuiz/app/" class="download-button play-now-button">Play in Browser</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="donate-section">
+        <div class="container">
+            <h2>Support Bible Fun Quiz</h2>
+            <p>Help us continue developing and improving Bible Fun Quiz by supporting our project. Your contribution helps us:</p>
+            <ul style="list-style: none; margin: 20px 0;">
+                <li>Create new quiz content</li>
+                <li>Develop more features</li>
+                <li>Keep the app ad-free</li>
+                <li>Support our development team</li>
+            </ul>
+            <div class="donation-buttons">
+                <a href="https://www.paypal.com/paypalme/BibleFunQuiz" target="_blank" class="donate-button paypal-button">
+                    <svg class="button-icon" viewBox="0 0 24 24" width="24" height="24">
+                        <path fill="currentColor" d="M20.067 8.478c.492.315.844.825.983 1.39.185.716.181 1.498-.043 2.28-.49 1.723-1.51 2.435-2.892 2.435h-.395c-.316 0-.576.24-.636.537l-.05.187-.447 2.763-.062.27c-.072.362-.37.63-.752.63H12.93c-.346 0-.607-.225-.566-.531l.086-.386.411-2.54.019-.127c.06-.362.36-.626.752-.626h.395c1.383 0 2.402-.712 2.893-2.435.224-.782.228-1.564.043-2.28-.14-.565-.491-1.075-.984-1.39m-1.154-1.982c-.301-.947-.957-1.284-1.769-1.284H12.93c-.348 0-.614.23-.666.552l-1.557 9.252c-.07.41.25.78.666.78h2.833c.316 0 .576-.24.636-.537l.05-.187.447-2.763.062-.27c.072-.362.37-.63.752-.63h.395c1.383 0 2.402-.712 2.893-2.435.224-.782.228-1.564.043-2.28-.14-.565-.491-1.075-.984-1.39m-4.713.982h1.006c.346 0 .607.225.566.531l-.086.386-.411 2.54-.019.127c-.06.362-.36.626-.752.626h-.395c-1.383 0-2.402.712-2.893 2.435-.224.782-.228 1.564-.043 2.28.14.565.491 1.075.984 1.39.301.947.957 1.284 1.769 1.284h2.833c.348 0 .614-.23.666-.552l1.557-9.252c.07-.41-.25-.78-.666-.78h-2.833c-.346 0-.607-.225-.566-.531"></path>
+                    </svg>
+                    Donate with PayPal
+                </a>
+                <a href="https://patreon.com/AdriaanBotha" target="_blank" class="donate-button patreon-button">
+                    <svg class="button-icon" viewBox="0 0 24 24" width="24" height="24">
+                        <path fill="currentColor" d="M14.82 2.41c3.96 0 7.18 3.24 7.18 7.21 0 3.96-3.22 7.18-7.18 7.18-3.97 0-7.21-3.22-7.21-7.18 0-3.97 3.24-7.21 7.21-7.21M2 21.6h3.5V2.41H2V21.6z"></path>
+                    </svg>
+                    Support on Patreon
+                </a>
+                <a href="https://buy.stripe.com/6oE3dd6oVbQD9WgaEG" target="_blank" class="donate-button stripe-button">
+                    <svg class="button-icon" viewBox="0 0 24 24" width="24" height="24">
+                        <path fill="currentColor" d="M13.479 9.883c-1.626-.604-2.512-1.067-2.512-1.803 0-.622.511-.977 1.423-.977 1.667 0 3.379.642 4.558 1.22l.666-4.111c-.935-.446-2.847-1.177-5.49-1.177-1.87 0-3.425.489-4.556 1.4-1.155.954-1.757 2.334-1.757 4.093 0 3.023 1.847 4.307 4.847 5.402 1.936.689 2.577 1.178 2.577 1.934 0 .734-.629 1.156-1.762 1.156-1.403 0-3.716-.689-5.231-1.578l-.674 4.157c1.304.822 3.713 1.488 6.221 1.488 1.975 0 3.625-.467 4.736-1.356 1.245-.977 1.89-2.422 1.89-4.289 0-3.09-1.889-4.38-4.935-5.468z"/>
+                    </svg>
+                    Donate with Stripe
+                </a>
+            </div>
+            <div class="qr-code-section">
+                <div class="qr-code">
+                    <img src="images/stripe-qr.png" alt="Stripe Payment QR Code">
+                </div>
+                <p class="qr-code-text">Scan to donate with Stripe</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Bible Fun Quiz. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="privacy.html">Privacy Policy</a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
