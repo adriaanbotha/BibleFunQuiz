@@ -284,7 +284,7 @@
     {"question": "Who was Dinah's mother?", "options": ["Leah", "Rachel", "Bilhah", "Zilpah"], "answer": "Leah", "reference": "Genesis 30:21"},
     {"question": "What did Jesus say about wise and foolish builders?", "options": ["One built on rock, one on sand", "Hear and do my words", "Both A and B", "Build strong"], "answer": "Both A and B", "reference": "Matthew 7:24-26"},
     {"question": "Who was Jochebed's father?", "options": ["Levi", "Amram", "Kohath", "Unknown"], "answer": "Levi", "reference": "Exodus 6:20"},
-    {"question": "What did Jesus say to the man with the withered hand?", "options": ["Stretch out your hand", "Be healed", "Both A and B", "Rise up"], "answer": "Stretch out your hand", "reference": "Matthew 12:13"},
+    {"question": "What did Jesus say to the man with the withered hand?", "options": ["Stretch out your hand", "Be healed", "Wash you hand", "Rise up"], "answer": "Stretch out your hand", "reference": "Matthew 12:13"},
     {"question": "Who was Perez's mother?", "options": ["Tamar", "Rahab", "Ruth", "Bathsheba"], "answer": "Tamar", "reference": "Genesis 38:29"},
     {"question": "What did Jesus say about the vine and branches?", "options": ["I am the vine, you are branches", "Abide in me", "Both A and B", "Bear fruit"], "answer": "Both A and B", "reference": "John 15:1,5"},
     {"question": "Who was Tamar's father?", "options": ["Judah", "Unknown", "Er", "Onan"], "answer": "Unknown", "reference": "Genesis 38:6"},
